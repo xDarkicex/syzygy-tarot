@@ -29,12 +29,13 @@ STROKE = 1.6
 def svg(body: str, title: str) -> str:
     """Wrap a body in the standard SVG header.
 
-    The parent group sets both fill and stroke to currentColor so child elements can use
-    whichever is appropriate via the shorthand attributes on the elements themselves.
+    The default is ``fill="none" stroke="currentColor"`` so structural lines render as
+    outlines. Children that should be solid (pips, dots) get an explicit
+    ``fill="currentColor" stroke="none"`` override.
     """
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" '
-        f'role="img" aria-label="{title}" fill="currentColor" stroke="currentColor" '
+        f'role="img" aria-label="{title}" fill="none" stroke="currentColor" '
         f'stroke-width="{STROKE}" stroke-linecap="round" stroke-linejoin="round">'
         f'<title>{title}</title>'
         f'{body}'
@@ -49,91 +50,91 @@ def translate(x: float, y: float) -> str:
 # ─────── Major arcana ───────
 
 MAJORS: dict[str, str] = {
-    "The Fool": '<circle cx="50" cy="70" r="22" stroke-width="' + str(STROKE) + '"/>'
-                '<path d="M 50 48 L 50 92" stroke-width="' + str(STROKE) + '"/>'
-                '<circle cx="50" cy="40" r="3"/>'
-                '<path d="M 44 96 L 56 96" stroke-width="' + str(STROKE) + '"/>',
-    "The Magician": '<path d="M 30 50 C 30 35, 70 35, 70 50 C 70 65, 30 65, 30 50 C 30 35, 70 35, 70 50" stroke-width="' + str(STROKE) + '"/>'
-                    '<path d="M 50 50 L 50 110" stroke-width="' + str(STROKE) + '"/>'
-                    '<circle cx="50" cy="115" r="3"/>',
-    "The High Priestess": '<path d="M 50 30 L 50 110" stroke-width="' + str(STROKE) + '"/>'
-                          '<circle cx="50" cy="40" r="4"/>'
-                          '<circle cx="50" cy="70" r="4"/>'
-                          '<circle cx="50" cy="100" r="4"/>',
-    "The Empress": '<circle cx="50" cy="70" r="26" stroke-width="' + str(STROKE) + '"/>'
-                   '<path d="M 35 90 Q 50 105, 65 90" stroke-width="' + str(STROKE) + '"/>'
-                   '<circle cx="50" cy="58" r="3"/>',
-    "The Emperor": '<path d="M 30 45 L 70 45 L 70 95 L 30 95 Z" stroke-width="' + str(STROKE) + '"/>'
-                   '<path d="M 35 45 L 35 35 L 65 35 L 65 45" stroke-width="' + str(STROKE) + '"/>'
-                   '<circle cx="50" cy="65" r="4"/>',
-    "The Hierophant": '<path d="M 50 35 L 30 50 L 50 65 L 70 50 Z" stroke-width="' + str(STROKE) + '"/>'
-                      '<path d="M 40 75 L 40 105 M 60 75 L 60 105" stroke-width="' + str(STROKE) + '"/>'
-                      '<path d="M 35 105 L 65 105" stroke-width="' + str(STROKE) + '"/>',
-    "The Lovers": '<circle cx="35" cy="65" r="14" stroke-width="' + str(STROKE) + '"/>'
-                  '<circle cx="65" cy="65" r="14" stroke-width="' + str(STROKE) + '"/>'
-                  '<path d="M 50 35 L 50 100" stroke-width="' + str(STROKE) + '"/>',
-    "The Chariot": '<path d="M 30 55 L 50 35 L 70 55 L 70 95 L 30 95 Z" stroke-width="' + str(STROKE) + '"/>'
-                   '<circle cx="38" cy="60" r="3"/>'
-                   '<circle cx="62" cy="60" r="3"/>'
-                   '<path d="M 30 95 L 25 110 M 70 95 L 75 110 M 50 95 L 50 110" stroke-width="' + str(STROKE) + '"/>',
-    "Strength": '<path d="M 30 70 C 30 50, 70 50, 70 70 C 70 90, 30 90, 30 70" stroke-width="' + str(STROKE) + '"/>'
-                '<path d="M 50 50 L 50 100" stroke-width="' + str(STROKE) + '"/>'
-                '<circle cx="50" cy="40" r="3"/>',
-    "The Hermit": '<path d="M 50 35 L 50 95" stroke-width="' + str(STROKE) + '"/>'
-                  '<path d="M 42 30 L 50 25 L 58 30 L 58 45 L 42 45 Z" stroke-width="' + str(STROKE) + '"/>'
-                  '<circle cx="50" cy="115" r="5" stroke-width="' + str(STROKE) + '"/>'
-                  '<path d="M 50 100 L 50 110 M 50 105 L 55 105 M 50 105 L 45 105" stroke-width="' + str(STROKE) + '"/>',
-    "Wheel of Fortune": '<circle cx="50" cy="70" r="26" stroke-width="' + str(STROKE) + '"/>'
-                        '<circle cx="50" cy="70" r="10" stroke-width="' + str(STROKE) + '"/>'
-                        '<path d="M 50 30 L 50 40 M 50 100 L 50 110 M 24 70 L 34 70 M 66 70 L 76 70" stroke-width="' + str(STROKE) + '"/>'
-                        '<path d="M 50 30 L 56 36 L 50 42 L 44 36 Z"/>',
-    "Justice": '<path d="M 50 30 L 50 95" stroke-width="' + str(STROKE) + '"/>'
-               '<path d="M 30 45 L 70 45 L 65 55 L 35 55 Z" stroke-width="' + str(STROKE) + '"/>'
-               '<path d="M 30 95 L 70 95" stroke-width="' + str(STROKE) + '"/>'
-               '<path d="M 45 60 L 45 90 M 55 60 L 55 90 M 45 90 L 55 90" stroke-width="' + str(STROKE) + '"/>',
-    "The Hanged Man": '<circle cx="50" cy="40" r="8" stroke-width="' + str(STROKE) + '"/>'
-                      '<path d="M 42 50 L 58 50" stroke-width="' + str(STROKE) + '"/>'
-                      '<path d="M 50 48 L 50 100" stroke-width="' + str(STROKE) + '"/>'
-                      '<path d="M 50 100 L 30 115" stroke-width="' + str(STROKE) + '"/>',
-    "Death": '<path d="M 50 25 L 50 110" stroke-width="' + str(STROKE) + '"/>'
-             '<path d="M 30 65 C 40 50, 60 50, 70 65 L 50 80 Z" stroke-width="' + str(STROKE) + '"/>'
-             '<circle cx="50" cy="25" r="3"/>',
-    "Temperance": '<path d="M 30 55 L 30 90 L 70 90 L 70 55" stroke-width="' + str(STROKE) + '"/>'
-                  '<path d="M 25 55 C 35 40, 65 40, 75 55" stroke-width="' + str(STROKE) + '"/>'
-                  '<path d="M 45 75 L 55 75" stroke-width="' + str(STROKE) + '"/>',
-    "The Devil": '<path d="M 50 30 L 50 80" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 35 40 L 50 30 L 65 40" stroke-width="' + str(STROKE) + '"/>'
-                 '<circle cx="50" cy="95" r="14" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 40 105 L 50 95 L 60 105" stroke-width="' + str(STROKE) + '"/>',
-    "The Tower": '<path d="M 40 30 L 40 70 L 35 75 L 40 80 L 40 110" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 60 30 L 60 70 L 65 75 L 60 80 L 60 110" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 35 30 L 65 30" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 30 60 L 70 60" stroke-width="' + str(STROKE) + '"/>',
-    "The Star": '<path d="M 50 30 L 50 110" stroke-width="' + str(STROKE) + '"/>'
-                '<path d="M 30 50 L 70 50" stroke-width="' + str(STROKE) + '"/>'
-                '<path d="M 50 30 L 44 50 M 50 30 L 56 50 M 30 50 L 44 50 M 70 50 L 56 50" stroke-width="' + str(STROKE) + '"/>'
-                '<circle cx="50" cy="50" r="3"/>',
-    "The Moon": '<path d="M 30 70 A 20 20 0 1 0 70 70 A 16 16 0 1 1 30 70" stroke-width="' + str(STROKE) + '"/>'
-                '<circle cx="50" cy="50" r="2"/>'
-                '<circle cx="35" cy="40" r="2"/>'
-                '<circle cx="65" cy="40" r="2"/>',
-    "The Sun": '<circle cx="50" cy="70" r="20" stroke-width="' + str(STROKE) + '"/>'
-               '<circle cx="50" cy="70" r="8"/>'
-               '<path d="M 50 30 L 50 38 M 50 102 L 50 110 M 10 70 L 18 70 M 82 70 L 90 70" stroke-width="' + str(STROKE) + '"/>'
-               '<path d="M 22 42 L 28 48 M 72 92 L 78 98 M 22 98 L 28 92 M 72 48 L 78 42" stroke-width="' + str(STROKE) + '"/>',
-    "Judgement": '<path d="M 20 90 L 50 70 L 80 90" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 35 50 L 35 70 M 50 45 L 50 65 M 65 50 L 65 70" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 30 50 L 40 50 M 45 45 L 55 45 M 60 50 L 70 50" stroke-width="' + str(STROKE) + '"/>',
-    "The World": '<circle cx="50" cy="70" r="26" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 30 60 Q 40 50, 50 60 Q 60 70, 70 60" stroke-width="' + str(STROKE) + '"/>'
-                 '<path d="M 30 80 Q 40 90, 50 80 Q 60 70, 70 80" stroke-width="' + str(STROKE) + '"/>'
-                 '<circle cx="50" cy="50" r="2"/>',
+    "The Fool": '<circle cx="50" cy="70" r="22"/>'
+                '<path d="M 50 48 L 50 92"/>'
+                '<circle cx="50" cy="40" r="3" fill="currentColor" stroke="none"/>'
+                '<path d="M 44 96 L 56 96"/>',
+    "The Magician": '<path d="M 30 50 C 30 35, 70 35, 70 50 C 70 65, 30 65, 30 50 C 30 35, 70 35, 70 50"/>'
+                    '<path d="M 50 50 L 50 110"/>'
+                    '<circle cx="50" cy="115" r="3" fill="currentColor" stroke="none"/>',
+    "The High Priestess": '<path d="M 50 30 L 50 110"/>'
+                          '<circle cx="50" cy="40" r="4" fill="currentColor" stroke="none"/>'
+                          '<circle cx="50" cy="70" r="4" fill="currentColor" stroke="none"/>'
+                          '<circle cx="50" cy="100" r="4" fill="currentColor" stroke="none"/>',
+    "The Empress": '<circle cx="50" cy="70" r="26"/>'
+                   '<path d="M 35 90 Q 50 105, 65 90"/>'
+                   '<circle cx="50" cy="58" r="3" fill="currentColor" stroke="none"/>',
+    "The Emperor": '<path d="M 30 45 L 70 45 L 70 95 L 30 95 Z"/>'
+                   '<path d="M 35 45 L 35 35 L 65 35 L 65 45"/>'
+                   '<circle cx="50" cy="65" r="4" fill="currentColor" stroke="none"/>',
+    "The Hierophant": '<path d="M 50 35 L 30 50 L 50 65 L 70 50 Z"/>'
+                      '<path d="M 40 75 L 40 105 M 60 75 L 60 105"/>'
+                      '<path d="M 35 105 L 65 105"/>',
+    "The Lovers": '<circle cx="35" cy="65" r="14"/>'
+                  '<circle cx="65" cy="65" r="14"/>'
+                  '<path d="M 50 35 L 50 100"/>',
+    "The Chariot": '<path d="M 30 55 L 50 35 L 70 55 L 70 95 L 30 95 Z"/>'
+                   '<circle cx="38" cy="60" r="3" fill="currentColor" stroke="none"/>'
+                   '<circle cx="62" cy="60" r="3" fill="currentColor" stroke="none"/>'
+                   '<path d="M 30 95 L 25 110 M 70 95 L 75 110 M 50 95 L 50 110"/>',
+    "Strength": '<path d="M 30 70 C 30 50, 70 50, 70 70 C 70 90, 30 90, 30 70"/>'
+                '<path d="M 50 50 L 50 100"/>'
+                '<circle cx="50" cy="40" r="3" fill="currentColor" stroke="none"/>',
+    "The Hermit": '<path d="M 50 35 L 50 95"/>'
+                  '<path d="M 42 30 L 50 25 L 58 30 L 58 45 L 42 45 Z"/>'
+                  '<circle cx="50" cy="115" r="5"/>'
+                  '<path d="M 50 100 L 50 110 M 50 105 L 55 105 M 50 105 L 45 105"/>',
+    "Wheel of Fortune": '<circle cx="50" cy="70" r="26"/>'
+                        '<circle cx="50" cy="70" r="10"/>'
+                        '<path d="M 50 30 L 50 40 M 50 100 L 50 110 M 24 70 L 34 70 M 66 70 L 76 70"/>'
+                        '<path d="M 50 30 L 56 36 L 50 42 L 44 36 Z" fill="currentColor" stroke="none"/>',
+    "Justice": '<path d="M 50 30 L 50 95"/>'
+               '<path d="M 30 45 L 70 45 L 65 55 L 35 55 Z"/>'
+               '<path d="M 30 95 L 70 95"/>'
+               '<path d="M 45 60 L 45 90 M 55 60 L 55 90 M 45 90 L 55 90"/>',
+    "The Hanged Man": '<circle cx="50" cy="40" r="8"/>'
+                      '<path d="M 42 50 L 58 50"/>'
+                      '<path d="M 50 48 L 50 100"/>'
+                      '<path d="M 50 100 L 30 115"/>',
+    "Death": '<path d="M 50 25 L 50 110"/>'
+             '<path d="M 30 65 C 40 50, 60 50, 70 65 L 50 80 Z"/>'
+             '<circle cx="50" cy="25" r="3" fill="currentColor" stroke="none"/>',
+    "Temperance": '<path d="M 30 55 L 30 90 L 70 90 L 70 55"/>'
+                  '<path d="M 25 55 C 35 40, 65 40, 75 55"/>'
+                  '<path d="M 45 75 L 55 75"/>',
+    "The Devil": '<path d="M 50 30 L 50 80"/>'
+                 '<path d="M 35 40 L 50 30 L 65 40"/>'
+                 '<circle cx="50" cy="95" r="14"/>'
+                 '<path d="M 40 105 L 50 95 L 60 105"/>',
+    "The Tower": '<path d="M 40 30 L 40 70 L 35 75 L 40 80 L 40 110"/>'
+                 '<path d="M 60 30 L 60 70 L 65 75 L 60 80 L 60 110"/>'
+                 '<path d="M 35 30 L 65 30"/>'
+                 '<path d="M 30 60 L 70 60"/>',
+    "The Star": '<path d="M 50 30 L 50 110"/>'
+                '<path d="M 30 50 L 70 50"/>'
+                '<path d="M 50 30 L 44 50 M 50 30 L 56 50 M 30 50 L 44 50 M 70 50 L 56 50"/>'
+                '<circle cx="50" cy="50" r="3" fill="currentColor" stroke="none"/>',
+    "The Moon": '<path d="M 30 70 A 20 20 0 1 0 70 70 A 16 16 0 1 1 30 70"/>'
+                '<circle cx="50" cy="50" r="2" fill="currentColor" stroke="none"/>'
+                '<circle cx="35" cy="40" r="2" fill="currentColor" stroke="none"/>'
+                '<circle cx="65" cy="40" r="2" fill="currentColor" stroke="none"/>',
+    "The Sun": '<circle cx="50" cy="70" r="20"/>'
+               '<circle cx="50" cy="70" r="8" fill="currentColor" stroke="none"/>'
+               '<path d="M 50 30 L 50 38 M 50 102 L 50 110 M 10 70 L 18 70 M 82 70 L 90 70"/>'
+               '<path d="M 22 42 L 28 48 M 72 92 L 78 98 M 22 98 L 28 92 M 72 48 L 78 42"/>',
+    "Judgement": '<path d="M 20 90 L 50 70 L 80 90"/>'
+                 '<path d="M 35 50 L 35 70 M 50 45 L 50 65 M 65 50 L 65 70"/>'
+                 '<path d="M 30 50 L 40 50 M 45 45 L 55 45 M 60 50 L 70 50"/>',
+    "The World": '<circle cx="50" cy="70" r="26"/>'
+                 '<path d="M 30 60 Q 40 50, 50 60 Q 60 70, 70 60"/>'
+                 '<path d="M 30 80 Q 40 90, 50 80 Q 60 70, 70 80"/>'
+                 '<circle cx="50" cy="50" r="2" fill="currentColor" stroke="none"/>',
 }
 
 
 # ─────── Minor arcana: pip patterns ───────
 
-PIP_DOT = '<circle cx="{x}" cy="{y}" r="4"/>'
+PIP_DOT = '<circle cx="{x}" cy="{y}" r="4" fill="currentColor" stroke="none"/>'
 
 
 def pip(x: float, y: float) -> str:
@@ -167,25 +168,24 @@ def suit_glyph(suit: str, x: float, y: float, scale: float = 1.0) -> str:
     """A small suit marker used inside the pips for non-coin suits."""
     cx, cy = x, y
     if suit == "wands":
-        return f'<path d="M {cx - 4 * scale} {cy - 10 * scale} L {cx + 4 * scale} {cy - 10 * scale} L {cx + 4 * scale} {cy + 10 * scale} L {cx - 4 * scale} {cy + 10 * scale} Z" stroke-width="{STROKE}"/>' \
-               f'<path d="M {cx} {cy - 10 * scale} L {cx} {cy - 16 * scale} M {cx - 3 * scale} {cy - 13 * scale} L {cx + 3 * scale} {cy - 13 * scale}" stroke-width="{STROKE}"/>'
+        return (f'<path d="M {cx - 4 * scale} {cy - 10 * scale} L {cx + 4 * scale} {cy - 10 * scale} L {cx + 4 * scale} {cy + 10 * scale} L {cx - 4 * scale} {cy + 10 * scale} Z"/>'
+                f'<path d="M {cx} {cy - 10 * scale} L {cx} {cy - 16 * scale} M {cx - 3 * scale} {cy - 13 * scale} L {cx + 3 * scale} {cy - 13 * scale}"/>')
     if suit == "cups":
-        return f'<path d="M {cx - 8 * scale} {cy - 5 * scale} L {cx + 8 * scale} {cy - 5 * scale} L {cx + 6 * scale} {cy + 8 * scale} L {cx - 6 * scale} {cy + 8 * scale} Z" stroke-width="{STROKE}"/>' \
-               f'<path d="M {cx - 4 * scale} {cy + 8 * scale} L {cx + 4 * scale} {cy + 8 * scale} L {cx + 4 * scale} {cy + 12 * scale} L {cx - 4 * scale} {cy + 12 * scale} Z" fill="currentColor"/>'
+        return (f'<path d="M {cx - 8 * scale} {cy - 5 * scale} L {cx + 8 * scale} {cy - 5 * scale} L {cx + 6 * scale} {cy + 8 * scale} L {cx - 6 * scale} {cy + 8 * scale} Z"/>'
+                f'<path d="M {cx - 4 * scale} {cy + 8 * scale} L {cx + 4 * scale} {cy + 8 * scale} L {cx + 4 * scale} {cy + 12 * scale} L {cx - 4 * scale} {cy + 12 * scale} Z" fill="currentColor" stroke="none"/>')
     if suit == "swords":
-        return f'<path d="M {cx} {cy - 12 * scale} L {cx} {cy + 10 * scale}" stroke-width="{STROKE}"/>' \
-               f'<path d="M {cx - 6 * scale} {cy + 4 * scale} L {cx + 6 * scale} {cy + 4 * scale}" stroke-width="{STROKE}"/>' \
-               f'<circle cx="{cx}" cy="{cy + 12 * scale}" r="2"/>'
+        return (f'<path d="M {cx} {cy - 12 * scale} L {cx} {cy + 10 * scale}"/>'
+                f'<path d="M {cx - 6 * scale} {cy + 4 * scale} L {cx + 6 * scale} {cy + 4 * scale}"/>'
+                f'<circle cx="{cx}" cy="{cy + 12 * scale}" r="2" fill="currentColor" stroke="none"/>')
     return pip(cx, cy)
 
 
 def minor_card_body(suit: str, rank: int) -> str:
     """Compose a minor-arcana card body: suit glyph + pip pattern + frame."""
-    frame = '<rect x="6" y="6" width="88" height="128" rx="3" stroke-width="' + str(STROKE) + '"/>'
+    frame = '<rect x="6" y="6" width="88" height="128" rx="3"/>'
     if rank == 1:  # Ace: a single large suit glyph
         return frame + suit_glyph(suit, 50, 70, scale=2.2)
     if 2 <= rank <= 10:
-        pip_glyph = suit_glyph if suit == "coins" else lambda s, x, y, scale=1.0: suit_glyph(s, x, y, scale=0.7)
         return frame + pip_grid(rank, suit)
     return frame + court_card(suit, rank)
 
@@ -194,34 +194,32 @@ def minor_card_body(suit: str, rank: int) -> str:
 
 def court_card(suit: str, rank: int) -> str:
     """Stylised seated/standing figure for Page/Knight/Queen/King."""
-    # Slight pose variation by rank
-    if rank == 11:  # Page: small figure, holding suit object
+    if rank == 11:  # Page
         figure = (
-            '<circle cx="50" cy="50" r="8" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 50 58 L 50 95" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 50 70 L 65 80 M 50 70 L 35 80" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 40 95 L 60 95" stroke-width="' + str(STROKE) + '"/>'
+            '<circle cx="50" cy="50" r="8"/>'
+            '<path d="M 50 58 L 50 95"/>'
+            '<path d="M 50 70 L 65 80 M 50 70 L 35 80"/>'
+            '<path d="M 40 95 L 60 95"/>'
         )
-    elif rank == 12:  # Knight: standing figure with legs
+    elif rank == 12:  # Knight
         figure = (
-            '<circle cx="50" cy="45" r="8" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 50 53 L 50 90" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 50 65 L 38 78 L 38 100" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 50 65 L 62 78 L 62 100" stroke-width="' + str(STROKE) + '"/>'
+            '<circle cx="50" cy="45" r="8"/>'
+            '<path d="M 50 53 L 50 90"/>'
+            '<path d="M 50 65 L 38 78 L 38 100"/>'
+            '<path d="M 50 65 L 62 78 L 62 100"/>'
         )
-    elif rank == 13:  # Queen: figure with crown
+    elif rank == 13:  # Queen
         figure = (
-            '<path d="M 42 38 L 42 32 L 50 35 L 58 32 L 58 38" stroke-width="' + str(STROKE) + '"/>'
-            '<circle cx="50" cy="50" r="8" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 36 70 Q 50 65, 64 70 L 60 100 L 40 100 Z" stroke-width="' + str(STROKE) + '"/>'
+            '<path d="M 42 38 L 42 32 L 50 35 L 58 32 L 58 38"/>'
+            '<circle cx="50" cy="50" r="8"/>'
+            '<path d="M 36 70 Q 50 65, 64 70 L 60 100 L 40 100 Z"/>'
         )
-    else:  # King: figure with crown and larger frame
+    else:  # King
         figure = (
-            '<path d="M 40 40 L 40 32 L 50 35 L 60 32 L 60 40" stroke-width="' + str(STROKE) + '"/>'
-            '<circle cx="50" cy="52" r="9" stroke-width="' + str(STROKE) + '"/>'
-            '<path d="M 32 72 L 68 72 L 64 105 L 36 105 Z" stroke-width="' + str(STROKE) + '"/>'
+            '<path d="M 40 40 L 40 32 L 50 35 L 60 32 L 60 40"/>'
+            '<circle cx="50" cy="52" r="9"/>'
+            '<path d="M 32 72 L 68 72 L 64 105 L 36 105 Z"/>'
         )
-    # Embed a small suit glyph near the figure
     motif = suit_glyph(suit, 50, 118, scale=0.9)
     return figure + motif
 
