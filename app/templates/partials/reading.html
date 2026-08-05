@@ -31,25 +31,19 @@
 
   <ol class="cards">
     {% for d in reading.drawn %}
-      <li class="card-slot card-slot--{{ d.position.accent }} card-slot--{{ loop.index0 }}{% if share_slug %} card-slot--auto{% endif %}"
-          data-index="{{ loop.index0 }}"
-          {% if share_slug %}style="animation-delay: {{ loop.index0 * 0.6 }}s"{% endif %}>
+      {% set back_delay = loop.index0 * 0.4 %}
+      {% set front_delay = back_delay + 0.2 %}
+      <li class="card-slot card-slot--{{ d.position.accent }} card-slot--{{ loop.index0 }}"
+          data-index="{{ loop.index0 }}">
         <button
           type="button"
           class="card {% if d.is_reversed %}card--reversed{% endif %}"
-          aria-label="Reveal {{ d.card.name }}{% if d.is_reversed %}, reversed{% endif %}"
-          {% if not share_slug %}
-            hx-get="/readings/{{ share_slug or 'preview' }}/card/{{ loop.index0 }}"
-            hx-trigger="click"
-            hx-target="closest .card-slot"
-            hx-swap="outerHTML"
-            disabled
-          {% endif %}>
-          <span class="card__face card__face--back">
+          aria-label="Reveal {{ d.card.name }}{% if d.is_reversed %}, reversed{% endif %}">
+          <span class="card__face card__face--back" {% if share_slug %}style="animation-delay: {{ back_delay }}s"{% endif %}>
             <span class="card__face-back-title">{{ d.position.title }}</span>
             <span class="card__face-back-hint">Tap to reveal</span>
           </span>
-          <span class="card__face card__face--front">
+          <span class="card__face card__face--front" {% if share_slug %}style="animation-delay: {{ front_delay }}s"{% endif %}>
             <img class="card__art" src="/static/cards/{{ d.card.slug }}.jpg" alt="{{ d.card.name }}" />
             <span class="card__position">{{ d.position.title }}</span>
             <span class="card__name">{{ d.card.name }}</span>
@@ -66,7 +60,7 @@
 
   {% if share_slug %}
     <div class="interpretation-wrap" data-dealt-only
-         style="animation-delay: {{ reading.drawn|length * 0.6 + 0.2 }}s">
+         style="animation-delay: {{ reading.drawn|length * 0.4 + 0.6 }}s">
       {% include "partials/interpretation.html" %}
     </div>
   {% endif %}

@@ -74,13 +74,16 @@ def _messages(reading: Reading) -> list[dict]:
 
 
 def generate_interpretation(reading: Reading) -> str:
-    """Synchronous full interpretation. Use this when you just want the final text."""
-    response = _client().responses.create(
-        model="deepseek-v4-flash",
-        input=_messages(reading),
-        max_tokens=900,
-    )
-    return _extract_text(response)
+    """Synchronous full interpretation. Use this when you just want the final text.
+
+    Concatenates every cumulative text chunk from the streaming path. The stream
+    is used (not the non-streaming path) because it surfaces both Thinking and
+    Text content blocks, and the same walker works for the share page refresh.
+    """
+    chunks: list[str] = []
+    for chunk in stream_interpretation(reading):
+        chunks.append(chunk)
+    return "".join(chunks).strip()
 
 
 def stream_interpretation(reading: Reading) -> Iterable[str]:

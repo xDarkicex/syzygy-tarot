@@ -1,14 +1,10 @@
 <section class="interpretation">
   <header class="interpretation__head">
     <h3 class="interpretation__title">The combined reading</h3>
-    <p class="interpretation__sub">A synthesis of your cards in light of this spread.</p>
+    <p class="interpretation__sub" id="interpretation-error" style="color: var(--ember)"></p>
   </header>
 
-  {% if interpretation %}
-    <div class="interpretation__body">{{ interpretation }}</div>
-  {% else %}
-    <div class="interpretation__body interpretation__body--pending">
-      <p class="interpretation__sub">The interpretation could not be generated right now. Your cards above are still yours to read.</p>
-    </div>
-  {% endif %}
+  <div class="interpretation__body" id="interpretation-body">
+    <p class="interpretation__sub">Generating your interpretation…</p>
+  </div>
 </section>
