@@ -104,14 +104,23 @@ Format:
 THINKING_CONFIG = {"type": "enabled", "budget_tokens": 1000}
 
 
-def _card_line(card, drawn) -> str:
+def _card_line(card, drawn, category: str | None = None) -> str:
     orientation = "reversed" if drawn.is_reversed else "upright"
     body = " ".join(drawn.body).strip()
     summary = drawn.summary
-    return (
-        f"- {drawn.position.title} — {card.name} ({orientation}): "
-        f"{summary} {body}"
-    )
+    base = f"- {drawn.position.title} — {card.name} ({orientation}): {summary} {body}"
+    if category == "love and relationships" and card.suit == "coins":
+        # The coin cards are stored with money-only meanings. When the
+        # question is about love, re-angle the core tension in relational
+        # terms so the model has a bridge instead of a money reading.
+        base += (
+            " This card's imagery about money and resources should be read "
+            "as emotional and relational: holding tight is not letting anyone "
+            "in, scarcity is fear of being unlovable, giving too freely is "
+            "over-giving to feel wanted, hoarding is guardedness that keeps "
+            "partners at arm's length. The fear here is about love, not money."
+        )
+    return base
 
 
 def _question_category(question: str) -> str:
@@ -186,18 +195,11 @@ def build_prompt(reading: Reading) -> str:
     ignored.
     """
     spread_name = reading.spread.name
-    card_lines = "\n".join(_card_line(d.card, d) for d in reading.drawn)
-    querent_context = _querent_context(reading)
     category = _question_category(reading.question) if reading.question else None
+    card_lines = "\n".join(_card_line(d.card, d, category) for d in reading.drawn)
+    querent_context = _querent_context(reading)
     category_block = (
-        f"The querent's question is about {category}.\n"
-        f"When the card's text talks about money, resources, or material "
-        f"things but the question is about love, read those as emotional "
-        f"and relational equivalents: a tight fist is emotional guardedness, "
-        f"scarcity is fear of being unlovable, hoarding is not letting "
-        f"anyone in, spending recklessly is over-giving to feel wanted. "
-        f"The card is always about the querent's question, never literally "
-        f"about money.\n\n"
+        f"The querent's question is about {category}.\n\n"
         if category else ""
     )
     question_block = (
