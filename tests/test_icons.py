@@ -40,10 +40,10 @@ def test_every_deck_card_has_an_icon() -> None:
 
 
 def test_icon_sizes_are_reasonable() -> None:
-    """Each icon should stay under 2KB so the whole deck fits in <200KB."""
+    """Each icon should stay under 4KB so the whole deck fits in ~400KB."""
     for path in ICONS_DIR.glob("*.svg"):
         size = path.stat().st_size
-        assert size < 2048, f"{path.name} is {size}b, expected <2048b"
+        assert size < 4096, f"{path.name} is {size}b, expected <4096b"
 
 
 def test_deal_html_references_card_icons() -> None:

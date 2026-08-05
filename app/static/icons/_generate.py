@@ -43,10 +43,6 @@ def svg(body: str, title: str) -> str:
     )
 
 
-def translate(x: float, y: float) -> str:
-    return f'transform="translate({x} {y})"'
-
-
 # ─────── Major arcana ───────
 
 MAJORS: dict[str, str] = {
@@ -132,95 +128,135 @@ MAJORS: dict[str, str] = {
 }
 
 
-# ─────── Minor arcana: pip patterns ───────
+# ─────── Minor arcana: suit glyph generators ───────
+# Each function returns the SVG for ONE instance of the suit motif, centred at
+# (x, y) with the given scale. The Ace is just one large central instance. Ranks
+# 2-10 are composed of N instances arranged per layout below.
 
-PIP_DOT = '<circle cx="{x}" cy="{y}" r="4" fill="currentColor" stroke="none"/>'
+def wand(x: float, y: float, scale: float = 1.0) -> str:
+    """A flame-tipped staff."""
+    s = scale
+    return (
+        f'<path d="M {x - 2.5 * s} {y - 14 * s} L {x + 2.5 * s} {y - 14 * s} L {x + 2.5 * s} {y + 14 * s} L {x - 2.5 * s} {y + 14 * s} Z"/>'
+        f'<path d="M {x} {y - 14 * s} L {x - 4 * s} {y - 22 * s} M {x} {y - 14 * s} L {x + 4 * s} {y - 22 * s} M {x - 3 * s} {y - 18 * s} L {x + 3 * s} {y - 18 * s}"/>'
+    )
 
 
-def pip(x: float, y: float) -> str:
-    return PIP_DOT.format(x=x, y=y)
+def cup(x: float, y: float, scale: float = 1.0) -> str:
+    """A chalice with water-line and stem."""
+    s = scale
+    return (
+        f'<path d="M {x - 9 * s} {y - 6 * s} Q {x} {y - 14 * s}, {x + 9 * s} {y - 6 * s} L {x + 6 * s} {y + 6 * s} L {x - 6 * s} {y + 6 * s} Z"/>'
+        f'<path d="M {x - 5 * s} {y - 6 * s} Q {x} {y - 12 * s}, {x + 5 * s} {y - 6 * s}"/>'
+        f'<path d="M {x - 2 * s} {y + 6 * s} L {x + 2 * s} {y + 6 * s} L {x + 3 * s} {y + 12 * s} L {x - 3 * s} {y + 12 * s} Z"/>'
+        f'<path d="M {x - 6 * s} {y + 12 * s} L {x + 6 * s} {y + 12 * s}"/>'
+    )
 
 
-# Pip layouts as data: a list of (x, y) tuples per count. This keeps the generator
-# pure-data and avoids an 11-branch if-elif chain.
-PIP_LAYOUTS: dict[int, tuple[tuple[float, float], ...]] = {
+def sword(x: float, y: float, scale: float = 1.0) -> str:
+    """A double-edged blade with crossguard and pommel."""
+    s = scale
+    return (
+        f'<path d="M {x} {y - 14 * s} L {x} {y + 8 * s}"/>'
+        f'<path d="M {x - 1.5 * s} {y - 10 * s} L {x + 1.5 * s} {y - 10 * s}"/>'
+        f'<path d="M {x - 7 * s} {y + 6 * s} L {x + 7 * s} {y + 6 * s}"/>'
+        f'<path d="M {x - 7 * s} {y + 6 * s} L {x - 7 * s} {y + 10 * s} M {x + 7 * s} {y + 6 * s} L {x + 7 * s} {y + 10 * s}"/>'
+        f'<circle cx="{x}" cy="{y + 12 * s}" r="{2 * s}" fill="currentColor" stroke="none"/>'
+    )
+
+
+def coin(x: float, y: float, scale: float = 1.0) -> str:
+    """A coin: outer ring with a small inner detail."""
+    s = scale
+    return (
+        f'<circle cx="{x}" cy="{y}" r="{8 * s}"/>'
+        f'<circle cx="{x}" cy="{y}" r="{4 * s}"/>'
+    )
+
+
+SUIT_GLYPH = {"wands": wand, "cups": cup, "swords": sword, "coins": coin}
+
+
+# Canonical pip layouts: positions for ranks 1-10. Each entry is a tuple of
+# (x, y) centres. Ranks use either 1, 2, 3 columns of 2/3/4 entries, with the
+# centre column optionally used for 5/7/9/10.
+LAYOUTS: dict[int, tuple[tuple[float, float], ...]] = {
     1:  ((50, 70),),
-    2:  ((50, 50), (50, 90)),
-    3:  ((50, 45), (50, 70), (50, 95)),
-    4:  ((35, 50), (65, 50), (35, 90), (65, 90)),
-    5:  ((35, 50), (65, 50), (50, 70), (35, 90), (65, 90)),
-    6:  ((35, 45), (65, 45), (35, 70), (65, 70), (35, 95), (65, 95)),
-    7:  ((35, 42), (65, 42), (50, 60), (35, 78), (65, 78), (35, 100), (65, 100)),
-    8:  ((35, 42), (65, 42), (50, 60), (35, 78), (65, 78), (50, 96), (35, 96), (65, 96)),
-    9:  ((35, 42), (65, 42), (50, 56), (35, 70), (65, 70), (50, 84), (35, 98), (65, 98), (50, 105)),
-    10: ((35, 38), (65, 38), (50, 48), (35, 58), (65, 58), (35, 78), (65, 78), (50, 88), (35, 98), (65, 98)),
+    2:  ((32, 70), (68, 70)),
+    3:  ((50, 38), (32, 70), (68, 70)),  # one above, two below
+    3:  ((50, 70),),  # placeholder; overridden below to symmetric
 }
-
-
-def pip_grid(count: int, suit: str) -> str:
-    """Layout pips 1-10 in the canonical tarot arrangement."""
-    return "".join(pip(x, y) for x, y in PIP_LAYOUTS[count])
-
-
-# ─────── Minor arcana: suit motifs ───────
-
-def suit_glyph(suit: str, x: float, y: float, scale: float = 1.0) -> str:
-    """A small suit marker used inside the pips for non-coin suits."""
-    cx, cy = x, y
-    if suit == "wands":
-        return (f'<path d="M {cx - 4 * scale} {cy - 10 * scale} L {cx + 4 * scale} {cy - 10 * scale} L {cx + 4 * scale} {cy + 10 * scale} L {cx - 4 * scale} {cy + 10 * scale} Z"/>'
-                f'<path d="M {cx} {cy - 10 * scale} L {cx} {cy - 16 * scale} M {cx - 3 * scale} {cy - 13 * scale} L {cx + 3 * scale} {cy - 13 * scale}"/>')
-    if suit == "cups":
-        return (f'<path d="M {cx - 8 * scale} {cy - 5 * scale} L {cx + 8 * scale} {cy - 5 * scale} L {cx + 6 * scale} {cy + 8 * scale} L {cx - 6 * scale} {cy + 8 * scale} Z"/>'
-                f'<path d="M {cx - 4 * scale} {cy + 8 * scale} L {cx + 4 * scale} {cy + 8 * scale} L {cx + 4 * scale} {cy + 12 * scale} L {cx - 4 * scale} {cy + 12 * scale} Z" fill="currentColor" stroke="none"/>')
-    if suit == "swords":
-        return (f'<path d="M {cx} {cy - 12 * scale} L {cx} {cy + 10 * scale}"/>'
-                f'<path d="M {cx - 6 * scale} {cy + 4 * scale} L {cx + 6 * scale} {cy + 4 * scale}"/>'
-                f'<circle cx="{cx}" cy="{cy + 12 * scale}" r="2" fill="currentColor" stroke="none"/>')
-    return pip(cx, cy)
+# Reassign 3..10 with a clean symmetric pip pattern.
+LAYOUTS = {
+    1:  ((50, 70),),
+    2:  ((32, 70), (68, 70)),
+    3:  ((50, 70),),  # not used; see LAYOUT_ODD
+    4:  ((32, 45), (68, 45), (32, 95), (68, 95)),
+    5:  ((32, 45), (68, 45), (50, 70), (32, 95), (68, 95)),
+    6:  ((32, 40), (68, 40), (32, 70), (68, 70), (32, 100), (68, 100)),
+    7:  ((32, 36), (68, 36), (50, 53), (32, 70), (68, 70), (32, 87), (68, 104)),
+    8:  ((32, 36), (68, 36), (50, 53), (32, 70), (68, 70), (50, 87), (32, 104), (68, 104)),
+    9:  ((32, 36), (68, 36), (32, 60), (68, 60), (50, 70), (32, 80), (68, 80), (32, 104), (68, 104)),
+    10: ((32, 30), (68, 30), (32, 52), (68, 52), (50, 62), (32, 78), (68, 78), (50, 88), (32, 100), (68, 100)),
+}
+# 3 and 7 with the classic single-centre arrangement
+LAYOUTS[3] = ((50, 40), (32, 70), (68, 70), (50, 100))
+LAYOUTS[7] = ((32, 34), (68, 34), (50, 52), (32, 70), (68, 70), (32, 88), (68, 88))
+LAYOUTS[9] = ((32, 34), (68, 34), (32, 56), (68, 56), (50, 70), (32, 84), (68, 84), (32, 106), (68, 106))
 
 
 def minor_card_body(suit: str, rank: int) -> str:
-    """Compose a minor-arcana card body: suit glyph + pip pattern + frame."""
+    """Compose a minor-arcana card body."""
     frame = '<rect x="6" y="6" width="88" height="128" rx="3"/>'
-    if rank == 1:  # Ace: a single large suit glyph
-        return frame + suit_glyph(suit, 50, 70, scale=2.2)
+    glyph = SUIT_GLYPH[suit]
+    if rank == 1:
+        return frame + glyph(50, 70, scale=2.4)
     if 2 <= rank <= 10:
-        return frame + pip_grid(rank, suit)
+        positions = LAYOUTS[rank]
+        scale = 0.65 if rank >= 6 else 0.8
+        return frame + "".join(glyph(x, y, scale=scale) for x, y in positions)
     return frame + court_card(suit, rank)
 
 
 # ─────── Court cards ───────
 
 def court_card(suit: str, rank: int) -> str:
-    """Stylised seated/standing figure for Page/Knight/Queen/King."""
-    if rank == 11:  # Page
+    """Page/Knight/Queen/King with the figure holding the suit motif."""
+    glyph = SUIT_GLYPH[suit]
+    if rank == 11:  # Page: a small standing figure holding the motif
         figure = (
-            '<circle cx="50" cy="50" r="8"/>'
-            '<path d="M 50 58 L 50 95"/>'
-            '<path d="M 50 70 L 65 80 M 50 70 L 35 80"/>'
-            '<path d="M 40 95 L 60 95"/>'
+            '<circle cx="50" cy="55" r="6"/>'
+            '<path d="M 50 61 L 50 92"/>'
+            '<path d="M 50 70 L 38 82"/>'
+            '<path d="M 50 70 L 62 82"/>'
+            '<path d="M 44 92 L 56 92"/>'
         )
-    elif rank == 12:  # Knight
+        motif = glyph(50, 50, scale=0.55)  # small motif above head
+    elif rank == 12:  # Knight: figure on horseback? simpler: standing with crossed legs
         figure = (
-            '<circle cx="50" cy="45" r="8"/>'
-            '<path d="M 50 53 L 50 90"/>'
-            '<path d="M 50 65 L 38 78 L 38 100"/>'
-            '<path d="M 50 65 L 62 78 L 62 100"/>'
+            '<circle cx="50" cy="50" r="6"/>'
+            '<path d="M 50 56 L 50 95"/>'
+            '<path d="M 50 65 L 38 80 L 40 100"/>'
+            '<path d="M 50 65 L 62 80 L 60 100"/>'
+            '<path d="M 50 70 L 70 60"/>'
         )
-    elif rank == 13:  # Queen
+        motif = glyph(72, 50, scale=0.55)
+    elif rank == 13:  # Queen: seated figure
         figure = (
-            '<path d="M 42 38 L 42 32 L 50 35 L 58 32 L 58 38"/>'
-            '<circle cx="50" cy="50" r="8"/>'
-            '<path d="M 36 70 Q 50 65, 64 70 L 60 100 L 40 100 Z"/>'
+            '<path d="M 42 44 L 42 38 L 50 40 L 58 38 L 58 44"/>'  # crown
+            '<circle cx="50" cy="54" r="6"/>'
+            '<path d="M 36 75 Q 50 68, 64 75 L 60 100 L 40 100 Z"/>'  # dress
+            '<path d="M 50 60 L 50 70"/>'  # neck
         )
-    else:  # King
+        motif = glyph(50, 92, scale=0.7)  # motif on lap
+    else:  # King: enthroned
         figure = (
-            '<path d="M 40 40 L 40 32 L 50 35 L 60 32 L 60 40"/>'
-            '<circle cx="50" cy="52" r="9"/>'
-            '<path d="M 32 72 L 68 72 L 64 105 L 36 105 Z"/>'
+            '<path d="M 38 46 L 38 38 L 50 41 L 62 38 L 62 46"/>'  # larger crown
+            '<path d="M 42 40 L 42 35 M 50 38 L 50 33 M 58 40 L 58 35"/>'
+            '<circle cx="50" cy="56" r="6"/>'
+            '<path d="M 30 80 L 70 80 L 64 105 L 36 105 Z"/>'  # throne
         )
-    motif = suit_glyph(suit, 50, 118, scale=0.9)
+        motif = glyph(50, 92, scale=0.7)
     return figure + motif
 
 
