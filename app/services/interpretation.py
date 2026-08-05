@@ -114,7 +114,7 @@ def _text_block(event: dict) -> str | None:
     first = _first_output_item(event)
     if first is None:
         return None
-    content = first.get("content")
+    content = _get_attr(first, "content")
     if not isinstance(content, list):
         return None
     parts: list[str] = []
@@ -125,27 +125,54 @@ def _text_block(event: dict) -> str | None:
     return "".join(parts) if parts else None
 
 
-def _first_output_item(event: dict) -> dict | None:
-    output = event.get("output")
+def _first_output_item(event: dict) -> object | None:
+    output = _get_attr(event, "output")
     if not isinstance(output, list) or not output:
         return None
-    first = output[0]
-    return first if isinstance(first, dict) else None
+    return output[0]
 
 
 def _text_field(item: object) -> str | None:
-    """Return the text from a content item, or None if it's not a text block."""
-    if not isinstance(item, dict) or item.get("type") != "text":
+    """Return the text from a content item, or None if it's not a text block.
+
+    Accepts both the dict shape (from the streaming path) and the Pydantic
+    model shape (from the non-streaming path), since the Merge gateway
+    normalises them differently.
+    """
+    if isinstance(item, dict):
+        kind = item.get("type")
+        text = item.get("text")
+    else:
+        kind = getattr(item, "type", None)
+        text = getattr(item, "text", None)
+    if kind != "text" or not isinstance(text, str):
         return None
-    text = item.get("text")
-    return text if isinstance(text, str) else None
+    return text
 
 
 def _extract_text(response) -> str:
-    """Pull the human-readable text from a non-streaming response."""
+    """Pull the human-readable text from a non-streaming response.
+
+    The Merge gateway's OutputMessage wraps its content blocks: ``item.content``
+    is a list of ThinkingContent and TextContent objects, with the actual answer
+    in any block whose ``type == "text"``. The streaming variant uses the same
+    shape, so ``_text_block`` and this function walk the same data.
+    """
     parts: list[str] = []
-    for item in getattr(response, "output", []) or []:
-        text = getattr(item, "text", None)
-        if isinstance(text, str) and text:
-            parts.append(text)
+    output = _get_attr(response, "output") or []
+    for item in output:
+        content = _get_attr(item, "content")
+        if not isinstance(content, list):
+            continue
+        for block in content:
+            text = _text_field(block)
+            if text:
+                parts.append(text)
     return "".join(parts).strip()
+
+
+def _get_attr(obj: object, key: str) -> object | None:
+    """Read a key from either a dict or a Pydantic-style object."""
+    if isinstance(obj, dict):
+        return obj.get(key)
+    return getattr(obj, key, None)

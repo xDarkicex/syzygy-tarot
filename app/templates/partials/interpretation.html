@@ -1,16 +1,14 @@
-<section class="interpretation"
-         hx-ext="sse"
-         sse-connect="/readings/{{ share_slug }}/interpret">
+<section class="interpretation">
   <header class="interpretation__head">
     <h3 class="interpretation__title">The combined reading</h3>
-    <p class="interpretation__sub" data-sse-swap="error" hx-swap="innerHTML">
-      Generating your interpretation…
-    </p>
+    <p class="interpretation__sub">A synthesis of your cards in light of this spread.</p>
   </header>
 
-  <div class="interpretation__body" data-sse-swap="token" hx-swap="innerHTML"></div>
-
-  <div class="interpretation__placeholder" data-sse-swap="error" hx-swap="innerHTML">
-    <p>The interpretation could not be generated right now. Your cards above are still yours to read.</p>
-  </div>
+  {% if interpretation %}
+    <div class="interpretation__body">{{ interpretation }}</div>
+  {% else %}
+    <div class="interpretation__body interpretation__body--pending">
+      <p class="interpretation__sub">The interpretation could not be generated right now. Your cards above are still yours to read.</p>
+    </div>
+  {% endif %}
 </section>

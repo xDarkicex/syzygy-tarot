@@ -6,6 +6,7 @@ import sqlite3
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 
 from app.config import get_settings
 from app.data.loader import load_deck
@@ -18,14 +19,13 @@ from app.domain.seeding import (
     get_strategy,
 )
 from app.domain.spreads import Spread, UnknownSpread, get_spread
-from app.storage.readings import fetch_reading, save_reading
+from app.services.interpretation import generate_interpretation
+from app.storage.readings import fetch_reading, save_reading, update_interpretation
 from app.web.auth import set_profile_cookie
 from app.web.dependencies import get_db, get_today
-from app.web.templating import templates as _t
-from fastapi.templating import Jinja2Templates
 
 router = APIRouter(prefix="/readings")
-templates: Jinja2Templates = _t
+templates = Jinja2Templates(directory=str(get_settings().templates_dir))
 
 
 @router.post("/", response_class=HTMLResponse)
@@ -44,6 +44,20 @@ def deal_reading(
     reading = build_reading(load_deck(), spread, querent, strategy, today)
     share_slug = save_reading(reading, conn) if save == "on" else None
 
+    # Generate the LLM interpretation synchronously. The model is fast (3-8s),
+    # one call per reading, and the result is stored so the share page is
+    # instant. The deal response therefore carries cards + interpretation in
+    # one round-trip — no SSE, no EventSource, no risk of double-subscription
+    # burning the budget.
+    interpretation = ""
+    if share_slug:
+        try:
+            interpretation = generate_interpretation(reading)
+            if interpretation:
+                update_interpretation(share_slug, interpretation, conn)
+        except Exception:  # noqa: BLE001
+            interpretation = ""
+
     response = templates.TemplateResponse(
         request,
         "partials/reading.html",
@@ -52,6 +66,7 @@ def deal_reading(
             "share_slug": share_slug,
             "querent_dict": {"name": querent.name, "age": querent.age, "resonance": querent.resonance},
             "querent": querent,
+            "interpretation": interpretation,
         },
     )
     if save == "on":
@@ -76,6 +91,7 @@ def view_reading(
             "share_slug": stored.share_slug,
             "created_at": stored.created_at,
             "querent": stored.reading.querent,
+            "interpretation": stored.interpretation,
         },
     )
 

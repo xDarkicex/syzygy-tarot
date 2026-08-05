@@ -281,6 +281,8 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
   font-family: var(--sans);
   white-space: pre-wrap;
 }
+.interpretation__body--pending { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 0; }
+.interpretation__body--pending p { font-family: var(--serif); font-style: italic; color: var(--ink-soft); margin: 0; }
 .interpretation__body::after {
   content: "▍";
   display: inline-block;

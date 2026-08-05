@@ -104,13 +104,38 @@ def test_generate_interpretation_without_api_key_raises(monkeypatch) -> None:
 
 
 def test_extract_text_skips_thinking_blocks() -> None:
-    class FakeResponse:
-        def __init__(self, items):
-            self.output = items
-
-    class TextItem:
-        def __init__(self, text):
+    """_extract_text walks the OutputMessage.content list and collects text from
+    TextContent blocks, skipping ThinkingContent. Works for both dict and
+    Pydantic shapes.
+    """
+    class FakeBlock:
+        def __init__(self, type_: str, text: str):
+            self.type = type_
             self.text = text
 
-    response = FakeResponse([TextItem("Hello"), TextItem("")])
-    assert interpretation._extract_text(response) == "Hello"
+    class FakeMessage:
+        def __init__(self, blocks):
+            self.content = blocks
+
+    class FakeResponse:
+        def __init__(self, messages):
+            self.output = messages
+
+    response = FakeResponse([
+        FakeMessage([
+            FakeBlock("thinking", "secret reasoning"),
+            FakeBlock("text", "Hello world"),
+        ])
+    ])
+    assert interpretation._extract_text(response) == "Hello world"
+
+    # And the dict shape, which is what the streaming path delivers.
+    dict_response = {
+        "output": [
+            {"content": [
+                {"type": "thinking", "thinking": "secret"},
+                {"type": "text", "text": "Streamed."},
+            ]}
+        ]
+    }
+    assert interpretation._extract_text(dict_response) == "Streamed."

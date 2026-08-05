@@ -20,9 +20,19 @@ def connect(database_path: Path) -> sqlite3.Connection:
 
 
 def init_database(database_path: Path) -> None:
-    """Apply the schema. Idempotent."""
+    """Apply the schema and run any pending migrations. Idempotent."""
     with closing_connection(database_path) as conn:
         conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
+        _ensure_column(conn, "readings", "interpretation", "TEXT NOT NULL DEFAULT ''")
+        _ensure_column(conn, "readings", "querent_age", "INTEGER NOT NULL DEFAULT 0")
+        _ensure_column(conn, "readings", "querent_resonance", "TEXT NOT NULL DEFAULT ''")
+
+
+def _ensure_column(conn: sqlite3.Connection, table: str, column: str, definition: str) -> None:
+    """Add a column to an existing table if it isn't already there."""
+    existing = {row["name"] for row in conn.execute(f"PRAGMA table_info({table})")}
+    if column not in existing:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
 
 @contextmanager

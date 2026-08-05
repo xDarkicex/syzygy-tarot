@@ -31,6 +31,7 @@ class StoredReading:
     reading: Reading
     share_slug: str
     created_at: str
+    interpretation: str = ""
 
 
 def _serialise_drawn(drawn: tuple[DrawnCard, ...]) -> str:
@@ -64,15 +65,15 @@ def _deserialise_drawn(payload: str) -> tuple[DrawnCard, ...]:
     return tuple(drawn)
 
 
-def save_reading(reading: Reading, conn: sqlite3.Connection) -> str:
+def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str = "") -> str:
     slug = generate_share_slug()
     with conn:  # commits on success, rolls back on exception
         conn.execute(
             """
             INSERT INTO readings (
                 share_slug, querent_name, querent_age, querent_resonance,
-                spread_slug, strategy_slug, seed, drawn_on, cards_json
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                spread_slug, strategy_slug, seed, drawn_on, cards_json, interpretation
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 slug,
@@ -84,9 +85,18 @@ def save_reading(reading: Reading, conn: sqlite3.Connection) -> str:
                 reading.seed,
                 reading.drawn_on.isoformat(),
                 _serialise_drawn(reading.drawn),
+                interpretation,
             ),
         )
     return slug
+
+
+def update_interpretation(share_slug: str, interpretation: str, conn: sqlite3.Connection) -> None:
+    with conn:
+        conn.execute(
+            "UPDATE readings SET interpretation = ? WHERE share_slug = ?",
+            (interpretation, share_slug),
+        )
 
 
 def _row_to_reading(row: sqlite3.Row) -> Reading:
@@ -108,7 +118,12 @@ def fetch_reading(share_slug: str, conn: sqlite3.Connection) -> StoredReading | 
     ).fetchone()
     if row is None:
         return None
-    return StoredReading(reading=_row_to_reading(row), share_slug=row["share_slug"], created_at=row["created_at"])
+    return StoredReading(
+        reading=_row_to_reading(row),
+        share_slug=row["share_slug"],
+        created_at=row["created_at"],
+        interpretation=row["interpretation"] or "",
+    )
 
 
 def fetch_recent_readings(limit: int, conn: sqlite3.Connection) -> list[StoredReading]:
@@ -116,7 +131,12 @@ def fetch_recent_readings(limit: int, conn: sqlite3.Connection) -> list[StoredRe
         "SELECT * FROM readings ORDER BY created_at DESC LIMIT ?", (limit,)
     ).fetchall()
     return [
-        StoredReading(reading=_row_to_reading(row), share_slug=row["share_slug"], created_at=row["created_at"])
+        StoredReading(
+            reading=_row_to_reading(row),
+            share_slug=row["share_slug"],
+            created_at=row["created_at"],
+            interpretation=row["interpretation"] or "",
+        )
         for row in rows
     ]
 

@@ -1,55 +1,58 @@
-"""Streaming interpretation endpoint.
+"""On-demand interpretation endpoint.
 
-Sends a text/event-stream response where each event is one text delta from the
-LLM. htmx's SSE extension consumes this and swaps the placeholder body as
-tokens arrive.
+Replaces the streaming SSE approach: the deal partial no longer auto-subscribes
+to a stream (which was leaking EventSources across re-deals and burning the LLM
+budget). The share page renders any pre-stored interpretation directly; the
+deal page exposes a 'Generate interpretation' button that POSTs here. The
+endpoint runs the LLM synchronously, stores the result, and returns the
+rendered body partial — bounded to one LLM call per reading.
 """
 
 from __future__ import annotations
 
 import sqlite3
-from collections.abc import Iterator
+from pathlib import Path
 
-from fastapi import APIRouter, Depends
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
-from app.services.interpretation import stream_interpretation
-from app.storage.readings import fetch_reading
+from app.config import get_settings
+from app.services.interpretation import generate_interpretation
+from app.storage.readings import fetch_reading, update_interpretation
 from app.web.dependencies import get_db
 
 router = APIRouter(prefix="/readings")
+templates = Jinja2Templates(directory=str(get_settings().templates_dir))
 
 
-def _sse(event: str, data: str) -> str:
-    payload = data.replace("\n", " ")
-    return f"event: {event}\ndata: {payload}\n\n"
-
-
-def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[str]:
+@router.post("/{share_slug}/interpret", response_class=HTMLResponse)
+def interpret(request: Request, share_slug: str, conn: sqlite3.Connection = Depends(get_db)) -> HTMLResponse:
     stored = fetch_reading(share_slug, conn)
     if stored is None:
-        yield _sse("error", "Reading not found")
-        return
-    reading = stored.reading
+        return HTMLResponse("<p>Reading not found.</p>", status_code=404)
+
+    existing = conn.execute(
+        "SELECT interpretation FROM readings WHERE share_slug = ?", (share_slug,)
+    ).fetchone()
+    if existing and existing["interpretation"]:
+        return templates.TemplateResponse(
+            request,
+            "partials/interpretation_body.html",
+            {"interpretation": existing["interpretation"]},
+        )
+
     try:
-        emitted_length = 0
-        for chunk in stream_interpretation(reading):
-            if len(chunk) <= emitted_length:
-                continue
-            emitted_length = len(chunk)
-            yield _sse("token", chunk)
-        if emitted_length == 0:
-            yield _sse("error", "No interpretation was generated")
-        else:
-            yield _sse("done", "complete")
+        text = generate_interpretation(stored.reading)
     except Exception as exc:  # noqa: BLE001
-        yield _sse("error", f"{type(exc).__name__}: {exc}")
+        return HTMLResponse(
+            f"<p>The interpretation could not be generated: {type(exc).__name__}.</p>",
+            status_code=500,
+        )
 
-
-@router.get("/{share_slug}/interpret")
-def interpret(share_slug: str, conn: sqlite3.Connection = Depends(get_db)) -> StreamingResponse:
-    return StreamingResponse(
-        _stream_for_reading(share_slug, conn),
-        media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    update_interpretation(share_slug, text, conn)
+    return templates.TemplateResponse(
+        request,
+        "partials/interpretation_body.html",
+        {"interpretation": text},
     )
