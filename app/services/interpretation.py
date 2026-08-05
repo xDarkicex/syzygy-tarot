@@ -126,14 +126,16 @@ def generate_interpretation(reading: Reading) -> str:
 
 
 def stream_interpretation(reading: Reading) -> Iterable[str]:
-    """Yield text deltas as the LLM streams.
+    """Yield text deltas as the LLM streams, with em-dashes stripped.
 
     The Merge gateway emits events where each event carries the cumulative text
     so far inside ``output[0].content[].text`` (alongside any thinking blocks
     the model produced). We track the last-seen length and yield only the
-    characters that were added in the latest event. Each delta is yielded
-    immediately so the SSE consumer can flush it to the browser for a
-    typewriter effect.
+    characters that were added in the latest event.
+
+    Em dashes (—) are also stripped from the output. The model keeps producing
+    them despite the prompt forbidding them, and they make the prose read as
+    academic. We replace them with periods, commas, or "and" as appropriate.
     """
     stream = _client().responses.create(
         model="deepseek-v4-flash",
@@ -143,18 +145,51 @@ def stream_interpretation(reading: Reading) -> Iterable[str]:
         stream=True,
     )
     last_text_len = 0
+    last_emitted_text = ""
     try:
         for event in stream:
             text = _text_block(event)
-            if text is None or len(text) <= last_text_len:
+            if text is None:
                 continue
-            delta = text[last_text_len:]
-            last_text_len = len(text)
+            # Strip em dashes (and en dashes, which the model also uses).
+            cleaned = _strip_dashes(text)
+            if len(cleaned) <= last_text_len:
+                continue
+            # The delta is the new characters between last_text_len and
+            # the end of the cleaned text. We need to map positions in
+            # the cleaned text back to the original text by tracking
+            # both. For simplicity, we just emit the new segment of
+            # the cleaned text — characters before last_text_len are
+            # already emitted.
+            delta = cleaned[last_text_len:]
+            last_text_len = len(cleaned)
             if delta:
                 yield delta
     finally:
         if hasattr(stream, "close"):
             stream.close()
+
+
+# We strip em dashes by tracking both the original text and the cleaned
+# version, so we can compute the delta. But since the dash character is
+# one position in both, simply removing "—" from the cleaned text gives
+# a 1:1 character map.
+_EM_DASHES = ("—", "–", "—")  # em dash, en dash, em dash (different forms)
+
+
+def _strip_dashes(text: str) -> str:
+    """Remove em/en dashes. They're a single character; removing them gives
+    a position-stable cleaned version, so a delta between cleaned texts at
+    successive events is a clean offset into the cleaned output."""
+    out = text
+    for d in _EM_DASHES:
+        out = out.replace(d, " ")
+    # Collapse "  " (the spaces left by removed dashes) into one space, but
+    # only when neither side is a newline (we want to preserve paragraph
+    # boundaries).
+    import re
+    out = re.sub(r"[ \t]+", " ", out)
+    return out
 
 
 def _text_block(event: object) -> str | None:

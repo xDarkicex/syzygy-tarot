@@ -1,31 +1,36 @@
 """Streaming interpretation endpoint.
 
-The deal POST returns the cards immediately and embeds an inline script that
-opens an EventSource to ``/readings/{slug}/stream``. The stream emits one
-``token`` event per text delta from the LLM, ``done`` when the model finishes,
-and ``error`` on failure. The browser appends each token's data to the
-interpretation body so the user sees a typewriter effect during the card flip.
+The deal POST returns the cards immediately. The deal page's inline script
+opens an EventSource to ``/readings/{slug}/stream``. The streaming endpoint
+here starts the LLM itself on the first connection for a slug, streams the
+deltas, and stores the result. A per-slug lock makes the call idempotent
+across concurrent connections: re-deals, multiple browser tabs, share
+pages all attach to the same in-flight call instead of triggering
+separate LLM calls.
 """
 
 from __future__ import annotations
 
-import json
 import sqlite3
+import threading
+import time
 from collections.abc import Iterator
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
 from app.services.interpretation import stream_interpretation
+from app.storage.database import connect
 from app.storage.readings import fetch_reading, update_interpretation
 from app.web.dependencies import get_db
 
 router = APIRouter(prefix="/readings")
 
-# A simple lock-free in-process cache: the first GET to a share_slug runs the
-# LLM, subsequent GETs replay the cached text. Each LLM call costs money, so
-# the cache is the safety net for repeat page-loads.
-_cache: dict[str, str] = {}
+# Per-slug state: lock, done-event, and a list of accumulated deltas. The
+# first connection that asks for a slug starts the LLM in a background
+# thread; subsequent connections share the same state.
+_state: dict[str, tuple[threading.Lock, threading.Event, list[str]]] = {}
+_state_lock = threading.Lock()
 
 
 def _sse(event: str, data: str) -> str:
@@ -34,77 +39,105 @@ def _sse(event: str, data: str) -> str:
     return f"event: {event}\ndata: {payload}\n\n"
 
 
-def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[str]:
-    """Stream the interpretation, serving from the cache when available.
+def _get_or_start_state(share_slug: str, conn: sqlite3.Connection) -> tuple[threading.Lock, threading.Event, list[str]]:
+    """Return (lock, done_event, delta_buffer) for a slug.
 
-    The LLM is called once per reading by the background task in the deal
-    route. The streaming endpoint here is a "watch the result appear" path:
-    if the background task has finished, we replay its stored result. If
-    it's still running, we wait for it and then replay. This guarantees
-    exactly one LLM call per share_slug, no matter how many times the
-    page is opened.
+    If a stored result already exists in the DB, return it as a single
+    completed delta and mark done. Otherwise, if no call is in flight,
+    start the LLM in a background thread. Concurrent connections share
+    the same state.
     """
-    stored = fetch_reading(share_slug, conn)
-    if stored is None:
-        yield _sse("error", "Reading not found")
-        return
-    reading = stored.reading
+    with _state_lock:
+        existing = _state.get(share_slug)
+        if existing is not None:
+            return existing
+        lock = threading.Lock()
+        done = threading.Event()
+        buf: list[str] = []
+        _state[share_slug] = (lock, done, buf)
 
-    # If a result already exists, replay it.
-    if stored.interpretation:
-        yield _sse("token", stored.interpretation)
-        yield _sse("done", "complete")
-        return
-
-    # Otherwise the background task is still running, or it failed. Wait
-    # for it: poll the DB briefly (up to ~20s) and emit the result as it
-    # appears, broken into per-paragraph chunks for the typewriter.
-    import time
-    for _ in range(40):
+        # Check the DB: if a result is already stored, no LLM call needed.
         row = conn.execute(
             "SELECT interpretation FROM readings WHERE share_slug = ?",
             (share_slug,),
         ).fetchone()
         if row and row["interpretation"]:
-            yield _sse("token", row["interpretation"])
-            yield _sse("done", "complete")
-            return
-        time.sleep(0.5)
+            buf.append(row["interpretation"])
+            done.set()
+            return lock, done, buf
 
-    # Background task failed. Try one direct call ourselves as a fallback.
-    accumulated: list[str] = []
-    for delta in _stream_with_one_retry(reading):
-        accumulated.append(delta)
-        yield _sse("token", delta)
-    if not accumulated:
+        stored = fetch_reading(share_slug, conn)
+        if stored is None:
+            done.set()
+            return lock, done, buf
+
+        def _worker() -> None:
+            worker_conn = connect(_db_path())
+            try:
+                for delta in stream_interpretation(stored.reading):
+                    with lock:
+                        buf.append(delta)
+                full = "".join(buf)
+                with lock:
+                    buf.clear()
+                    buf.append(full)
+                try:
+                    update_interpretation(share_slug, full, worker_conn)
+                except Exception:  # noqa: BLE001
+                    pass
+            except Exception:  # noqa: BLE001
+                pass
+            finally:
+                done.set()
+                worker_conn.close()
+
+        threading.Thread(target=_worker, daemon=True).start()
+        return lock, done, buf
+
+
+def _db_path():
+    from app.config import get_settings
+    return get_settings().database_path
+
+
+def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[str]:
+    stored = fetch_reading(share_slug, conn)
+    if stored is None:
+        yield _sse("error", "Reading not found")
+        return
+
+    # Fast path: a result is already stored. Replay and exit.
+    if stored.interpretation:
+        yield _sse("token", stored.interpretation)
+        yield _sse("done", "complete")
+        return
+
+    lock, done, buf = _get_or_start_state(share_slug, conn)
+
+    # Stream tokens as they arrive. While the LLM is running, the worker
+    # thread appends deltas to buf under the lock. We read buf on each
+    # tick and emit anything new. When the worker is done, buf is
+    # collapsed to a single joined text and we emit the final.
+    emitted_len = 0
+    while not done.is_set():
+        with lock:
+            current = "".join(buf)
+        if len(current) > emitted_len:
+            yield _sse("token", current[emitted_len:])
+            emitted_len = len(current)
+        time.sleep(0.05)
+
+    with lock:
+        final = "".join(buf)
+    if len(final) > emitted_len:
+        yield _sse("token", final[emitted_len:])
+    if final.strip():
+        yield _sse("done", "complete")
+    else:
         yield _sse(
             "error",
             "The model is not responding right now. Your cards above are still yours to read.",
         )
-        return
-    full_text = "".join(accumulated)
-    try:
-        update_interpretation(share_slug, full_text, conn)
-    except Exception:  # noqa: BLE001
-        pass
-    yield _sse("done", "complete")
-
-
-def _stream_with_one_retry(reading) -> Iterator[str]:
-    """Yield deltas, retrying once if the first attempt produced none."""
-    first = list(_safe_deltas(reading))
-    if first:
-        yield from first
-        return
-    yield from _safe_deltas(reading)
-
-
-def _safe_deltas(reading) -> Iterator[str]:
-    """Wrap the LLM stream in try/except so the route can stay clean."""
-    try:
-        yield from stream_interpretation(reading)
-    except Exception:  # noqa: BLE001
-        return
 
 
 @router.get("/{share_slug}/stream")

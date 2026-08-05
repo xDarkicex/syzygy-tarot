@@ -61,18 +61,15 @@ def deal_reading(
 ) -> HTMLResponse:
     """Deal the cards and return the full reading page.
 
-    The LLM interpretation is generated in a background thread and stored
-    against the reading. The deal page renders immediately with empty
-    interpretation body and an inline script that opens an EventSource to
-    stream the LLM tokens as they arrive. The share page picks up the
-    stored interpretation on next visit.
+    The LLM interpretation is generated lazily: the deal page's inline script
+    opens an EventSource to /readings/{slug}/stream, and that endpoint
+    starts the LLM on first connection (idempotent across re-deals and
+    multiple tabs via a per-slug lock). So the deal POST itself is just
+    cards + share link, fast.
     """
     querent, spread, strategy = _form_parts(name, age, resonance, spread_slug, strategy_slug)
     reading = build_reading(load_deck(), spread, querent, strategy, today)
     share_slug = save_reading(reading, conn) if save == "on" else None
-
-    if share_slug:
-        _kick_off_interpretation(share_slug, reading)
 
     response = templates.TemplateResponse(
         request,
@@ -88,37 +85,6 @@ def deal_reading(
     if save == "on":
         set_profile_cookie(response, querent)
     return response
-
-
-def _kick_off_interpretation(share_slug: str, reading) -> None:
-    """Generate the LLM interpretation in a background thread, store it.
-
-    One LLM call per reading. The thread is daemonised so it dies with the
-    process. The share page reads the stored result on the next visit; the
-    deal page's EventSource streams the same result if the user is still on
-    the page when the LLM finishes.
-    """
-    settings = get_settings()
-
-    def _worker() -> None:
-        worker_conn = connect(settings.database_path)
-        try:
-            existing = worker_conn.execute(
-                "SELECT interpretation FROM readings WHERE share_slug = ?",
-                (share_slug,),
-            ).fetchone()
-            if existing and existing["interpretation"]:
-                return
-            from app.services.interpretation import generate_interpretation
-            text = generate_interpretation(reading)
-            if text:
-                update_interpretation(share_slug, text, worker_conn)
-        except Exception:  # noqa: BLE001
-            pass
-        finally:
-            worker_conn.close()
-
-    threading.Thread(target=_worker, daemon=True).start()
 
 
 @router.get("/{share_slug}", response_class=HTMLResponse)
