@@ -78,9 +78,14 @@ Format:
   forcing, not about the meeting itself."
 - Otherwise, open with the querent's first name and a comma.
 - One sentence that names the overall tone of the spread.
-- Walk the positions in order, in second person, present tense. Each
-  position gets a paragraph that begins with the position name in bold:
-  **Hear Me**, **Help Me**, **Hold Me**.
+- For a MULTI-card spread (3+ cards): walk the positions in order, in
+  second person, present tense. Each position gets a paragraph that
+  begins with the position name in bold: **Hear Me**, **Help Me**,
+  **Hold Me**.
+- For a SINGLE-card spread: do NOT use position-name headings like
+  **Hear Me** or **Help Me**. The card has one position and its title
+  is "The Card". Write continuous paragraphs with no bold headings,
+  following the question-aware structure in the user's message.
 - Close with one short paragraph on what to carry away. If a question
   was asked, the carry-away is the direct answer.
 - Two to four paragraphs total. Aim for 200 to 300 words. Plain prose.
