@@ -18,7 +18,7 @@ router = APIRouter()
 
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request, today=Depends(get_today), profile: Querent | None = Depends(get_profile)) -> HTMLResponse:
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request,
         "home.html",
         {
@@ -28,6 +28,8 @@ def home(request: Request, today=Depends(get_today), profile: Querent | None = D
             "strategies": list(STRATEGIES.values()),
         },
     )
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
 
 
 @router.get("/history", response_class=HTMLResponse)
