@@ -345,7 +345,8 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 }
 .question-field textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 .question-field__hint { font-size: 0.75rem; color: var(--ink-faint); font-style: italic; margin: 0.25rem 0 0 0; }
-.question-field[x-show] { display: block; }
+.question-field[style*="display: block"],
+.question-field[style*="display:block"] { display: block; }
 .interpretation__body::after {
   content: "▍";
   display: inline-block;

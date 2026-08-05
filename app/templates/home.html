@@ -65,7 +65,7 @@
   </fieldset>
 
   <div class="question-field"
-       x-show="['single', 'question'].includes(($root.querySelector('input[name=spread_slug]:checked')?.value) || '')">
+       x-show="($root.querySelector('input[name=spread_slug]:checked')?.value) === 'single'">
     <label>
       <span>Your question <span class="question-field__opt">(optional)</span></span>
       <textarea name="question" rows="3" maxlength="500"
