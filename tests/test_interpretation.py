@@ -15,7 +15,7 @@ import pytest
 
 from app.data.loader import load_deck
 from app.domain.reading import build_reading
-from app.domain.seeding import DailySeed, Querent
+from app.domain.seeding import LayeredSeed as DailySeed, Querent
 from app.domain.spreads import SIGNATURE, SINGLE
 from app.services import interpretation
 
