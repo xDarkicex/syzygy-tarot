@@ -1,25 +1,24 @@
-<section class="interpretation">
+<section class="interpretation"
+         x-data="{ render(text) {
+             if (!text) return '';
+             const escaped = text
+                 .replace(/&/g, '&amp;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;');
+             return escaped
+                 .split(/\n\s*\n/)
+                 .filter(p => p.trim())
+                 .map(p => '<p>' + p.trim().replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>') + '</p>')
+                 .join('');
+         } }">
   <header class="interpretation__head">
     <h3 class="interpretation__title">The combined reading</h3>
     <p class="interpretation__sub" id="interpretation-error" style="color: var(--ember)"></p>
   </header>
 
-  <div class="interpretation__body" id="interpretation-body">
+  <div class="interpretation__body" id="interpretation-body" x-html="render($store.text)">
     {% if interpretation %}
-      {% for paragraph in interpretation.split('\n\n') %}
-        {% if paragraph.strip() %}
-          <p>{% set _p = paragraph.strip() -%}
-            {%- if _p.startswith('**') and '**' in _p[2:] -%}
-              {%- set _close = _p.find('**', 2) -%}
-              {%- set _lead = _p[2:_close] -%}
-              {%- set _rest = _p[_close + 2:] -%}
-              <span class="interpretation__lead">{{ _lead }}</span>{{ _rest }}
-            {%- else -%}
-              {{ _p }}
-            {%- endif -%}
-          </p>
-        {% endif %}
-      {% endfor %}
+      {{ interpretation | safe }}
     {% else %}
       <p class="interpretation__sub">Generating your interpretation…</p>
     {% endif %}

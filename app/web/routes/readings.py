@@ -15,6 +15,8 @@ from app.config import get_settings
 from app.data.loader import load_deck
 from app.domain.deck import Deck
 from app.domain.reading import build_reading
+from app.services.interpretation import generate_interpretation
+import markdown as _markdown
 from app.domain.seeding import (
     InvalidQuerent,
     Querent,
@@ -29,6 +31,20 @@ from app.web.dependencies import get_db, get_today
 
 router = APIRouter(prefix="/readings")
 templates = Jinja2Templates(directory=str(get_settings().templates_dir))
+
+
+def _md(text: str) -> str:
+    """Render the model's markdown-flavoured text to HTML for the share page.
+
+    We pass the raw text through the python-markdown library with a small
+    extension set: paragraphs split on blank lines, ``**bold**`` rendered as
+    <strong>, single line breaks preserved as <br>. No other syntax is enabled.
+    """
+    return _markdown.markdown(
+        text,
+        extensions=["extra", "sane_lists"],
+        output_format="html5",
+    )
 
 
 @router.post("/", response_class=HTMLResponse)
@@ -122,7 +138,7 @@ def view_reading(
             "share_slug": stored.share_slug,
             "created_at": stored.created_at,
             "querent": stored.reading.querent,
-            "interpretation": stored.interpretation,
+            "interpretation": _md(stored.interpretation) if stored.interpretation else "",
         },
     )
 
