@@ -84,11 +84,12 @@ def generate_interpretation(reading: Reading) -> str:
 
 
 def stream_interpretation(reading: Reading) -> Iterable[str]:
-    """Yield text deltas as the model produces them.
+    """Yield the full text-so-far each time new characters appear.
 
-    The Merge gateway streams cumulative text per content block — i.e. the text
-    field grows on each event, not the delta. We track the last-seen length and
-    yield only the new characters.
+    The Merge gateway streams cumulative text per content block — the text field
+    grows on each event, not the delta. We yield the full cumulative text on
+    every change, so the SSE consumer can swap it in as `innerHTML` and get a
+    typewriter effect.
     """
     stream = _client().responses.create(
         model="deepseek-v4-flash",
@@ -101,10 +102,8 @@ def stream_interpretation(reading: Reading) -> Iterable[str]:
         text = _text_block(event)
         if text is None or len(text) <= last_text_len:
             continue
-        delta = text[last_text_len:]
         last_text_len = len(text)
-        if delta:
-            yield delta
+        yield text
     stream.close()
 
 

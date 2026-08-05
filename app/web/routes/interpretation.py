@@ -32,17 +32,16 @@ def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[s
         return
     reading = stored.reading
     try:
-        accumulated: list[str] = []
+        emitted_length = 0
         for chunk in stream_interpretation(reading):
-            if not chunk:
+            if len(chunk) <= emitted_length:
                 continue
-            accumulated.append(chunk)
+            emitted_length = len(chunk)
             yield _sse("token", chunk)
-        full = "".join(accumulated).strip()
-        if not full:
+        if emitted_length == 0:
             yield _sse("error", "No interpretation was generated")
         else:
-            yield _sse("done", full)
+            yield _sse("done", "complete")
     except Exception as exc:  # noqa: BLE001
         yield _sse("error", f"{type(exc).__name__}: {exc}")
 
