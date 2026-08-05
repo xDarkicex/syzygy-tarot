@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from collections.abc import Iterator
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
@@ -21,7 +22,8 @@ from app.domain.seeding import (
     get_strategy,
 )
 from app.domain.spreads import Spread, UnknownSpread, get_spread
-from app.storage.readings import fetch_reading, save_reading
+from app.storage.database import connect
+from app.storage.readings import fetch_reading, save_reading, update_interpretation
 from app.web.auth import set_profile_cookie
 from app.web.dependencies import get_db, get_today
 
@@ -43,15 +45,18 @@ def deal_reading(
 ) -> HTMLResponse:
     """Deal the cards and return the full reading page.
 
-    The LLM interpretation is *not* called here. Instead the response includes
-    an inline ``<script>`` (when ``share_slug`` is set) that opens an
-    EventSource to ``/readings/{slug}/stream`` and renders the LLM tokens into
-    ``#interpretation-body`` as they arrive. The cards are visible immediately;
-    the interpretation typewriter effect lands during the card-flip animation.
+    The LLM interpretation is generated in a background thread and stored
+    against the reading. The deal page renders immediately with empty
+    interpretation body and an inline script that opens an EventSource to
+    stream the LLM tokens as they arrive. The share page picks up the
+    stored interpretation on next visit.
     """
     querent, spread, strategy = _form_parts(name, age, resonance, spread_slug, strategy_slug)
     reading = build_reading(load_deck(), spread, querent, strategy, today)
     share_slug = save_reading(reading, conn) if save == "on" else None
+
+    if share_slug:
+        _kick_off_interpretation(share_slug, reading)
 
     response = templates.TemplateResponse(
         request,
@@ -67,6 +72,37 @@ def deal_reading(
     if save == "on":
         set_profile_cookie(response, querent)
     return response
+
+
+def _kick_off_interpretation(share_slug: str, reading) -> None:
+    """Generate the LLM interpretation in a background thread, store it.
+
+    One LLM call per reading. The thread is daemonised so it dies with the
+    process. The share page reads the stored result on the next visit; the
+    deal page's EventSource streams the same result if the user is still on
+    the page when the LLM finishes.
+    """
+    settings = get_settings()
+
+    def _worker() -> None:
+        worker_conn = connect(settings.database_path)
+        try:
+            existing = worker_conn.execute(
+                "SELECT interpretation FROM readings WHERE share_slug = ?",
+                (share_slug,),
+            ).fetchone()
+            if existing and existing["interpretation"]:
+                return
+            from app.services.interpretation import generate_interpretation
+            text = generate_interpretation(reading)
+            if text:
+                update_interpretation(share_slug, text, worker_conn)
+        except Exception:  # noqa: BLE001
+            pass
+        finally:
+            worker_conn.close()
+
+    threading.Thread(target=_worker, daemon=True).start()
 
 
 @router.get("/{share_slug}", response_class=HTMLResponse)

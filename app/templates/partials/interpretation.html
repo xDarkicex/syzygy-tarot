@@ -6,7 +6,20 @@
 
   <div class="interpretation__body" id="interpretation-body">
     {% if interpretation %}
-      {{ interpretation }}
+      {% for paragraph in interpretation.split('\n\n') %}
+        {% if paragraph.strip() %}
+          <p>{% set _p = paragraph.strip() -%}
+            {%- if _p.startswith('**') and '**' in _p[2:] -%}
+              {%- set _close = _p.find('**', 2) -%}
+              {%- set _lead = _p[2:_close] -%}
+              {%- set _rest = _p[_close + 2:] -%}
+              <span class="interpretation__lead">{{ _lead }}</span>{{ _rest }}
+            {%- else -%}
+              {{ _p }}
+            {%- endif -%}
+          </p>
+        {% endif %}
+      {% endfor %}
     {% else %}
       <p class="interpretation__sub">Generating your interpretation…</p>
     {% endif %}

@@ -68,18 +68,56 @@
         var body = document.getElementById("interpretation-body");
         var err = document.getElementById("interpretation-error");
         if (!body) return;
+        // Clear the "Generating..." placeholder on first token.
+        body.textContent = "";
+
+        // Each SSE token is a fragment of the model's text. The model uses
+        // **Bold** to mark a position name and \n\n for paragraph breaks.
+        // We render each token as it arrives, creating new <p> elements on
+        // \n\n and styling the lead as a small-caps lead.
+        var buf = "";
+        function flushParagraph() {
+          if (!buf) return;
+          var p = document.createElement("p");
+          var s = buf;
+          // Convert "**Lead** rest" into a styled span + plain text.
+          if (s.indexOf("**") === 0 && s.indexOf("**", 2) > 2) {
+            var close = s.indexOf("**", 2);
+            var lead = s.substring(2, close);
+            var rest = s.substring(close + 2);
+            var leadEl = document.createElement("span");
+            leadEl.className = "interpretation__lead";
+            leadEl.textContent = lead;
+            p.appendChild(leadEl);
+            p.appendChild(document.createTextNode(rest));
+          } else {
+            p.textContent = s;
+          }
+          body.appendChild(p);
+          buf = "";
+        }
         var src = new EventSource("/readings/{{ share_slug }}/stream");
         src.addEventListener("token", function(e) {
           if (err) err.textContent = "";
-          // Append each token's data, preserving any whitespace/paragraphs.
-          body.append(e.data);
+          // The model's text includes \n\n for paragraph breaks. Split
+          // each incoming token on \n\n: complete paragraphs go to the
+          // body, the trailing partial stays in the buffer for the next
+          // token (or final flush).
+          var parts = e.data.split("\n\n");
+          for (var i = 0; i < parts.length; i++) {
+            buf += parts[i];
+            if (i < parts.length - 1) flushParagraph();
+          }
         });
-        src.addEventListener("done", function() { src.close(); });
-        src.addEventListener("error", function(e) {
-          // The browser fires an error event when the connection drops. If we
-          // already got a 'done' it was a clean close; otherwise surface it.
-          if (body.textContent.trim() === "") {
+        src.addEventListener("done", function() {
+          flushParagraph();
+          src.close();
+        });
+        src.addEventListener("error", function() {
+          if (body.textContent.trim() === "" && !buf) {
             if (err) err.textContent = "The interpretation could not be generated right now.";
+          } else {
+            flushParagraph();
           }
           src.close();
         });
