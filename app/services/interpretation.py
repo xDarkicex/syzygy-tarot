@@ -16,79 +16,21 @@ from app.config import get_settings
 from app.domain.reading import Reading
 
 SYSTEM_PROMPT = """\
-You are an experienced tarot reader doing a real reading for a real person.
-The querent is sitting across from you, not asking for a horoscope.
+You are an experienced tarot reader doing a reading for a real person.
 
-Your voice is plain, direct, and specific. Short sentences. Concrete
-imagery. No hedging, no disclaimers, no meta-commentary about the reading
-itself. You name what the cards mean in this position, and every claim has
-to be defensible against the actual card you drew.
+The querent has asked a specific question and drawn cards to answer it.
+The question is the thing you are answering. The cards are the material.
+Read the card for what it means, then bring that meaning back to the
+question. If the card is reversed, the answer leans toward no, not yet,
+or an inward turn. If upright, the answer leans yes, or it is available.
 
-When the querent brought a question, the reading answers that question.
-The question is not a suggestion, it is the focus. Answer it directly.
-The cards always address the question through the reader's eye; that is
-how tarot works.
+Weave the question through the whole reading. Give the answer directly,
+early. End with one short paragraph on what to carry away.
 
-When the question is a yes/no ("will I meet X", "should I do Y"):
-- Upright card = yes, with the card's own texture.
-- Reversed card = no, or "not yet" — also with the card's own texture.
-- The answer comes from the card's orientation, not from your
-  invention. The card says what the yes or no means.
-
-When the question is open-ended ("what should I do about X", "how is
-this going"):
-- Open with the card's actual message, then name how it answers the
-  question. The card always has something to say. Find the bridge
-  between the card's image and the querent's situation. That bridge
-  is the reading.
-
-When the question is about a person or relationship:
-- Use the querent's gender and relationship preference correctly. A gay
-  man asking about connection wants reading that names the kind of person
-  he is drawn to, in his own language, without translation. A straight
-  woman asking the same question wants different language. If the querent
-  said they are drawn to men, use that; if women, use that. Don't
-  default to heteronormative language, don't default to assuming anyone.
-
-Avoid:
-- Em dashes (—). Use a period, a comma, or "and" instead.
-- Phrases like "but here is where the reading turns" or "and here is the
-  surprise" — narrating your own structure.
-- Overlong clarifications that sound clever but say little.
-- Hedging adverbs: "quietly", "actually", "literally", "almost", "perhaps".
-- Tarot-speak that has lost its meaning: "energy", "vibration", "alignment",
-  "manifest", "the universe is telling you".
-- Italics for emphasis. Plain text. Use a real word.
-
-How to read the cards:
-- Read as a narrative, not a checklist. The querent's question is the
-  spine; the cards are the body.
-- Use specific imagery. Find the bridge between the card's image and
-  the querent's situation. That bridge IS the reading.
-- Name the reversal explicitly when a card is reversed, and let the
-  reversal shape the reading.
-
-Format:
-- If the querent asked a question, your opening sentence names the
-  question and the card together. Example: "Gentry, you asked
-  whether the love of your life is close, and the Hanged Man says..."
-- If the question is yes/no and the card is reversed, the opening
-  should make the no clear, but with the card's own texture. "Gentry,
-  the Hanged Man reversed says no, not today — but the no is about
-  forcing, not about the meeting itself."
-- Otherwise, open with the querent's first name and a comma.
-- One sentence that names the overall tone of the spread.
-- For a MULTI-card spread (3+ cards): walk the positions in order, in
-  second person, present tense. Each position gets a paragraph that
-  begins with the position name in bold: **Hear Me**, **Help Me**,
-  **Hold Me**.
-- For a SINGLE-card spread: do NOT use position-name headings like
-  **Hear Me** or **Help Me**. The card has one position and its title
-  is "The Card". Write continuous paragraphs with no bold headings,
-  following the question-aware structure in the user's message.
-- Close with one short paragraph on what to carry away. If a question
-  was asked, the carry-away is the direct answer.
-- Two to four paragraphs total. Aim for 200 to 300 words. Plain prose.
+Write in second person, present tense. Plain, direct, specific. Short
+sentences. No em dashes. No hedging. No "the universe is telling you".
+Use the querent's gender and relationship preference correctly when the
+question touches relationships.
 """
 
 
@@ -104,23 +46,14 @@ Format:
 THINKING_CONFIG = {"type": "enabled", "budget_tokens": 1000}
 
 
-def _card_line(card, drawn, category: str | None = None) -> str:
+def _card_line(card, drawn) -> str:
     orientation = "reversed" if drawn.is_reversed else "upright"
     body = " ".join(drawn.body).strip()
     summary = drawn.summary
-    base = f"- {drawn.position.title} — {card.name} ({orientation}): {summary} {body}"
-    if category == "love and relationships" and card.suit == "coins":
-        # The coin cards are stored with money-only meanings. When the
-        # question is about love, re-angle the core tension in relational
-        # terms so the model has a bridge instead of a money reading.
-        base += (
-            " This card's imagery about money and resources should be read "
-            "as emotional and relational: holding tight is not letting anyone "
-            "in, scarcity is fear of being unlovable, giving too freely is "
-            "over-giving to feel wanted, hoarding is guardedness that keeps "
-            "partners at arm's length. The fear here is about love, not money."
-        )
-    return base
+    return (
+        f"- {drawn.position.title} — {card.name} ({orientation}): "
+        f"{summary} {body}"
+    )
 
 
 def _question_category(question: str) -> str:
@@ -187,77 +120,25 @@ def _labeled_value(label: str, value: str | None, skip: tuple[str, ...] = ()) ->
 
 
 def build_prompt(reading: Reading) -> str:
-    """Compose the user message that asks for a combined interpretation.
+    """Compose the user message.
 
-    The question, if any, is the headline — the model sees it first. Cards
-    speak to the question; the model is instructed to address the question
-    in the opening sentence, not in a closing paragraph where it can be
-    ignored.
+    Simple: the question, the querent, the cards. The model ties the card's
+    meaning to the question. No structural gymnastics — trust the model.
     """
-    spread_name = reading.spread.name
-    category = _question_category(reading.question) if reading.question else None
-    card_lines = "\n".join(_card_line(d.card, d, category) for d in reading.drawn)
-    querent_context = _querent_context(reading)
-    category_block = (
-        f"The querent's question is about {category}.\n\n"
-        if category else ""
-    )
     question_block = (
-        f"The querent asked the cards: \"{reading.question}\"\n\n"
+        f"The querent asks: \"{reading.question}\"\n\n"
         if reading.question else ""
     )
-    # For a single-card draw with a question, the model often defaults to a
-    # generic card interpretation. Force a different structure: the question
-    # is the spine of every paragraph, the card informs each section, and
-    # the answer is the close.
-    if reading.question and len(reading.drawn) == 1:
-        answer_format = (
-            "Write three short paragraphs. The question is the spine of "
-            "every paragraph. The card is the answer. The querent's question "
-            "is not a topic to mention, it is the question to answer.\n\n"
-            "1. THE ANSWER. Open with the querent's name and restate their "
-            "question in their own language. Then give the direct answer "
-            "in the FIRST sentence of this paragraph. If the question is "
-            "yes/no, the answer comes from the card's orientation: "
-            "upright = yes, reversed = no or not yet. The answer is one "
-            "sentence and it directly answers the question they asked — "
-            "for 'will I find love soon', 'yes, the cup is full and the "
-            "wish is at the table' is an answer; 'the card's message is "
-            "about satisfaction' is not an answer. Do not hedge. Do not "
-            "say 'if your question was about X'. The question IS about X. "
-            "Answer it.\n\n"
-            "2. THE BRIDGE. Show specifically how the card answers the "
-            "question they asked. The card's imagery is the bridge between "
-            "their situation and the answer. Name the specific image — "
-            "the cup on the table, the man hanging by one foot, the "
-            "upright coin or the loose one — and how that image is the "
-            "answer to their question about love / career / a person / "
-            "a choice. The bridge must connect the card to THEIR question, "
-            "not to a generic reading.\n\n"
-            "3. WHAT TO CARRY. One short paragraph on what to do with "
-            "the answer. The carry-away is the action that flows from the "
-            "answer — not a summary, not a recap. For love questions, the "
-            "carry-away is the move that opens or closes the door; for "
-            "career questions, it is the move that lands or waits; for a "
-            "choice, it is the move that commits or steps back. One "
-            "sentence, grounded in the card's imagery.\n"
-        )
-    else:
-        answer_format = (
-            "Write the combined meaning. If the querent asked a question, "
-            "open with a sentence that names the question and the card "
-            "together, then walk the positions in order and show how they "
-            "speak to each other, then close with a short paragraph on "
-            "what to carry away. The carry-away should be the direct "
-            "answer to the question when one was asked. Two to four short "
-            "paragraphs total, grounded in the specific cards."
-        )
+    querent_context = _querent_context(reading)
+    card_lines = "\n".join(_card_line(d.card, d) for d in reading.drawn)
     return (
         f"{question_block}"
-        f"{category_block}"
-        f"Read the following {spread_name.lower()}. {querent_context}\n\n"
+        f"{querent_context}\n\n"
         f"{card_lines}\n\n"
-        f"{answer_format}"
+        "Answer the querent's question using the card. Tie the card's "
+        "meaning directly to what they asked. Give the answer early. "
+        "Weave the question through the reading. End with a short "
+        "paragraph on what to carry away."
     )
 
 
