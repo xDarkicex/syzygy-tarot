@@ -59,8 +59,10 @@
   </ol>
 
   {% if share_slug %}
+    {% set card_count = reading.drawn|length %}
     <div class="interpretation-wrap" data-dealt-only
-         style="animation-delay: {{ reading.drawn|length * 0.4 + 0.6 }}s">
+         style="animation-delay: {{ card_count * 0.4 + 0.6 }}s">
+      {% if card_count == 1 %}{% set is_single = True %}{% else %}{% set is_single = False %}{% endif %}
       {% include "partials/interpretation.html" %}
     </div>
     <script>

@@ -1,6 +1,10 @@
 <section class="interpretation">
   <header class="interpretation__head">
-    <h3 class="interpretation__title">The combined reading</h3>
+    <h3 class="interpretation__title">
+      {% if is_single %}The card
+      {% else %}The reading
+      {% endif %}
+    </h3>
     <p class="interpretation__sub" id="interpretation-error" style="color: var(--ember)"></p>
   </header>
 

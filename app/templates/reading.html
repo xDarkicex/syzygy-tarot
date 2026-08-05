@@ -35,6 +35,8 @@
     {% endfor %}
   </ol>
 
+  {% set card_count = reading.drawn|length %}
+  {% if card_count == 1 %}{% set is_single = True %}{% else %}{% set is_single = False %}{% endif %}
   {% include "partials/interpretation.html" %}
 </article>
 {% endblock %}
