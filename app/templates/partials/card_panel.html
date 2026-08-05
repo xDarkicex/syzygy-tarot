@@ -1,8 +1,11 @@
 <li class="card-slot card-slot--{{ drawn.position.accent }} revealed" data-index="{{ position - 1 }}">
   <div class="card card--revealed {% if drawn.is_reversed %}card--reversed{% endif %}">
     <span class="card__face card__face--front">
+      <img class="card__index card__index--tl" src="/static/icons/{{ drawn.card.slug }}.svg" alt="" />
+      <img class="card__index card__index--br" src="/static/icons/{{ drawn.card.slug }}.svg" alt="" />
+      <img class="card__watermark" src="/static/icons/{{ drawn.card.slug }}.svg" alt="" />
       <span class="card__position">{{ position }} / {{ total }} · {{ drawn.position.title }}</span>
-      <span class="card__name">{{ drawn.card.name }}{% if drawn.is_reversed %} <em>(reversed)</em>{% endif %}</span>
+      <span class="card__name">{{ drawn.card.name }}</span>
       <span class="card__prompt">{{ drawn.position.prompt }}</span>
       <span class="card__summary">{{ drawn.summary }}</span>
       <span class="card__body">

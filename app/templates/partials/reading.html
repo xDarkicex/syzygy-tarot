@@ -42,12 +42,16 @@
           hx-swap="outerHTML"
           {% if not share_slug %}disabled{% endif %}>
           <span class="card__face card__face--back">
+            <img class="card__index card__index--back-tl" src="/static/icons/{{ d.card.slug }}.svg" alt="" />
             <span class="card__glyph" aria-hidden="true">✶</span>
             <span class="card__hint">Tap to reveal</span>
           </span>
           <span class="card__face card__face--front">
+            <img class="card__index card__index--tl" src="/static/icons/{{ d.card.slug }}.svg" alt="" />
+            <img class="card__index card__index--br" src="/static/icons/{{ d.card.slug }}.svg" alt="" />
+            <img class="card__watermark" src="/static/icons/{{ d.card.slug }}.svg" alt="" />
             <span class="card__position">{{ d.position.title }}</span>
-            <span class="card__name">{{ d.card.name }}{% if d.is_reversed %} <em>(reversed)</em>{% endif %}</span>
+            <span class="card__name">{{ d.card.name }}</span>
             <span class="card__prompt">{{ d.position.prompt }}</span>
             <span class="card__summary">{{ d.summary }}</span>
             <span class="card__body">
