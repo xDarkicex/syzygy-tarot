@@ -1,22 +1,14 @@
-<section class="interpretation"
-         x-data="{ render(text) {
-             if (!text) {
-                 return '<p class=\"interpretation__sub\">Generating your interpretation…</p>';
-             }
-             const escaped = text
-                 .replace(/&/g, '&amp;')
-                 .replace(/</g, '&lt;')
-                 .replace(/>/g, '&gt;');
-             return escaped
-                 .split(/\n\s*\n/)
-                 .filter(p => p.trim())
-                 .map(p => '<p>' + p.trim().replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>') + '</p>')
-                 .join('');
-         } }">
+<section class="interpretation">
   <header class="interpretation__head">
     <h3 class="interpretation__title">The combined reading</h3>
     <p class="interpretation__sub" id="interpretation-error" style="color: var(--ember)"></p>
   </header>
 
-  <div class="interpretation__body" id="interpretation-body" x-html="render($store.text)"></div>
+  <div class="interpretation__body" id="interpretation-body">
+    {% if interpretation %}
+      {{ interpretation | safe }}
+    {% else %}
+      <p class="interpretation__sub">Generating your interpretation…</p>
+    {% endif %}
+  </div>
 </section>

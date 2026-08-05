@@ -66,38 +66,63 @@
     <script>
       (function() {
         var slug = "{{ share_slug }}";
+        var body = document.getElementById("interpretation-body");
+        if (!body) return;
 
-        // Each new deal gets a fresh SSE connection. The old connection (if
-        // any) is in a different <script> closure from a previous partial and
-        // will be GC'd when its old DOM is detached, but the global Alpine
-        // store persists across deals — we must reset it to "" on every deal
-        // so the previous reading's text doesn't bleed into the new one.
-        function bind() {
-          var body = document.getElementById("interpretation-body");
-          if (!body || typeof Alpine === "undefined") {
-            setTimeout(bind, 30);
-            return;
+        // The body initially has the "Generating your interpretation…"
+        // placeholder. Replace it with a fresh buffer on first token.
+        var firstToken = true;
+        var buf = "";
+
+        function flushParagraph() {
+          if (!buf) return;
+          var p = document.createElement("p");
+          var s = buf;
+          // Convert "**Lead** rest" into a styled span + plain text.
+          var close = s.indexOf("**", 2);
+          if (s.indexOf("**") === 0 && close > 2) {
+            var lead = s.substring(2, close);
+            var rest = s.substring(close + 2);
+            var leadEl = document.createElement("span");
+            leadEl.className = "interpretation__lead";
+            leadEl.textContent = lead;
+            p.appendChild(leadEl);
+            p.appendChild(document.createTextNode(rest));
+          } else {
+            p.textContent = s;
           }
-          // Reset the store to a known empty state. The x-html binding
-          // re-renders immediately as the empty string, which leaves the
-          // "Generating your interpretation…" text below as the visible
-          // state until the first token arrives.
-          Alpine.store("text", "");
-          var src = new EventSource("/readings/" + slug + "/stream");
-          src.addEventListener("token", function(e) {
-            var current = Alpine.store("text") || "";
-            Alpine.store("text", current + e.data);
-          });
-          src.addEventListener("done", function() { src.close(); });
-          src.addEventListener("error", function() {
-            if (!Alpine.store("text")) {
-              var err = document.getElementById("interpretation-error");
-              if (err) err.textContent = "The interpretation could not be generated right now.";
-            }
-            src.close();
-          });
+          body.appendChild(p);
+          buf = "";
         }
-        bind();
+
+        var src = new EventSource("/readings/" + slug + "/stream");
+        src.addEventListener("token", function(e) {
+          if (firstToken) {
+            body.textContent = "";
+            firstToken = false;
+          }
+          // Each token may include \n\n which is the model's paragraph
+          // separator. Split on it, flush complete paragraphs, keep the
+          // trailing partial in the buffer for the next token.
+          var parts = e.data.split("\n\n");
+          for (var i = 0; i < parts.length; i++) {
+            buf += parts[i];
+            if (i < parts.length - 1) flushParagraph();
+          }
+        });
+        src.addEventListener("done", function() {
+          flushParagraph();
+          src.close();
+        });
+        src.addEventListener("error", function() {
+          if (firstToken) {
+            var err = document.getElementById("interpretation-error");
+            if (err) err.textContent = "The interpretation could not be generated right now.";
+          } else {
+            flushParagraph();
+          }
+          src.close();
+        });
       })();
     </script>
   {% endif %}
