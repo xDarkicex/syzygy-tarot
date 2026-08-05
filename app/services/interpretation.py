@@ -185,7 +185,11 @@ def stream_interpretation(reading: Reading) -> Iterable[str]:
     stream = _client().responses.create(
         model="deepseek-v4-flash",
         input=_messages(reading),
-        max_tokens=900,
+        # max_tokens must cover the thinking budget AND the answer text.
+        # Thinking budget is 1000; a full reading is ~400-500 tokens of
+        # output. 2000 leaves comfortable room so the reading never
+        # truncates mid-sentence.
+        max_tokens=2000,
         thinking=THINKING_CONFIG,
         stream=True,
     )
