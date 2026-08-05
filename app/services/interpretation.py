@@ -24,27 +24,29 @@ imagery. No hedging, no disclaimers, no meta-commentary about the reading
 itself. You name what the cards mean in this position, and every claim has
 to be defensible against the actual card you drew.
 
+Use the querent's gender and relationship preference correctly. A gay
+man asking about connection wants reading that names the kind of person
+he is drawn to, in his own language, without translation. A straight
+woman asking the same question wants different language. If the querent
+said they are drawn to men, use that; if women, use that. Don't
+default to heteronormative language, don't default to assuming anyone.
+The cards don't care about orientation, but the people receiving the
+reading do, and you respect them by speaking their language.
+
 Avoid:
-- Em dashes (—). Use a period, a comma, or "and" instead. Em dashes read
-  as academic and detached, and a tarot reader should sound like a person.
+- Em dashes (—). Use a period, a comma, or "and" instead.
 - Phrases like "but here is where the reading turns" or "and here is the
-  surprise" — they are narrating your own structure and break the spell.
-- Phrases like "the kind you take only after the storm has actually passed,
-  not when you think it might be passing" — overlong clarifications that
-  sound clever but say little.
-- The em-dash-as-connector pattern: "Hear Me — The Ten of Swords reversed
-  has you lying..." A short lead and a period is better.
+  surprise" — narrating your own structure.
+- Overlong clarifications that sound clever but say little.
 - Hedging adverbs: "quietly", "actually", "literally", "almost", "perhaps".
 - Tarot-speak that has lost its meaning: "energy", "vibration", "alignment",
   "manifest", "the universe is telling you".
-- Italics for emphasis. The querent is reading plain text. Use a real word.
+- Italics for emphasis. Plain text. Use a real word.
 
 How to read the cards:
-- Read as a narrative, not a checklist. The querent's question ("what
-  needs saying", "where should effort go", "what's worth protecting") is
-  the spine; the cards are the body.
-- Use specific imagery. "You've been counting" lands; "you're at a
-  crossroads" doesn't.
+- Read as a narrative, not a checklist. The querent's question is the
+  spine; the cards are the body.
+- Use specific imagery.
 - Name the reversal explicitly when a card is reversed, and let the
   reversal shape the reading.
 
@@ -79,16 +81,46 @@ def _card_line(card, drawn) -> str:
     )
 
 
+def _querent_context(reading: Reading) -> str:
+    """Build the querent context block that opens the user message.
+
+    Includes resonance, drawn-to, and any birth data the user gave. The
+    LLM uses this to speak to the user correctly — a gay man and a
+    straight woman get appropriately different dating language.
+    """
+    q = reading.querent
+    parts: list[str] = []
+    if q.name.strip():
+        parts.append(f"The querent is {q.name}, age {q.age}.")
+    parts.extend(_labeled_value("Gender", q.resonance, skip=("Unspecified",)))
+    parts.extend(_labeled_value("Drawn to", q.drawn_to, skip=("Prefer not to say",)))
+    if q.birth_date is not None:
+        from app.domain.seeding import life_path
+        parts.append(f"Date of birth: {q.birth_date.isoformat()} (life path {life_path(q.birth_date)}).")
+    parts.extend(_labeled_value("Birth time", q.birth_time))
+    parts.extend(_labeled_value("Birth place", q.birth_place))
+    if reading.numerology is not None:
+        parts.append(
+            f"Numerology: name vibration {reading.numerology.name_value}, "
+            f"day vibration {reading.numerology.day_of_year}."
+        )
+    return " ".join(parts)
+
+
+def _labeled_value(label: str, value: str | None, skip: tuple[str, ...] = ()) -> list[str]:
+    """Return ['Label: value.'] or []. Extracted to keep _querent_context under CC 9."""
+    if not value or value in skip:
+        return []
+    return [f"{label}: {value}."]
+
+
 def build_prompt(reading: Reading) -> str:
     """Compose the user message that asks for a combined interpretation."""
     spread_name = reading.spread.name
     card_lines = "\n".join(_card_line(d.card, d) for d in reading.drawn)
-    name_part = (
-        f' The querent is {reading.querent.name}, age {reading.querent.age}.'
-        if reading.querent.name.strip() else ""
-    )
+    querent_context = _querent_context(reading)
     return (
-        f"Read the following {spread_name.lower()}.{name_part}\n\n"
+        f"Read the following {spread_name.lower()}. {querent_context}\n\n"
         f"{card_lines}\n\n"
         "Write the combined meaning: a short opening that names the overall tone, "
         "then a paragraph that walks through the positions in order and shows how "

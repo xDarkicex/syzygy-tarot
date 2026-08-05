@@ -27,6 +27,19 @@ MAX_NAME_LENGTH = 64
 # combinations still produce the reading they always did. Append new options, never insert.
 RESONANCES: tuple[str, ...] = ("Male", "Female", "Nonbinary", "Fluid", "Unspecified")
 
+# Sexuality is a separate field — used by the LLM for relationship/connection
+# advice, not by the seed. The label is "Drawn to" to make the intent
+# obvious without sounding clinical. The "Prefer not to say" option keeps
+# the field optional without forcing a label.
+DRAWN_TO: tuple[str, ...] = (
+    "Men",
+    "Women",
+    "Nonbinary people",
+    "All / exploring",
+    "No preference",
+    "Prefer not to say",
+)
+
 
 class InvalidQuerent(ValueError):
     """Raised when querent details fall outside the supported range."""
@@ -39,6 +52,7 @@ class Querent:
     name: str
     age: int
     resonance: str
+    drawn_to: str = "Prefer not to say"
     birth_date: date | None = None
     birth_time: str | None = None  # "HH:MM" 24-hour, optional
     birth_place: str | None = None  # free-text city name, optional
@@ -47,6 +61,7 @@ class Querent:
         _validate_name(self.name)
         _validate_age(self.age)
         _validate_resonance(self.resonance)
+        _validate_drawn_to(self.drawn_to)
         _validate_birth_date(self.birth_date)
         _validate_birth_time(self.birth_time)
 
@@ -71,6 +86,11 @@ def _validate_age(age: int) -> None:
 def _validate_resonance(resonance: str) -> None:
     if resonance not in RESONANCES:
         raise InvalidQuerent(f"Resonance must be one of: {', '.join(RESONANCES)}.")
+
+
+def _validate_drawn_to(drawn_to: str) -> None:
+    if drawn_to not in DRAWN_TO:
+        raise InvalidQuerent(f"Drawn to must be one of: {', '.join(DRAWN_TO)}.")
 
 
 def _validate_birth_date(birth_date: date | None) -> None:

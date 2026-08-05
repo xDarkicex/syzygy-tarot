@@ -25,6 +25,30 @@
         {% endfor %}
       </select>
     </label>
+    <label>
+      <span>Drawn to</span>
+      <select name="drawn_to" x-model="profile.drawn_to">
+        {% for option in ["Men", "Women", "Nonbinary people", "All / exploring", "No preference", "Prefer not to say"] %}
+          <option value="{{ option }}" {% if profile and profile.drawn_to == option %}selected{% endif %}>{{ option }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </fieldset>
+
+  <fieldset class="profile">
+    <legend>When you were born <span class="profile__hint">(optional — deepens the reading)</span></legend>
+    <label>
+      <span>Date</span>
+      <input type="date" name="birth_date" x-model="profile.birth_date" value="{{ profile.birth_date if profile else '' }}" max="{{ today.isoformat() }}" />
+    </label>
+    <label>
+      <span>Time</span>
+      <input type="time" name="birth_time" x-model="profile.birth_time" value="{{ profile.birth_time if profile else '' }}" />
+    </label>
+    <label>
+      <span>Place</span>
+      <input type="text" name="birth_place" x-model="profile.birth_place" value="{{ profile.birth_place if profile else '' }}" placeholder="City, country" />
+    </label>
   </fieldset>
 
   <fieldset class="spread-picker">

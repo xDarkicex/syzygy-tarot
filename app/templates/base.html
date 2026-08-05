@@ -37,7 +37,15 @@
   <script>
     document.addEventListener('alpine:init', () => {
       window.Alpine.data('syzygy', () => ({
-        profile: Alpine.$persist({ name: '', age: 30, resonance: 'Unspecified' }).as('syzygy_profile'),
+        profile: Alpine.$persist({
+          name: '',
+          age: 30,
+          resonance: 'Unspecified',
+          drawn_to: 'Prefer not to say',
+          birth_date: '',
+          birth_time: '',
+          birth_place: '',
+        }).as('syzygy_profile'),
       }))
     })
   </script>

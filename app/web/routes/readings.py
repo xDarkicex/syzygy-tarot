@@ -6,6 +6,7 @@ import json
 import sqlite3
 import threading
 from collections.abc import Iterator
+from datetime import date
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -53,6 +54,10 @@ def deal_reading(
     name: str = Form(...),
     age: int = Form(...),
     resonance: str = Form(...),
+    drawn_to: str = Form("Prefer not to say"),
+    birth_date: str = Form(""),
+    birth_time: str = Form(""),
+    birth_place: str = Form(""),
     spread_slug: str = Form(...),
     strategy_slug: str = Form("daily"),
     save: str = Form("on"),
@@ -67,7 +72,11 @@ def deal_reading(
     multiple tabs via a per-slug lock). So the deal POST itself is just
     cards + share link, fast.
     """
-    querent, spread, strategy = _form_parts(name, age, resonance, spread_slug, strategy_slug)
+    querent, spread, strategy = _form_parts(
+        name, age, resonance, drawn_to,
+        birth_date, birth_time, birth_place,
+        spread_slug, strategy_slug,
+    )
     reading = build_reading(load_deck(), spread, querent, strategy, today)
     share_slug = save_reading(reading, conn) if save == "on" else None
 
@@ -77,7 +86,12 @@ def deal_reading(
         {
             "reading": reading,
             "share_slug": share_slug,
-            "querent_dict": {"name": querent.name, "age": querent.age, "resonance": querent.resonance},
+            "querent_dict": {
+                "name": querent.name,
+                "age": querent.age,
+                "resonance": querent.resonance,
+                "drawn_to": querent.drawn_to,
+            },
             "querent": querent,
             "interpretation": "",
         },
@@ -133,12 +147,25 @@ def _form_parts(
     name: str,
     age: int,
     resonance: str,
+    drawn_to: str,
+    birth_date: str,
+    birth_time: str,
+    birth_place: str,
     spread_slug: str,
     strategy_slug: str,
 ) -> tuple[Querent, Spread, SeedStrategy]:
     """Validate the form and return typed pieces. Raises HTTPException on bad input."""
+    parsed_birth_date = _parse_birth_date(birth_date)
     try:
-        querent = Querent(name=name, age=age, resonance=resonance)
+        querent = Querent(
+            name=name,
+            age=age,
+            resonance=resonance,
+            drawn_to=drawn_to or "Prefer not to say",
+            birth_date=parsed_birth_date,
+            birth_time=birth_time or None,
+            birth_place=birth_place or None,
+        )
     except InvalidQuerent as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     try:
@@ -146,3 +173,12 @@ def _form_parts(
     except UnknownSpread as exc:
         raise HTTPException(status_code=404, detail="Unknown spread") from exc
     return querent, spread, get_strategy(strategy_slug)
+
+
+def _parse_birth_date(value: str) -> date | None:
+    if not value or not value.strip():
+        return None
+    try:
+        return date.fromisoformat(value)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Birth date must be YYYY-MM-DD.") from exc
