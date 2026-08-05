@@ -65,30 +65,28 @@
     </div>
     <script>
       (function() {
-        // Wait for Alpine to be ready, then subscribe the same x-data store
-        // the interpretation template uses, so SSE tokens reactively re-render
-        // through Alpine's render() function (markdown-flavoured).
+        var slug = "{{ share_slug }}";
+
+        // Each new deal gets a fresh SSE connection. The old connection (if
+        // any) is in a different <script> closure from a previous partial and
+        // will be GC'd when its old DOM is detached, but the global Alpine
+        // store persists across deals — we must reset it to "" on every deal
+        // so the previous reading's text doesn't bleed into the new one.
         function bind() {
           var body = document.getElementById("interpretation-body");
           if (!body || typeof Alpine === "undefined") {
             setTimeout(bind, 30);
             return;
           }
-          var section = body.closest("[x-data]");
-          if (!section) {
-            setTimeout(bind, 30);
-            return;
-          }
-          // We don't have a direct hook into the inline x-data, but Alpine
-          // exposes $root._x_dataStack[0] for x-data scopes. Use a manual
-          // approach: append raw text to the body and rely on Alpine's
-          // existing x-html to format. The cleanest path is a tiny global
-          // store that the SSE script writes to and the section reads from.
-          if (!Alpine.store("text")) Alpine.store("text", "");
-          body.textContent = "";
-          var src = new EventSource("/readings/{{ share_slug }}/stream");
+          // Reset the store to a known empty state. The x-html binding
+          // re-renders immediately as the empty string, which leaves the
+          // "Generating your interpretation…" text below as the visible
+          // state until the first token arrives.
+          Alpine.store("text", "");
+          var src = new EventSource("/readings/" + slug + "/stream");
           src.addEventListener("token", function(e) {
-            Alpine.store("text", Alpine.store("text") + e.data);
+            var current = Alpine.store("text") || "";
+            Alpine.store("text", current + e.data);
           });
           src.addEventListener("done", function() { src.close(); });
           src.addEventListener("error", function() {
