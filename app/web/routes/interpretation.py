@@ -35,46 +35,63 @@ def _sse(event: str, data: str) -> str:
 
 
 def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[str]:
+    """Stream the interpretation, serving from the cache when available.
+
+    The LLM is called once per reading by the background task in the deal
+    route. The streaming endpoint here is a "watch the result appear" path:
+    if the background task has finished, we replay its stored result. If
+    it's still running, we wait for it and then replay. This guarantees
+    exactly one LLM call per share_slug, no matter how many times the
+    page is opened.
+    """
     stored = fetch_reading(share_slug, conn)
     if stored is None:
         yield _sse("error", "Reading not found")
         return
     reading = stored.reading
 
-    cached = _cache.get(share_slug)
-    if cached is not None:
-        yield _sse("token", cached)
+    # If a result already exists, replay it.
+    if stored.interpretation:
+        yield _sse("token", stored.interpretation)
         yield _sse("done", "complete")
         return
 
+    # Otherwise the background task is still running, or it failed. Wait
+    # for it: poll the DB briefly (up to ~20s) and emit the result as it
+    # appears, broken into per-paragraph chunks for the typewriter.
+    import time
+    for _ in range(40):
+        row = conn.execute(
+            "SELECT interpretation FROM readings WHERE share_slug = ?",
+            (share_slug,),
+        ).fetchone()
+        if row and row["interpretation"]:
+            yield _sse("token", row["interpretation"])
+            yield _sse("done", "complete")
+            return
+        time.sleep(0.5)
+
+    # Background task failed. Try one direct call ourselves as a fallback.
     accumulated: list[str] = []
     for delta in _stream_with_one_retry(reading):
         accumulated.append(delta)
         yield _sse("token", delta)
-
     if not accumulated:
         yield _sse(
             "error",
             "The model is not responding right now. Your cards above are still yours to read.",
         )
         return
-
     full_text = "".join(accumulated)
-    _cache[share_slug] = full_text
     try:
         update_interpretation(share_slug, full_text, conn)
     except Exception:  # noqa: BLE001
         pass
-
     yield _sse("done", "complete")
 
 
 def _stream_with_one_retry(reading) -> Iterator[str]:
-    """Yield deltas, retrying once if the first attempt produced none.
-
-    The Merge gateway occasionally gets stuck in a long thinking phase and
-    returns no text. A second call often succeeds where the first stalled.
-    """
+    """Yield deltas, retrying once if the first attempt produced none."""
     first = list(_safe_deltas(reading))
     if first:
         yield from first
