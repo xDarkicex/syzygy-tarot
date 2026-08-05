@@ -17,5 +17,9 @@ venv/
 *.db
 *.sqlite3
 
+# Card artwork (public-domain but bulky, ~5MB; regen via app/static/cards/_download.sh)
+app/static/cards/*.jpg
+app/static/cards/*.webp
+
 # OS
 .DS_Store

@@ -21,9 +21,7 @@
       <li class="card-slot card-slot--{{ d.position.accent }} revealed">
         <div class="card card--revealed {% if d.is_reversed %}card--reversed{% endif %}">
           <span class="card__face card__face--front">
-            <img class="card__index card__index--tl" src="/static/icons/{{ d.card.slug }}.svg" alt="" />
-            <img class="card__index card__index--br" src="/static/icons/{{ d.card.slug }}.svg" alt="" />
-            <img class="card__watermark" src="/static/icons/{{ d.card.slug }}.svg" alt="" />
+            <img class="card__art" src="/static/cards/{{ d.card.slug }}.jpg" alt="{{ d.card.name }}" />
             <span class="card__position">{{ d.position.title }}</span>
             <span class="card__name">{{ d.card.name }}</span>
             <span class="card__prompt">{{ d.position.prompt }}</span>
