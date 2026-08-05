@@ -1,0 +1,152 @@
+"""LLM-powered combined reading interpretation via Merge Gateway / deepseek-v4-flash.
+
+The system reads a reading (querent + spread + drawn cards with orientations and
+meanings) and asks the model to synthesise a single coherent reading that ties the
+cards together in light of what each position asks.
+"""
+
+from __future__ import annotations
+
+import os
+from typing import Iterable
+
+from merge_gateway import MergeGateway
+
+from app.config import get_settings
+from app.domain.reading import Reading
+
+SYSTEM_PROMPT = """\
+You are a thoughtful tarot reader. You write in second person, address the person
+directly, and keep your voice grounded — never mystical jargon, never fortune-
+cookie generalities. You read for the specific cards and the specific spread in
+front of you, not for a generic situation.
+
+You respect the card orientations: an upright card reads in its main meaning, a
+reversed card reads in its shadow. When a card is reversed, name that fact in your
+interpretation and let the reversal shape what the card is saying.
+
+You write short paragraphs. No bullet points, no numbered lists, no headings.
+Two to four paragraphs total. Aim for 180 to 320 words.
+"""
+
+
+def _card_line(card, drawn) -> str:
+    orientation = "reversed" if drawn.is_reversed else "upright"
+    body = " ".join(drawn.body).strip()
+    summary = drawn.summary
+    return (
+        f"- {drawn.position.title} — {card.name} ({orientation}): "
+        f"{summary} {body}"
+    )
+
+
+def build_prompt(reading: Reading) -> str:
+    """Compose the user message that asks for a combined interpretation."""
+    spread_name = reading.spread.name
+    card_lines = "\n".join(_card_line(d.card, d) for d in reading.drawn)
+    name_part = (
+        f' The querent is {reading.querent.name}, age {reading.querent.age}.'
+        if reading.querent.name.strip() else ""
+    )
+    return (
+        f"Read the following {spread_name.lower()}.{name_part}\n\n"
+        f"{card_lines}\n\n"
+        "Write the combined meaning: a short opening that names the overall tone, "
+        "then a paragraph that walks through the positions in order and shows how "
+        "they speak to each other, then a closing paragraph on what to carry away. "
+        "Keep it to two to four short paragraphs, grounded in the specific cards."
+    )
+
+
+def _client() -> MergeGateway:
+    settings = get_settings()
+    api_key = os.getenv("SYZYGY_MERGE_API_KEY") or settings.merge_api_key
+    if not api_key:
+        raise RuntimeError("SYZYGY_MERGE_API_KEY is not set")
+    return MergeGateway(api_key=api_key, base_url=settings.merge_base_url)
+
+
+def _messages(reading: Reading) -> list[dict]:
+    return [
+        {"type": "message", "role": "system", "content": SYSTEM_PROMPT},
+        {"type": "message", "role": "user", "content": build_prompt(reading)},
+    ]
+
+
+def generate_interpretation(reading: Reading) -> str:
+    """Synchronous full interpretation. Use this when you just want the final text."""
+    response = _client().responses.create(
+        model="deepseek-v4-flash",
+        input=_messages(reading),
+        max_tokens=900,
+    )
+    return _extract_text(response)
+
+
+def stream_interpretation(reading: Reading) -> Iterable[str]:
+    """Yield text deltas as the model produces them.
+
+    The Merge gateway streams cumulative text per content block — i.e. the text
+    field grows on each event, not the delta. We track the last-seen length and
+    yield only the new characters.
+    """
+    stream = _client().responses.create(
+        model="deepseek-v4-flash",
+        input=_messages(reading),
+        max_tokens=900,
+        stream=True,
+    )
+    last_text_len = 0
+    for event in stream:
+        text = _text_block(event)
+        if text is None or len(text) <= last_text_len:
+            continue
+        delta = text[last_text_len:]
+        last_text_len = len(text)
+        if delta:
+            yield delta
+    stream.close()
+
+
+def _text_block(event: dict) -> str | None:
+    """Pull the cumulative text from an event's output, ignoring thinking blocks."""
+    if not isinstance(event, dict):
+        return None
+    first = _first_output_item(event)
+    if first is None:
+        return None
+    content = first.get("content")
+    if not isinstance(content, list):
+        return None
+    parts: list[str] = []
+    for item in content:
+        text = _text_field(item)
+        if text is not None:
+            parts.append(text)
+    return "".join(parts) if parts else None
+
+
+def _first_output_item(event: dict) -> dict | None:
+    output = event.get("output")
+    if not isinstance(output, list) or not output:
+        return None
+    first = output[0]
+    return first if isinstance(first, dict) else None
+
+
+def _text_field(item: object) -> str | None:
+    """Return the text from a content item, or None if it's not a text block."""
+    if not isinstance(item, dict) or item.get("type") != "text":
+        return None
+    text = item.get("text")
+    return text if isinstance(text, str) else None
+
+
+def _extract_text(response) -> str:
+    """Pull the human-readable text from a non-streaming response."""
+    parts: list[str] = []
+    for item in getattr(response, "output", []) or []:
+        text = getattr(item, "text", None)
+        if isinstance(text, str) and text:
+            parts.append(text)
+    return "".join(parts).strip()

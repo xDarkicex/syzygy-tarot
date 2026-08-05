@@ -1,0 +1,17 @@
+<section class="interpretation"
+         hx-ext="sse"
+         sse-connect="/readings/{{ share_slug }}/interpret"
+         sse-swap="token"
+         hx-swap="innerHTML"
+         sse-close="done">
+  <header class="interpretation__head">
+    <h3 class="interpretation__title">The combined reading</h3>
+    <p class="interpretation__sub" data-sse-swap="error">Generating your interpretation…</p>
+  </header>
+  <div class="interpretation__body"
+       data-sse-swap="token"
+       hx-swap="beforeend"></div>
+  <div class="interpretation__placeholder" data-sse-swap="error">
+    <p>The interpretation could not be generated right now. Your cards above are still yours to read.</p>
+  </div>
+</section>

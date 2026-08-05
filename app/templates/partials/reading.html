@@ -59,4 +59,8 @@
       </li>
     {% endfor %}
   </ol>
+
+  {% if share_slug %}
+    {% include "partials/interpretation.html" %}
+  {% endif %}
 </article>

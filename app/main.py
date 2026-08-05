@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.storage.database import init_database
-from app.web.routes import pages, readings as readings_routes, profile
+from app.web.routes import interpretation, pages, readings as readings_routes, profile
 
 
 def create_app() -> FastAPI:
@@ -19,6 +19,7 @@ def create_app() -> FastAPI:
 
     app.include_router(pages.router)
     app.include_router(readings_routes.router)
+    app.include_router(interpretation.router)
     app.include_router(profile.router)
 
     return app
