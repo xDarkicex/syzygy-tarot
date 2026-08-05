@@ -74,24 +74,48 @@
         var firstToken = true;
         var buf = "";
 
+        // Convert **Lead** to a styled span. We do this on the full
+        // paragraph text and rebuild its DOM children each time so bold
+        // markers that span token boundaries get resolved as the buffer
+        // grows.
+        function renderParagraph(text) {
+          var p = document.createElement("p");
+          // The model uses **Lead** as a position marker at the start
+          // of a paragraph. Detect that and lift the lead into a span.
+          if (text.indexOf("**") === 0) {
+            var close = text.indexOf("**", 2);
+            if (close > 2) {
+              var lead = document.createElement("span");
+              lead.className = "interpretation__lead";
+              lead.textContent = text.substring(2, close);
+              p.appendChild(lead);
+              p.appendChild(document.createTextNode(text.substring(close + 2)));
+              return p;
+            }
+          }
+          // Otherwise: convert any inline **bold** to a span.
+          var re = /\*\*([^*]+)\*\*/g;
+          var last = 0;
+          var m;
+          while ((m = re.exec(text)) !== null) {
+            if (m.index > last) {
+              p.appendChild(document.createTextNode(text.substring(last, m.index)));
+            }
+            var b = document.createElement("span");
+            b.className = "interpretation__strong";
+            b.textContent = m[1];
+            p.appendChild(b);
+            last = re.lastIndex;
+          }
+          if (last < text.length) {
+            p.appendChild(document.createTextNode(text.substring(last)));
+          }
+          return p;
+        }
+
         function flushParagraph() {
           if (!buf) return;
-          var p = document.createElement("p");
-          var s = buf;
-          // Convert "**Lead** rest" into a styled span + plain text.
-          var close = s.indexOf("**", 2);
-          if (s.indexOf("**") === 0 && close > 2) {
-            var lead = s.substring(2, close);
-            var rest = s.substring(close + 2);
-            var leadEl = document.createElement("span");
-            leadEl.className = "interpretation__lead";
-            leadEl.textContent = lead;
-            p.appendChild(leadEl);
-            p.appendChild(document.createTextNode(rest));
-          } else {
-            p.textContent = s;
-          }
-          body.appendChild(p);
+          body.appendChild(renderParagraph(buf));
           buf = "";
         }
 

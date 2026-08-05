@@ -332,6 +332,7 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
   font-weight: 500;
   margin-right: 0.5em;
 }
+.interpretation__strong { color: var(--ember); font-weight: 500; }
 .interpretation__body--pending { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 0; }
 .interpretation__body--pending p { font-family: var(--serif); font-style: italic; color: var(--ink-soft); margin: 0; }
 .interpretation__body::after {
