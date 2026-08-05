@@ -156,23 +156,36 @@ def build_prompt(reading: Reading) -> str:
     )
     # For a single-card draw with a question, the model often defaults to a
     # generic card interpretation. Force a different structure: the question
-    # is the headline, the card is the body, the answer is the close.
+    # is the spine of every paragraph, the card informs each section, and
+    # the answer is the close.
     if reading.question and len(reading.drawn) == 1:
         answer_format = (
-            "Write exactly three short paragraphs in this order:\n"
-            "1. The question and the card. Open with the querent's name "
-            "and restate their question in one breath, then name the card "
-            "and what it shows. This paragraph is the headline; the rest "
-            "of the reading unpacks it.\n"
-            "2. The bridge. Name how the card answers the question. The "
-            "card's imagery is the bridge to the querent's situation. "
-            "Find the specific image, the specific gesture, the specific "
-            "detail that speaks to the question. This is the body.\n"
-            "3. The direct answer. Give the querent a direct answer to "
-            "their question in one or two sentences. If the question is "
+            "Write three short paragraphs in this order. The question is "
+            "the spine of every paragraph; the card informs each section; "
+            "the answer is the close.\n\n"
+            "1. THE QUESTION AND THE ANSWER. Open with the querent's name, "
+            "restate the question in their language, and give the direct "
+            "answer in the first one or two sentences. If the question is "
             "yes/no, the answer comes from the card's orientation: "
             "upright is yes, reversed is no or not yet. The card's own "
-            "texture colours the yes or the no. This is the close.\n"
+            "texture colours the yes or the no — for love questions, "
+            "a reversed Hanged Man says 'no, not today' AND it tells you "
+            "what the no is about; a Nine of Cups upright says yes, and "
+            "the yes is about a wish already granted. Do not say 'the "
+            "card's message' as a separate clause — weave the answer.\n\n"
+            "2. THE BRIDGE. Show how the card's imagery answers the "
+            "question. The card is the bridge between the querent's "
+            "situation and the answer. Name the specific image, the "
+            "specific gesture, the specific detail that makes the card "
+            "speak to love / career / a choice / a person / whatever the "
+            "question is about. This is the body of the reading.\n\n"
+            "3. WHAT TO CARRY. One short paragraph on what to do with "
+            "the answer. The carry-away is the action that flows from the "
+            "answer — not a summary. For love questions, the carry-away "
+            "is the move that opens or closes the door; for career "
+            "questions, it is the move that lands or waits; for a choice, "
+            "it is the move that commits or steps back. One sentence, "
+            "grounded in the card.\n"
         )
     else:
         answer_format = (
