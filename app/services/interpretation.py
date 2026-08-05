@@ -24,6 +24,13 @@ imagery. No hedging, no disclaimers, no meta-commentary about the reading
 itself. You name what the cards mean in this position, and every claim has
 to be defensible against the actual card you drew.
 
+When the querent brought a question, the reading answers that question.
+The question is not a suggestion, it is the focus. The cards speak to
+the question; you do not describe the card and then ignore what the
+querent actually asked. If the question is "will I meet someone this
+year", the answer is in the card. If the question is "are you a real
+person", the answer is in the card too.
+
 Use the querent's gender and relationship preference correctly. A gay
 man asking about connection wants reading that names the kind of person
 he is drawn to, in his own language, without translation. A straight
@@ -51,13 +58,17 @@ How to read the cards:
   reversal shape the reading.
 
 Format:
-- Open with the querent's first name and a comma.
+- If the querent asked a question, your opening sentence names the
+  question and the spread in one breath. Example: "Gentry, you asked
+  whether the love of your life is close, and the Hanged Man says..."
+- Otherwise, open with the querent's first name and a comma.
 - One sentence that names the overall tone of the spread.
 - Walk the positions in order, in second person, present tense. Each
   position gets a paragraph that begins with the position name in bold:
   **Hear Me**, **Help Me**, **Hold Me**.
 - Close with one short paragraph on what to carry away. One concrete
-  move or orientation, not a summary.
+  move or orientation, not a summary. If a question was asked, the
+  carry-away is the direct answer.
 - Two to four paragraphs total. Aim for 200 to 300 words. Plain prose.
 """
 
@@ -115,23 +126,31 @@ def _labeled_value(label: str, value: str | None, skip: tuple[str, ...] = ()) ->
 
 
 def build_prompt(reading: Reading) -> str:
-    """Compose the user message that asks for a combined interpretation."""
+    """Compose the user message that asks for a combined interpretation.
+
+    The question, if any, is the headline — the model sees it first. Cards
+    speak to the question; the model is instructed to address the question
+    in the opening sentence, not in a closing paragraph where it can be
+    ignored.
+    """
     spread_name = reading.spread.name
     card_lines = "\n".join(_card_line(d.card, d) for d in reading.drawn)
     querent_context = _querent_context(reading)
     question_block = (
-        f"\n\nThe querent's question for the cards: \"{reading.question}\""
+        f"The querent asked the cards: \"{reading.question}\"\n\n"
         if reading.question else ""
     )
     return (
-        f"Read the following {spread_name.lower()}. {querent_context}{question_block}\n\n"
+        f"{question_block}"
+        f"Read the following {spread_name.lower()}. {querent_context}\n\n"
         f"{card_lines}\n\n"
-        "Write the combined meaning: a short opening that names the overall tone, "
-        "then walk the positions in order and show how they speak to each other "
-        "and to the querent's situation, then close with one short paragraph on "
-        "what to carry away. If the querent asked a question, address it directly "
-        "in the closing — the cards were drawn for that question. Keep it to two "
-        "to four short paragraphs, grounded in the specific cards."
+        "Write the combined meaning. If the querent asked a question, "
+        "open with a sentence that names the question and the card together, "
+        "then walk the positions in order and show how they speak to each "
+        "other, then close with a short paragraph on what to carry away. "
+        "The carry-away should be the direct answer to the question when "
+        "one was asked. Two to four short paragraphs total, grounded in the "
+        "specific cards."
     )
 
 
