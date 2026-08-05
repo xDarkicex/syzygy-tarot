@@ -43,31 +43,44 @@ def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[s
 
     cached = _cache.get(share_slug)
     if cached is not None:
-        # Replay the cached text as a single token event so the page fills in.
         yield _sse("token", cached)
         yield _sse("done", "complete")
         return
 
+    # The Merge gateway streams deltas as the LLM produces them. If the model
+    # gets stuck in a thinking loop and produces no text, retry once before
+    # giving up — the second call often succeeds where the first stalled.
+    accumulated: list[str] = []
+    last_was_empty = False
     try:
-        deltas = stream_interpretation(reading)
+        for delta in stream_interpretation(reading):
+            accumulated.append(delta)
+            yield _sse("token", delta)
     except Exception as exc:  # noqa: BLE001
         yield _sse("error", f"{type(exc).__name__}: {exc}")
         return
 
-    if not deltas:
-        yield _sse("error", "No interpretation was generated")
+    if not accumulated:
+        # Retry once: the model occasionally gets stuck, but a re-prompt often works.
+        try:
+            for delta in stream_interpretation(reading):
+                accumulated.append(delta)
+                yield _sse("token", delta)
+        except Exception as exc:  # noqa: BLE001
+            yield _sse("error", f"{type(exc).__name__}: {exc}")
+            return
+
+    if not accumulated:
+        yield _sse("error", "The model is not responding right now. Your cards above are still yours to read.")
         return
 
-    full_text = "".join(deltas)
+    full_text = "".join(accumulated)
     _cache[share_slug] = full_text
     try:
         update_interpretation(share_slug, full_text, conn)
     except Exception:  # noqa: BLE001
         pass
 
-    # Send each delta as a separate SSE event so the browser typewriter is smooth.
-    for delta in deltas:
-        yield _sse("token", delta)
     yield _sse("done", "complete")
 
 

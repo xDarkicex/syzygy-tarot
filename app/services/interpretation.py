@@ -91,15 +91,15 @@ def generate_interpretation(reading: Reading) -> str:
     return "".join(chunks).strip()
 
 
-def stream_interpretation(reading: Reading) -> list[str]:
-    """Return a list of text deltas as the LLM streams.
+def stream_interpretation(reading: Reading) -> Iterable[str]:
+    """Yield text deltas as the LLM streams.
 
     The Merge gateway emits events where each event carries the cumulative text
     so far inside ``output[0].content[].text`` (alongside any thinking blocks
-    the model produced). We track the last-seen length and emit only the
-    characters that were added in the latest event. Deltas are returned as a
-    list (not yielded) so the underlying httpx SSE iterator is fully consumed
-    by the time we return.
+    the model produced). We track the last-seen length and yield only the
+    characters that were added in the latest event. Each delta is yielded
+    immediately so the SSE consumer can flush it to the browser for a
+    typewriter effect.
     """
     stream = _client().responses.create(
         model="deepseek-v4-flash",
@@ -108,7 +108,6 @@ def stream_interpretation(reading: Reading) -> list[str]:
         stream=True,
     )
     last_text_len = 0
-    deltas: list[str] = []
     try:
         for event in stream:
             text = _text_block(event)
@@ -117,11 +116,10 @@ def stream_interpretation(reading: Reading) -> list[str]:
             delta = text[last_text_len:]
             last_text_len = len(text)
             if delta:
-                deltas.append(delta)
+                yield delta
     finally:
         if hasattr(stream, "close"):
             stream.close()
-    return deltas
 
 
 def _text_block(event: object) -> str | None:

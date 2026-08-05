@@ -46,9 +46,9 @@ def test_prompt_names_querent_and_lists_every_card() -> None:
 def test_stream_emits_deltas_from_cumulative_events() -> None:
     """The Merge gateway emits events where each event's output[0].content[]
     contains the cumulative text so far. We track the previous total length
-    and emit only the new characters as deltas.
+    and emit only the new characters as deltas (a generator, not a list, so
+    each delta is yielded as it arrives and the browser gets a real stream).
     """
-    # Simulate the cumulative-text stream: text grows, we emit only the new chars.
     events = [
         {"output": [{"content": [{"type": "text", "text": "Gentry"}]}]},
         {"output": [{"content": [{"type": "text", "text": "Gentry,"}]}]},
@@ -72,7 +72,7 @@ def test_stream_emits_deltas_from_cumulative_events() -> None:
 
     mod._client = client
     try:
-        deltas = mod.stream_interpretation(_reading(3))
+        deltas = list(mod.stream_interpretation(_reading(3)))
     finally:
         mod._client = original
 
@@ -110,7 +110,7 @@ def test_stream_skips_thinking_blocks() -> None:
 
     mod._client = client
     try:
-        deltas = mod.stream_interpretation(_reading(3))
+        deltas = list(mod.stream_interpretation(_reading(3)))
     finally:
         mod._client = original
 
