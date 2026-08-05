@@ -57,7 +57,6 @@
       <label class="spread">
         <input type="radio" name="spread_slug" value="{{ spread.slug }}"
                x-model="profile.spread"
-               @change="profile.spread = $el.value"
                {% if loop.first %}checked{% endif %} />
         <span class="spread__body">
           <span class="spread__name">{{ spread.name }}</span>
@@ -67,7 +66,7 @@
     {% endfor %}
   </fieldset>
 
-  <div class="question-field">
+  <div class="question-field" x-show="profile.spread === 'single'" x-cloak>
     <label>
       <span>Your question <span class="question-field__opt">(optional)</span></span>
       <textarea name="question" rows="3" maxlength="500"
