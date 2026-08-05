@@ -58,6 +58,15 @@ Format:
 """
 
 
+# Disabled so the model goes straight to text instead of burning tokens on a
+# thinking block. With thinking enabled, the model sometimes gets stuck in a
+# long thinking phase, which made the SSE stream hang for 4+ seconds and
+# occasionally returned no text at all. Disabling it produces direct output
+# at a small quality cost. The Merge gateway requires budget_tokens > 0 even
+# for type=disabled, so we use 1 (the minimum).
+THINKING_CONFIG = {"type": "disabled", "budget_tokens": 1}
+
+
 def _card_line(card, drawn) -> str:
     orientation = "reversed" if drawn.is_reversed else "upright"
     body = " ".join(drawn.body).strip()
@@ -128,6 +137,7 @@ def stream_interpretation(reading: Reading) -> Iterable[str]:
         model="deepseek-v4-flash",
         input=_messages(reading),
         max_tokens=900,
+        thinking=THINKING_CONFIG,
         stream=True,
     )
     last_text_len = 0

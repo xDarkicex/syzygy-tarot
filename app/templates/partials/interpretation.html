@@ -5,6 +5,10 @@
   </header>
 
   <div class="interpretation__body" id="interpretation-body">
-    <p class="interpretation__sub">Generating your interpretation…</p>
+    {% if interpretation %}
+      {{ interpretation }}
+    {% else %}
+      <p class="interpretation__sub">Generating your interpretation…</p>
+    {% endif %}
   </div>
 </section>
