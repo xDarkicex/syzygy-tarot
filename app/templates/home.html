@@ -64,15 +64,15 @@
     {% endfor %}
   </fieldset>
 
-  <div class="question-field" x-data="{ open: false }"
-       x-show="$root.querySelector('input[name=spread_slug]:checked')?.value === 'question'">
+  <div class="question-field"
+       x-show="['single', 'question'].includes(($root.querySelector('input[name=spread_slug]:checked')?.value) || '')">
     <label>
-      <span>Your question</span>
+      <span>Your question <span class="question-field__opt">(optional)</span></span>
       <textarea name="question" rows="3" maxlength="500"
                 placeholder="What do you want to ask the cards?"
                 x-model="profile.question"></textarea>
     </label>
-    <p class="question-field__hint">The cards will speak to this specific question.</p>
+    <p class="question-field__hint">Single card with a question is the deepest kind of reading. Leave blank and the card speaks to the day.</p>
   </div>
 
   <fieldset class="strategy-picker">

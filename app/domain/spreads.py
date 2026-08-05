@@ -227,11 +227,12 @@ MIND_BODY_SPIRIT = Spread(
 
 QUESTION_CARD = Spread(
     slug="question",
-    name="Question",
-    tagline="One card for a specific question",
+    name="Single Card with a Question",
+    tagline="One card, one question",
     description=(
-        "A single card for when you have a specific question on your mind. "
-        "Type your question, draw a card, and the reading addresses what you asked."
+        "A single draw for when you have a specific question. The card answers "
+        "what you asked. Use the question field that appears when this spread "
+        "is selected."
     ),
     positions=(
         Position(
@@ -253,7 +254,6 @@ SPREADS: dict[str, Spread] = {
         HERE_THERE_NOWHERE,
         SITUATION_CHALLENGE_ADVICE,
         MIND_BODY_SPIRIT,
-        QUESTION_CARD,
     )
 }
 DEFAULT_SPREAD = SIGNATURE.slug
