@@ -1,4 +1,4 @@
-<article class="reading" data-share-slug="{{ share_slug or '' }}">
+<article class="reading {% if share_slug %}reading--dealt{% endif %}" data-share-slug="{{ share_slug or '' }}">
   <header class="reading__header">
     <div>
       <p class="reading__eyebrow">{{ reading.spread.name }}</p>
@@ -31,16 +31,20 @@
 
   <ol class="cards">
     {% for d in reading.drawn %}
-      <li class="card-slot card-slot--{{ d.position.accent }}" data-index="{{ loop.index0 }}">
+      <li class="card-slot card-slot--{{ d.position.accent }} card-slot--{{ loop.index0 }}{% if share_slug %} card-slot--auto{% endif %}"
+          data-index="{{ loop.index0 }}"
+          {% if share_slug %}style="animation-delay: {{ loop.index0 * 0.6 }}s"{% endif %}>
         <button
           type="button"
           class="card {% if d.is_reversed %}card--reversed{% endif %}"
           aria-label="Reveal {{ d.card.name }}{% if d.is_reversed %}, reversed{% endif %}"
-          hx-get="/readings/{{ share_slug or 'preview' }}/card/{{ loop.index0 }}"
-          hx-trigger="click"
-          hx-target="closest .card-slot"
-          hx-swap="outerHTML"
-          {% if not share_slug %}disabled{% endif %}>
+          {% if not share_slug %}
+            hx-get="/readings/{{ share_slug or 'preview' }}/card/{{ loop.index0 }}"
+            hx-trigger="click"
+            hx-target="closest .card-slot"
+            hx-swap="outerHTML"
+            disabled
+          {% endif %}>
           <span class="card__face card__face--back">
             <span class="card__face-back-title">{{ d.position.title }}</span>
             <span class="card__face-back-hint">Tap to reveal</span>
@@ -61,6 +65,9 @@
   </ol>
 
   {% if share_slug %}
-    {% include "partials/interpretation.html" %}
+    <div class="interpretation-wrap" data-dealt-only
+         style="animation-delay: {{ reading.drawn|length * 0.6 + 0.2 }}s">
+      {% include "partials/interpretation.html" %}
+    </div>
   {% endif %}
 </article>
