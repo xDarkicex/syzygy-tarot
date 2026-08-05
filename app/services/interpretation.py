@@ -109,6 +109,36 @@ def _card_line(card, drawn) -> str:
     )
 
 
+def _question_category(question: str) -> str:
+    """Classify the querent's question into a topic the model can anchor on.
+
+    The card's stored meaning text is topic-specific (Four of Coins talks
+    about money, Three of Swords about grief). When the question is about
+    love but the card is a money card, the model needs to know the question
+    is a love question so it can bridge 'scarcity' to 'emotional scarcity'
+    instead of producing a literal money reading.
+    """
+    q = question.lower()
+    love_words = ("love", "relationship", "partner", "date", "dating", "marry",
+                  "marriage", "crush", "ex", "breakup", "find someone", "boyfriend",
+                  "girlfriend", "husband", "wife", "gay", "lesbian", "drawn to",
+                  "romance", "romantic", "meet someone", "soulmate")
+    career_words = ("job", "career", "work", "promotion", "interview", "boss",
+                    "salary", "raise", "business", "startup", "project", "colleague")
+    choice_words = ("choose", "choice", "decide", "decision", "which", "option",
+                    "either", "or should i", "should i take", "pick")
+    health_words = ("health", "sick", "ill", "pain", "doctor", "exercise", "energy")
+    if any(w in q for w in love_words):
+        return "love and relationships"
+    if any(w in q for w in career_words):
+        return "career and work"
+    if any(w in q for w in choice_words):
+        return "a choice or decision"
+    if any(w in q for w in health_words):
+        return "health and wellbeing"
+    return "life and general direction"
+
+
 def _querent_context(reading: Reading) -> str:
     """Build the querent context block that opens the user message.
 
@@ -153,6 +183,11 @@ def build_prompt(reading: Reading) -> str:
     spread_name = reading.spread.name
     card_lines = "\n".join(_card_line(d.card, d) for d in reading.drawn)
     querent_context = _querent_context(reading)
+    category = _question_category(reading.question) if reading.question else None
+    category_block = (
+        f"The querent's question is about {category}.\n\n"
+        if category else ""
+    )
     question_block = (
         f"The querent asked the cards: \"{reading.question}\"\n\n"
         if reading.question else ""
@@ -205,6 +240,7 @@ def build_prompt(reading: Reading) -> str:
         )
     return (
         f"{question_block}"
+        f"{category_block}"
         f"Read the following {spread_name.lower()}. {querent_context}\n\n"
         f"{card_lines}\n\n"
         f"{answer_format}"
