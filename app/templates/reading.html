@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Reading · syzygy{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="hero__lede">Saved on {{ created_at }}</p>
+</section>
+<article class="reading">
+  <header class="reading__header">
+    <div>
+      <p class="reading__eyebrow">{{ reading.spread.name }}</p>
+      <h2 class="reading__title">A reading for {{ querent.name or 'you' }}.</h2>
+      <p class="reading__meta">
+        {{ reading.drawn_on.strftime("%B %-d, %Y") }} ·
+        seed <code>{{ reading.seed }}</code>
+      </p>
+    </div>
+  </header>
+
+  <ol class="cards cards--static">
+    {% for d in reading.drawn %}
+      <li class="card-slot card-slot--{{ d.position.accent }} revealed">
+        <div class="card card--revealed {% if d.is_reversed %}card--reversed{% endif %}">
+          <span class="card__face card__face--front">
+            <span class="card__position">{{ d.position.title }}</span>
+            <span class="card__name">{{ d.card.name }}{% if d.is_reversed %} <em>(reversed)</em>{% endif %}</span>
+            <span class="card__prompt">{{ d.position.prompt }}</span>
+            <span class="card__summary">{{ d.summary }}</span>
+            <span class="card__body">
+              {% for paragraph in d.body %}<span>{{ paragraph }}</span>{% endfor %}
+            </span>
+          </span>
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+</article>
+{% endblock %}

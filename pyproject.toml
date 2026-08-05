@@ -1,0 +1,45 @@
+[project]
+name = "syzygy-tarot"
+version = "0.1.0"
+description = "A modern web revisioning of the xDarkicex/tarot console reader"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.12",
+    "itsdangerous>=2.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "httpx>=0.28",
+    "ruff>=0.8",
+    "radon>=6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C90", "RET", "ARG", "PTH"]
+ignore = ["B008"]
+
+[tool.ruff.lint.mccabe]
+# Hard project constraint: cyclomatic complexity must stay under 10.
+max-complexity = 9
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

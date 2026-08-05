@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}History · syzygy{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Recent readings</h1>
+  <p class="hero__lede">The most recent 20 readings saved to this device's server.</p>
+</section>
+{% if readings %}
+  <ol class="history">
+    {% for stored in readings %}
+      <li>
+        <a href="/readings/{{ stored.share_slug }}">
+          <span class="history__title">{{ stored.reading.spread.name }}</span>
+          <span class="history__meta">
+            {{ stored.reading.drawn_on.strftime("%b %-d, %Y") }} ·
+            seed <code>{{ stored.reading.seed }}</code> ·
+            {{ stored.reading.querent.name or "anonymous" }}
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  <p class="empty">No readings yet. <a href="/">Draw one.</a></p>
+{% endif %}
+{% endblock %}

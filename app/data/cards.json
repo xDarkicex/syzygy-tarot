@@ -1,0 +1,1837 @@
+[
+  {
+    "slug": "the-fool",
+    "name": "The Fool",
+    "arcana": "major",
+    "suit": null,
+    "number": 0,
+    "upright": {
+      "summary": "Let go of expectations and trust your instincts.",
+      "body": [
+        "Let yourself be spontaneous enough to stretch beyond the realm of logic. There is no advantage to be gained by thinking you possess the knowledge, power, or control to direct reality.",
+        "Open and receive without question, instead of trying to manage what's happening right now. The Fool has no ambition to manipulate a specific outcome.",
+        "Just be happy to be part of the whole."
+      ]
+    },
+    "reversed": {
+      "summary": "Question whether your spontaneity is actually avoidance dressed as openness.",
+      "body": [
+        "Recklessness can look a lot like trust when you are the one leaping. The Fool has no ambition to manipulate an outcome -- but you may have an ambition to dodge something, and the leap is in that direction.",
+        "Take stock of what you are leaving behind and what you are running toward. If you cannot name either, the openness is a costume rather than a path.",
+        "A real leap of faith is grounded enough to land. Slow down just enough to see the ground before you take off."
+      ]
+    },
+    "source_index": 0
+  },
+  {
+    "slug": "the-magician",
+    "name": "The Magician",
+    "arcana": "major",
+    "suit": null,
+    "number": 1,
+    "upright": {
+      "summary": "Be creative and stay open -- your possibilities are endless.",
+      "body": [
+        "You do not have to understand it all intellectually. Besides, intuition is your ace in the hole. Respond in a spontaneous manner to what is right in front of you. There is no reason to hold yourself back.",
+        "Your natural urges are exactly what is needed, and, your ingenuous timing and elegant style will help smooth over any awkwardness."
+      ]
+    },
+    "reversed": {
+      "summary": "Recognize when creative confidence has crossed into pure performance.",
+      "body": [
+        "It feels good to be the person with all the right moves. The danger is that the moves begin to substitute for the work, until your elegant style is the only thing still on the table.",
+        "Spontaneity that has been rehearsed a few too many times stops being intuition and starts being manipulation -- first of others, then of yourself.",
+        "Pull back from the stage for a moment. Ask which of your resources you are actually using and which you are just brandishing."
+      ]
+    },
+    "source_index": 6
+  },
+  {
+    "slug": "the-high-priestess",
+    "name": "The High Priestess",
+    "arcana": "major",
+    "suit": null,
+    "number": 2,
+    "upright": {
+      "summary": "Get your self out of the way and become attuned to a more spiritual view.",
+      "body": [
+        "Until you consider this as vital to your well-being as the need to eat and sleep, you are likely to be eternally restless and deeply dissatisfied.",
+        "A spiritual routine that suits your temperament, practiced every day, is the most trustworthy path to freedom."
+      ]
+    },
+    "reversed": {
+      "summary": "Stop using busyness to keep the inner voice at bay.",
+      "body": [
+        "You can outrun the High Priestess for a long time, but the restlessness she offers will keep surfacing as agitation, vague dissatisfaction, or an unexplained sense of urgency.",
+        "A daily practice is not a luxury you will get around to. It is the only thing that has been demonstrated to quiet the noise, and until you commit to it, the freedom she promises will stay theoretical.",
+        "Start small and stay with it. Ten minutes of honest attention, every day, will do more than any grand gesture you are currently planning."
+      ]
+    },
+    "source_index": 12
+  },
+  {
+    "slug": "the-empress",
+    "name": "The Empress",
+    "arcana": "major",
+    "suit": null,
+    "number": 3,
+    "upright": {
+      "summary": "Look for opportunities to be generous, warm, and nurturing.",
+      "body": [
+        "Demonstrate this through caring actions, a forgiving and generous attitude, and wise understanding of others' needs and struggles.",
+        "Bring a healing influence to the current situation and take full credit for the supportive part you play."
+      ]
+    },
+    "reversed": {
+      "summary": "Be alert for the moment warmth tips into control of another person.",
+      "body": [
+        "The Empress's generosity becomes a problem when it is conditional, even silently. Caring actions offered with quiet expectation can quietly shape another person into a role rather than help them grow.",
+        "Be honest about who you are actually supporting -- the other person, or the version of them that makes you feel useful.",
+        "Nurture what is genuinely in front of you, and let the rest make its own choices."
+      ]
+    },
+    "source_index": 17
+  },
+  {
+    "slug": "the-emperor",
+    "name": "The Emperor",
+    "arcana": "major",
+    "suit": null,
+    "number": 4,
+    "upright": {
+      "summary": "You have the wisdom and authority to achieve your goals.",
+      "body": [
+        "You have the necessary abilities to be the final authority.",
+        "This situation is an opportunity to showcase your competence and skill. Act with the confidence of someone who knows how to take care of business."
+      ]
+    },
+    "reversed": {
+      "summary": "Soften the grip before the structure cracks under your own weight.",
+      "body": [
+        "Confidence that has no room for input hardens into something brittle. The competence that made you the authority becomes the reason no one can help you when things go sideways.",
+        "Notice where your decisiveness is actually rigidity, and where your clarity is fear of being wrong. The two often travel together.",
+        "Genuine strength leaves room for correction. Practice being the leader who can change course without losing face."
+      ]
+    },
+    "source_index": 1
+  },
+  {
+    "slug": "the-hierophant",
+    "name": "The Hierophant",
+    "arcana": "major",
+    "suit": null,
+    "number": 5,
+    "upright": {
+      "summary": "Expand your inner knowledge and share it with others.",
+      "body": [
+        "Earn respect and recognition by completing your education and broadening your experience.",
+        "If you already have all the necessary experience you need, then rewrite your resume so others can appreciate who you are and what you can bring to a situation. Focus on your goal and be determined.",
+        "You may be destined to be a master in your realm."
+      ]
+    },
+    "reversed": {
+      "summary": "Test whether your expertise is real wisdom or rehearsed authority.",
+      "body": [
+        "Credentials and experience are not the same as mastery. You can have the resume of a master and still be operating from a script you memorized long ago.",
+        "When you catch yourself citing rather than thinking, that is the signal. The Hierophant's value comes from genuine knowing, not from the appearance of it.",
+        "Return to the part of your learning that is still alive and uncertain. The places you can no longer question are the places you have stopped growing."
+      ]
+    },
+    "source_index": 7
+  },
+  {
+    "slug": "the-lovers",
+    "name": "The Lovers",
+    "arcana": "major",
+    "suit": null,
+    "number": 6,
+    "upright": {
+      "summary": "Integrate two potential realities or let go of one of them.",
+      "body": [
+        "Be willing to make some compromises, then stick with the commitments you finally make. Trust your intuition along with your rational intellect, and once you make your choice, carry it out with conviction."
+      ]
+    },
+    "reversed": {
+      "summary": "Choose, and mean it -- even if the choosing costs you.",
+      "body": [
+        "Trying to hold both realities is more painful than losing one of them. The Lovers card is not asking you to be free of regret; it is asking you to stop pretending the deferral is not already a decision.",
+        "Compromise is real, but only after you have actually chosen. Until then, you are not compromising -- you are postponing.",
+        "Make the choice you can stand behind, then give it your full conviction. Half-measures are the only thing this card will not tolerate."
+      ]
+    },
+    "source_index": 13
+  },
+  {
+    "slug": "the-chariot",
+    "name": "The Chariot",
+    "arcana": "major",
+    "suit": null,
+    "number": 7,
+    "upright": {
+      "summary": "Use your powers of freedom and flexibility to drive your future.",
+      "body": [
+        "You may be asked to live out of a suitcase and consider every place your home for a while.",
+        "Be receptive to new people who come into your life. Most especially, become more fluid and taste the joys of freedom.",
+        "The Charioteer is nothing if not self-sufficient. Be prepared and self-contained for the changes that will sweep in and carry you with them."
+      ]
+    },
+    "reversed": {
+      "summary": "Watch for the moment motion becomes a way of staying out of reach.",
+      "body": [
+        "The Charioteer's freedom has a shadow: it can become a strategy for never having to put down roots. Movement that always has an exit can keep you permanently out of reach of the people who could actually know you.",
+        "Self-sufficiency is impressive until it doubles as a wall. Notice whether the suitcase you keep packed is also a way of keeping others at a distance.",
+        "Stay long enough to be known. The fluidity you value survives contact with commitment -- it just looks different than you expected."
+      ]
+    },
+    "source_index": 18
+  },
+  {
+    "slug": "strength",
+    "name": "Strength",
+    "arcana": "major",
+    "suit": null,
+    "number": 8,
+    "upright": {
+      "summary": "Balance your primal force with intution and compassion.",
+      "body": [
+        "Demand and expect the same from others who have some power in this situation.",
+        "You cannot challenge them to live to a higher standard if you, yourself, have not yet done so. Influence others by setting an example of integrity.",
+        "Your self-esteem will increase to the degree that you succeed in your efforts."
+      ]
+    },
+    "reversed": {
+      "summary": "Soften your grip on the people and the outcomes you are trying to control.",
+      "body": [
+        "Strength that shows up as coercion, even of yourself, has lost its center. When you start demanding that outcomes match your standards, take a hard look at whose standard is actually being served.",
+        "Compassion is the only thing that distinguishes force from strength. Without it, you are just loud.",
+        "Influence by example of integrity, not by pressure on the people around you. The self-esteem you want will not come from winning."
+      ]
+    },
+    "source_index": 2
+  },
+  {
+    "slug": "the-hermit",
+    "name": "The Hermit",
+    "arcana": "major",
+    "suit": null,
+    "number": 9,
+    "upright": {
+      "summary": "Gaze into the mysteries of your inner life.",
+      "body": [
+        "Now may be the moment for you to tell everyone to leave you alone. When you are fully ready, you will be able and willing to give others what they need."
+      ]
+    },
+    "reversed": {
+      "summary": "Distinguish between seeking solitude and hiding from the world.",
+      "body": [
+        "A retreat that has no end stops being a retreat. There is a version of withdrawal that begins as self-knowledge and slowly becomes a way of avoiding the demands of being known.",
+        "Sort out whether the silence you are sitting in is feeding you or merely protecting you. Both feel similar at first, and the difference only shows up over weeks.",
+        "The Hermit eventually comes back down the mountain. If you are not finding your way back, the solitude is doing you harm rather than good."
+      ]
+    },
+    "source_index": 8
+  },
+  {
+    "slug": "wheel-of-fortune",
+    "name": "Wheel of Fortune",
+    "arcana": "major",
+    "suit": null,
+    "number": 10,
+    "upright": {
+      "summary": "Learn to go with the flow without resisting ups and downs.",
+      "body": [
+        "This is a safe place for you to be. You are watched over and protected as you go round and round the wheel.",
+        "You will learn a lot. You will also learn it quickly, and what you absorb will benefit you for a long time to come."
+      ]
+    },
+    "reversed": {
+      "summary": "Notice when going with the flow has become a cover for not choosing.",
+      "body": [
+        "Going with the flow becomes an evasion when you use it to avoid any choice at all. The Wheel turns, yes -- and so do you, whether or not you notice.",
+        "Watched over and protected is not the same as carried. There is a difference between trusting the cycle and using it as cover for refusing to act.",
+        "Make a move that is yours, even a small one. The learning the Wheel promises comes from participating, not from watching."
+      ]
+    },
+    "source_index": 14
+  },
+  {
+    "slug": "justice",
+    "name": "Justice",
+    "arcana": "major",
+    "suit": null,
+    "number": 11,
+    "upright": {
+      "summary": "Balance the scales to support truth and serve the greatest good.",
+      "body": [
+        "As you witness people's account of themselves, your understanding will go beyond the words you hear.",
+        "Subtle inferences and clues will reveal the truths that will enable you to make a wise and accurate assessment."
+      ]
+    },
+    "reversed": {
+      "summary": "Beware when your pursuit of truth becomes a way of punishing people.",
+      "body": [
+        "Justice with no compassion calcifies into something you would not want aimed at you. The accuracy you pride yourself on can become a weapon if you forget that what you are weighing is also a person.",
+        "Take an honest look at the satisfaction you get from being right about someone. If the assessment is a verdict rather than an understanding, the scales have tipped.",
+        "Truth can be delivered with the goal of repair. Practice the same accurate reading in a way that leaves room for the other person to grow."
+      ]
+    },
+    "source_index": 19
+  },
+  {
+    "slug": "the-hanged-man",
+    "name": "The Hanged Man",
+    "arcana": "major",
+    "suit": null,
+    "number": 12,
+    "upright": {
+      "summary": "You have reached a crossroads, making it possible to clear the slate and start over.",
+      "body": [
+        "Stop resisting your circumstances and let some time go by. Eventually, you will be released a little wiser and not much the worse for wear.",
+        "You will come to realize in time how you collaborated with the problem. However, the issues you were stuck on when you were first hung up have subsided and no longer concern you.",
+        "You are free to take up new endeavors. You will ultimately feel refreshed and grateful that you were derailed from your former track."
+      ]
+    },
+    "reversed": {
+      "summary": "Stop fighting the pause that is trying to teach you something.",
+      "body": [
+        "The Hanged Man's wisdom arrives only when you stop thrashing. If you are swinging your arms trying to break free, you have made the suspension into a punishment rather than a study.",
+        "Ask what the delay is actually showing you. Most likely it is asking you to see how you have been collaborating with the very problem you are now blaming on circumstance.",
+        "Put the effort down. Sit in the inversion long enough for the new perspective to register, and you will come down lighter than you went up."
+      ]
+    },
+    "source_index": 3
+  },
+  {
+    "slug": "death",
+    "name": "Death",
+    "arcana": "major",
+    "suit": null,
+    "number": 13,
+    "upright": {
+      "summary": "Shed the old to make room for the new.",
+      "body": [
+        "Do not allow nostalgia and outworn loyalties to hold you back. Be willing to go through whatever it takes to get to where you really want to be."
+      ]
+    },
+    "reversed": {
+      "summary": "Acknowledge what has already ended, even if you are not ready.",
+      "body": [
+        "Death does not need your permission to be over. By the time you are wrestling with whether to let go, the thing in question is already gone -- your hold is on a memory, not a living thing.",
+        "Nostalgia and outworn loyalty are the two main culprits. They feel like love, and they quietly keep you from where you actually want to be.",
+        "Allow yourself to grieve what is leaving. The release you are avoiding is the doorway to the next chapter, and standing in it costs less than you think."
+      ]
+    },
+    "source_index": 9
+  },
+  {
+    "slug": "temperance",
+    "name": "Temperance",
+    "arcana": "major",
+    "suit": null,
+    "number": 14,
+    "upright": {
+      "summary": "The time is now for self-healing.",
+      "body": [
+        "Prepare to use spiritual practices, studies, or lifestyle changes that can assist you in your quest.",
+        "A tremendous amount of benefit is available if you can organize yourself and be disciplined at this time."
+      ]
+    },
+    "reversed": {
+      "summary": "Stop healing in ways that keep you perpetually preparing to live.",
+      "body": [
+        "Self-healing can become its own avoidance. When the routines grow elaborate and the results stay the same, the discipline has become a holding pattern rather than a path.",
+        "Watch for the version of preparation that postpones everything else. One more book, one more practice, one more refinement of the regimen -- these are ways of staying safely on the threshold.",
+        "Pick one or two practices and live them. The benefit comes from application, not from endless refinement."
+      ]
+    },
+    "source_index": 15
+  },
+  {
+    "slug": "the-devil",
+    "name": "The Devil",
+    "arcana": "major",
+    "suit": null,
+    "number": 15,
+    "upright": {
+      "summary": "Put subtlety aside and empower your passion and confidence.",
+      "body": [
+        "Assert your agenda, express yourself honestly, and let the chips fall where they may.",
+        "Your best bet could be to express your true emotions, possibly even including anger. Acknowledge that you have whatever feelings you have.",
+        "While it may not be necessary to act out what you feel in every situation, accepting the power and depth of your inner experience enables you to remain true to yourself."
+      ]
+    },
+    "reversed": {
+      "summary": "Watch for when honest expression becomes a compulsion you cannot set down.",
+      "body": [
+        "There is a difference between claiming your power and being driven by it. When the passion starts to dictate the agenda, and you find yourself needing the next hit of intensity just to feel real, the Devil has taken the wheel.",
+        "Honest anger can become anger that looks for reasons to exist. Honest desire can become desire that has forgotten the difference between want and need.",
+        "Put the thing down for a moment, even if it is your favorite obsession. The depth of your inner experience will survive the pause, and so will you."
+      ]
+    },
+    "source_index": 20
+  },
+  {
+    "slug": "the-tower",
+    "name": "The Tower",
+    "arcana": "major",
+    "suit": null,
+    "number": 16,
+    "upright": {
+      "summary": "Because of circumstances beyond your control, you have no choice.",
+      "body": [
+        "Now you may be at the forefront, acknowledging and accepting the bracing presence of the future bursting in on the present.",
+        "Try to mediate the harsher parts of the changes as they unfold, so the most vulnerable are the most cushioned. Acknowledge yourself, as well as the others in your life, who are offering their resources to usher in a better future."
+      ]
+    },
+    "reversed": {
+      "summary": "Stop propping up a structure that has already finished falling.",
+      "body": [
+        "A Tower you are trying to prevent is a Tower you have postponed. The bracing presence of the future is going to arrive whether or not you keep bracing, and every day spent holding the walls up costs you and the people around you.",
+        "Look closely at what you are protecting. If it is brittle and you are exhausted, the building was already coming down.",
+        "Accept what is asking to be released. Cushioning the vulnerable does not require denying the change -- it requires doing both at once."
+      ]
+    },
+    "source_index": 4
+  },
+  {
+    "slug": "the-star",
+    "name": "The Star",
+    "arcana": "major",
+    "suit": null,
+    "number": 17,
+    "upright": {
+      "summary": "Rise above your day-to-day and connect with the divine.",
+      "body": [
+        "Now is a period for quiet contemplation. Listen for the voice within.",
+        "Anything that would interfere with this communion may not be serving your best interests right now."
+      ]
+    },
+    "reversed": {
+      "summary": "Look closely at when contemplation becomes a way of opting out.",
+      "body": [
+        "Quiet contemplation has its place, but it can quietly become a way to avoid the day-to-day rather than rise above it. Listening for the voice within is not the same as not answering anyone else's call.",
+        "Anything that interferes with the communion may not be serving your best interests -- including using the communion as a shield against ordinary obligations.",
+        "Bring what you receive in the silence back into the room. The Star's gift only becomes real when it touches something practical."
+      ]
+    },
+    "source_index": 10
+  },
+  {
+    "slug": "the-moon",
+    "name": "The Moon",
+    "arcana": "major",
+    "suit": null,
+    "number": 18,
+    "upright": {
+      "summary": "This is an opportunity to draw messages from your inner self.",
+      "body": [
+        "The everyday mind may not be prepared for strange oceanic circumstances.",
+        "Plus, it has no game plan. Your intuitive body will support you unerringly if you do not interfere with or try to control what you perceive.",
+        "A better approach would be to meditate. Try to just be a witness. Do nothing; let nature carry you forward. This may be your best option in this situation."
+      ]
+    },
+    "reversed": {
+      "summary": "Stop letting the fog become the only landscape you can see.",
+      "body": [
+        "The Moon asks you to witness without controlling, but there is a version of that practice that turns into paralysis. If you have been just being a witness for weeks, you have likely slipped into something more like hiding.",
+        "Your intuitive body supports you only if you stop interfering -- but interfering includes the habit of using uncertainty as a reason to take no action at all.",
+        "Take the smallest concrete step you can take without pretending the fog is not there. The way through is not clarity; it is one small motion made anyway."
+      ]
+    },
+    "source_index": 16
+  },
+  {
+    "slug": "the-sun",
+    "name": "The Sun",
+    "arcana": "major",
+    "suit": null,
+    "number": 19,
+    "upright": {
+      "summary": "You are in the right place at the right time.",
+      "body": [
+        "Step into the full light of truth and reveal your motives and principles. Once done, you will no longer give away power to the people that criticize and shame you. Focus on the positive and the real.",
+        "Your authentic shining self can be a light for others if you project it without contrivance."
+      ]
+    },
+    "reversed": {
+      "summary": "Make room for the parts of yourself that are not yet shiny.",
+      "body": [
+        "The Sun's authenticity is the whole point, and the easiest way to lose it is to insist on positivity as a performance. When the shining self becomes a project rather than a way of being, it stops being a light for anyone.",
+        "Notice what you are not allowing to be seen. The critics you tune out are sometimes pointing at the truth you are papering over with cheer.",
+        "Step into the light with the whole of yourself, including the parts that are not yet polished. Real warmth does not require a curated version of you."
+      ]
+    },
+    "source_index": 21
+  },
+  {
+    "slug": "judgement",
+    "name": "Judgement",
+    "arcana": "major",
+    "suit": null,
+    "number": 20,
+    "upright": {
+      "summary": "You have the power to make changes and feel complete.",
+      "body": [
+        "It's not necessary to reject others, but refuse to be manipulated by those who cry foul.",
+        "This process isn't about them anyway. It is about you and the desire you feel to change your life and become a more complete person.",
+        "Trust your impulses and allow this remarkable awakening to happen."
+      ]
+    },
+    "reversed": {
+      "summary": "Let yourself complete what your own high standards keep postponing.",
+      "body": [
+        "Judgement's call is to awaken into a more complete person, and the most common way to refuse that call is to insist you have not yet earned it. Notice when the voice saying you are not ready is actually your own.",
+        "The desire you feel to change is not a mistake to be policed. Trust the impulse toward completion rather than picking it apart for impurities.",
+        "Allow the awakening even if it feels premature. The version of you that comes out the other side has been waiting for permission for a long time."
+      ]
+    },
+    "source_index": 5
+  },
+  {
+    "slug": "the-world",
+    "name": "The World",
+    "arcana": "major",
+    "suit": null,
+    "number": 21,
+    "upright": {
+      "summary": "You are in a timeless state of grace where all is well.",
+      "body": [
+        "What matters is divine intention. Whether or not human beings approve is less important.",
+        "If you allow your ego to inflate, however, you cease to be useful to the greater plan."
+      ]
+    },
+    "reversed": {
+      "summary": "Stay open to what comes after the finish line.",
+      "body": [
+        "The World is the end of a cycle, not the end of your life. The danger is mistaking the grace for an arrival -- and then refusing the next beginning because you are too comfortable where you are.",
+        "Ego inflation is the precise failure this card warns against. The moment you believe you have arrived, you have made yourself useless to whatever wants to happen next.",
+        "Enjoy the completion fully, but do not camp in it. The next journey is gathering itself on the other side of your gratitude."
+      ]
+    },
+    "source_index": 11
+  },
+  {
+    "slug": "ace-of-coins",
+    "name": "Ace of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 1,
+    "upright": {
+      "summary": "You are becoming increasingly aware of your contribution and value.",
+      "body": [
+        "This card advises that if you work a little bit every day toward your long-term goal,",
+        "at some time in the future you will discover that you have accumulated magnificent results.",
+        "The secret of achieving success does not lie in inflating your dreams to grandiose levels; instead it comes about by choosing your direction wisely,",
+        "while humbly and faithfully taking one step at a time."
+      ]
+    },
+    "reversed": {
+      "summary": "Stop discounting your value while postponing the small work that would prove it.",
+      "body": [
+        "A grand opportunity may seem necessary to confirm that your contribution matters. Meanwhile, the modest task in front of you goes undone.",
+        "Choose one useful direction and give it a little effort every day. Let accumulated results, rather than inflated plans, restore your confidence."
+      ]
+    },
+    "source_index": 64
+  },
+  {
+    "slug": "two-of-coins",
+    "name": "Two of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 2,
+    "upright": {
+      "summary": "Wait patiently for circumstances to sort themselves out.",
+      "body": [
+        "Ask yourself -- are all the facts in yet? Or is the coin still flipping in the air?",
+        "There is no need to be goaded into premature decisions or actions.",
+        "Act only when you are able to do so with a unified heart and mind."
+      ]
+    },
+    "reversed": {
+      "summary": "Your patience has become avoidance; gather the remaining facts and make a grounded choice.",
+      "body": [
+        "Uncertainty can protect you from a hasty commitment, but it can also become an excuse to keep every option open. Notice whether the coin is still moving or whether you simply dislike the answer.",
+        "Set a reasonable deadline for reviewing the practical facts. Then bring your judgment and desire together and act without asking circumstances to decide for you."
+      ]
+    },
+    "source_index": 65
+  },
+  {
+    "slug": "three-of-coins",
+    "name": "Three of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 3,
+    "upright": {
+      "summary": "Your leadership in a cooperative effort brings exceptional results.",
+      "body": [
+        "Expect new and exciting offers. When they arrive, accept them graciously.",
+        "Why hide your light under a bushel?",
+        "It does not become you to display false modesty.",
+        "Practice saying to yourself, Thank you, I accept the compliment until you learn to fully let in this kind of affirmative grace with ease."
+      ]
+    },
+    "reversed": {
+      "summary": "Accept your earned recognition instead of shrinking from the cooperative role you can lead.",
+      "body": [
+        "Perhaps you are minimizing your skill so no one expects more of you. False modesty does not protect the work; it deprives the group of what you know how to do.",
+        "If an offer or compliment arrives, receive it without arguing. Leadership here means making room for everyone's craft, not proving that yours is superior."
+      ]
+    },
+    "source_index": 66
+  },
+  {
+    "slug": "four-of-coins",
+    "name": "Four of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 4,
+    "upright": {
+      "summary": "Cultivate a feeling of gratitude and make the best use of your advantage.",
+      "body": [
+        "However, if you are frivolous or foolish, your behavior could undermine both your inheritance and the well being of others who are connected to it. In many decks, we see the image of a person who is stuck in his or her misunderstanding of how the material plane works.",
+        "He's afraid to let go of his four measly coins, because he doesn't know he has to give in order to get. When looked at this way, this is the card of poverty consciousness"
+      ]
+    },
+    "reversed": {
+      "summary": "Your fear of scarcity is making you clutch or squander resources instead of stewarding them.",
+      "body": [
+        "Poverty consciousness can appear as a tight fist or an empty purse. In either form, fear is deciding what happens to what you have.",
+        "Take an honest account of your advantage and those connected to it. Use some, save some, and give some -- gratitude becomes practical when resources are allowed to circulate wisely."
+      ]
+    },
+    "source_index": 67
+  },
+  {
+    "slug": "five-of-coins",
+    "name": "Five of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 5,
+    "upright": {
+      "summary": "Consider carefully what consequences may result from joining forces.",
+      "body": [
+        "Put your heads together and devise a bold plan for future objectives and decide how to invest in their success.",
+        "This Five of Coins recommends teamwork and the mutual benefits a combined effort can yield."
+      ]
+    },
+    "reversed": {
+      "summary": "Do not join resources until every partner understands the plan, cost, and benefit.",
+      "body": [
+        "A combined effort is faltering because the objectives or consequences have not been faced together. Cooperation without a shared investment can turn into resentment and wasted labor.",
+        "Put every contribution, responsibility, and future aim on the table. If your heads cannot come together around a workable plan, keep your resources separate for now."
+      ]
+    },
+    "source_index": 68
+  },
+  {
+    "slug": "six-of-coins",
+    "name": "Six of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 6,
+    "upright": {
+      "summary": "You are in a position to be generous if you want to be.",
+      "body": [
+        "You have to constantly check your intentions so that you are not expecting something in return.",
+        "Do not for a minute feel proud about doing someone a favor.",
+        "In truth what you are doing is paying back an old debt to those who served as your mentors."
+      ]
+    },
+    "reversed": {
+      "summary": "Your generosity loses its grace when you use it to purchase loyalty or praise.",
+      "body": [
+        "A favor offered with an invisible price is not freely given. Check whether you are keeping score, displaying your virtue, or making someone dependent on your help.",
+        "Remember what you received from mentors and others before you had the means to repay them. Give only what you can release without control, and let the recipient remain equal to you."
+      ]
+    },
+    "source_index": 69
+  },
+  {
+    "slug": "seven-of-coins",
+    "name": "Seven of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 7,
+    "upright": {
+      "summary": "Your personal power is growing and others are taking notice.",
+      "body": [
+        "The path to success is paved by perseverance.",
+        "Glamorous or flashy moves cannot take the place of consistent steps in the right direction.",
+        "If you do not understand this, perhaps you are moving in the wrong direction or are not motivated strongly enough."
+      ]
+    },
+    "reversed": {
+      "summary": "Persistence is becoming drudgery because you have stopped questioning where your work leads.",
+      "body": [
+        "Consistency has value, but repeating the wrong steps will not create success. The attention of others is no reason to keep cultivating a goal that no longer motivates you.",
+        "Pause long enough to inspect both your direction and your daily practice. Renew the purpose, change the method, or admit that your perseverance belongs elsewhere."
+      ]
+    },
+    "source_index": 70
+  },
+  {
+    "slug": "eight-of-coins",
+    "name": "Eight of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 8,
+    "upright": {
+      "summary": "Give yourself credit for the quality work you are producing.",
+      "body": [
+        "This is an important time for meeting goals.",
+        "However, do not work so hard that quality suffers.",
+        "You are in a position where your effort can make a big difference.",
+        "Apply yourself. Do the work and you will be rewarded with flexibility and freedom."
+      ]
+    },
+    "reversed": {
+      "summary": "Hard work is narrowing your judgment, and the quality you value is beginning to suffer.",
+      "body": [
+        "You are measuring commitment by hours spent rather than by what you actually produce. More effort is not useful when fatigue makes the craft careless.",
+        "Step back, review the standard, and correct what needs correction. Credit yourself for sound work, not exhaustion; skill should eventually create more flexibility, not less."
+      ]
+    },
+    "source_index": 71
+  },
+  {
+    "slug": "nine-of-coins",
+    "name": "Nine of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 9,
+    "upright": {
+      "summary": "The abundance you enjoy allows you the freedom to be yourself.",
+      "body": [
+        "Hard work has brought you to a place where you could earn and receive grace, comfort, and freedom -- whether that be personal, emotional or financial.",
+        "Exercise your imagination and create an abundant, sustainable, and enjoyable lifestyle (or relationship) for yourself.",
+        "Acknowledge the friends and others who were loyal to you during the difficult times.",
+        "Gather your dreams and get ready.",
+        "You deserve this happiness."
+      ]
+    },
+    "reversed": {
+      "summary": "You have earned comfort, but guilt or isolation keeps you from enjoying it fully.",
+      "body": [
+        "Hard work may have produced abundance without teaching you how to receive it. If your lifestyle is costly to your body, relationships, or peace, it is not yet sustainable.",
+        "Let loyal friends share in the life they helped you reach, and allow pleasure without turning it into proof of success. You deserve happiness that leaves you more yourself, not more guarded."
+      ]
+    },
+    "source_index": 72
+  },
+  {
+    "slug": "ten-of-coins",
+    "name": "Ten of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 10,
+    "upright": {
+      "summary": "You are required to meet obligations.",
+      "body": [
+        "Think of every act of spending and investing and securing as the sowing of seed that will sprout and produce another money tree in somebody else's yard.",
+        "How can you get really clever and inventive at throwing those seeds? This is your next assignment."
+      ]
+    },
+    "reversed": {
+      "summary": "Meet your obligations without letting them consume every resource or dictate every choice.",
+      "body": [
+        "Duty has become a burden because you are treating every demand as equally binding. Money sent in all directions without thought is not the inventive investment this situation requires.",
+        "Trace where your spending, securing, and investing actually bear fruit, especially for others. Fulfill what is truly yours, revise wasteful commitments, and sow with greater intention."
+      ]
+    },
+    "source_index": 73
+  },
+  {
+    "slug": "page-of-coins",
+    "name": "Page of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 11,
+    "upright": {
+      "summary": "You are reinventing yourself to create a better fit with your chosen profession.",
+      "body": [
+        "Leave no stone unturned.",
+        "See if you can figure out why their experiments went the way they did and what you might do differently that could change the outcome.",
+        "Passionately hunt for the missing pieces overlooked by those who came before you. Remember that the mind of a beginner is an open channel for genius.",
+        "Let that openness lead you and you will instinctively penetrate to the heart of the matter"
+      ]
+    },
+    "reversed": {
+      "summary": "Your professional reinvention stalls when embarrassment keeps you from becoming a beginner again.",
+      "body": [
+        "Established methods may tempt you to copy them without asking why they worked or failed. The missing piece will remain hidden if you are more concerned with appearing qualified than with learning.",
+        "Return to the evidence with an open mind. Test a different approach, welcome basic questions, and let curiosity reshape your place in the work."
+      ]
+    },
+    "source_index": 74
+  },
+  {
+    "slug": "knight-of-coins",
+    "name": "Knight of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 12,
+    "upright": {
+      "summary": "Cultivate your investments using good timing and skillful management.",
+      "body": [
+        "The entire endeavor will be enhanced significantly by the resources you bring to it and you will be blessed tenfold.",
+        "Expect to supervise and guide the project as well as influence the outcome of events.",
+        "Without you on board, this endeavor is just another good idea."
+      ]
+    },
+    "reversed": {
+      "summary": "Your wish to manage everything is turning sound investment into control and delay.",
+      "body": [
+        "The project may need your resources and judgment, but it does not need you gripping every decision. Believing nothing can succeed without you weakens both the endeavor and the people involved.",
+        "Review the timing, assign real authority, and manage what is actually yours. Your contribution becomes more valuable when it guides the work without possessing it."
+      ]
+    },
+    "source_index": 75
+  },
+  {
+    "slug": "queen-of-coins",
+    "name": "Queen of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 13,
+    "upright": {
+      "summary": "Use your your penetrating intuition to divine new meanings.",
+      "body": [
+        "Proceed with confidence and do what you so strongly feel must be done.",
+        "Since the Queen of Coins is often the person with the best intuition in the crowd, you may feel at first as if you are going against the grain, only to later find yourself becoming the leader of a new trend."
+      ]
+    },
+    "reversed": {
+      "summary": "Test your strong conviction before mistaking stubbornness for the insight others have missed.",
+      "body": [
+        "Going against the grain is not proof that your judgment is sound. A need to be the first can make you force new meaning onto practical facts.",
+        "Listen to what your body knows, then check it against evidence and consequences. Proceed confidently only after curiosity, rather than pride, has taken you to the heart of the matter."
+      ]
+    },
+    "source_index": 76
+  },
+  {
+    "slug": "king-of-coins",
+    "name": "King of Coins",
+    "arcana": "minor",
+    "suit": "coins",
+    "number": 14,
+    "upright": {
+      "summary": "Make unpressured choices, dream big dreams -- and be generous.",
+      "body": [
+        "Make your moves with authority and trust in your actions without waiting for acknowledgment or approval.",
+        "Soon enough you will receive blessing after blessing.",
+        "If you can learn to feel that kind of confidence in your body and get comfortable with it as your natural state, you will attract the support you desire."
+      ]
+    },
+    "reversed": {
+      "summary": "Release the pressure to prove success; grounded confidence does not need applause or excess.",
+      "body": [
+        "Large choices may be tempting when you want to secure acknowledgment rather than make a wise decision. Authority becomes brittle when generosity is withheld and every move must confirm your importance.",
+        "Slow down until confidence can be felt in your body rather than displayed through possessions or promises. Dream broadly, choose carefully, and offer support without using it to buy approval."
+      ]
+    },
+    "source_index": 77
+  },
+  {
+    "slug": "ace-of-cups",
+    "name": "Ace of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 1,
+    "upright": {
+      "summary": "A fountain of abundance nourishes your life.",
+      "body": [
+        "Look with the eye of a loving parent or companion upon the people and things you come into contact with.",
+        "Make a conscious decision to approve of and delight in even the quirky developments that make the world turn.",
+        "No one can be perfect at such unconditional acceptance. Still the practice will sweeten your day to day life.",
+        "Your magnetism will increase and more loving people may enter your life.",
+        "The whole world will benefit as this becomes second nature to you."
+      ]
+    },
+    "reversed": {
+      "summary": "Your cup spills over so freely that nothing remains for those nearby to take hold of.",
+      "body": [
+        "Notice when generosity tips into pressure, and when the affection you offer becomes a demand the other person must meet on your terms.",
+        "The same impulse that fills you can empty you. Refusal is a form of self-care, and a quiet way to love the people you are pouring for.",
+        "Let others bring their own cups to the table. Not every offering needs to come from you, and not every relationship needs to run at your pace."
+      ]
+    },
+    "source_index": 36
+  },
+  {
+    "slug": "two-of-cups",
+    "name": "Two of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 2,
+    "upright": {
+      "summary": "Your emotional, psychic and spiritual lives are quickening like spring.",
+      "body": [
+        "You have nothing to lose and everything to gain. Life is a relationship game.",
+        "It's a great privilege to share with others who are so complementary and compatible."
+      ]
+    },
+    "reversed": {
+      "summary": "Your springtime quickening has curdled into a merging where neither of you can find an outline.",
+      "body": [
+        "When two cups pour into each other back and forth, both eventually run dry. Notice which preferences and habits you have quietly handed over, and which ones you no longer recognize as yours.",
+        "Healthy union is two whole people choosing each other, not two halves depending on completion to feel real.",
+        "Pull back into your own shape this week. The connection survives a little distance far better than it survives dissolution."
+      ]
+    },
+    "source_index": 37
+  },
+  {
+    "slug": "three-of-cups",
+    "name": "Three of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 3,
+    "upright": {
+      "summary": "Celebrate friendships and close companions.",
+      "body": [
+        "Think of this occasion as a celebration, where their support helps you find success in your work.",
+        "There may be something here for everyone to contribute. Put yourself in the loving hands of your family connections and your trust will be well rewarded.",
+        "The synergy between you could enhance each individual's talent and creativity.",
+        "You will love the results!"
+      ]
+    },
+    "reversed": {
+      "summary": "Your circle has tightened to exclude someone, and you may be holding the invisible door shut.",
+      "body": [
+        "Community becomes a clique the moment a third person feels unwelcome. Notice who is not in the room, and why their name has quietly stopped coming up.",
+        "Celebration shared only among the chosen few is closer to performance than friendship. The toast still sounds the same, but it lands differently.",
+        "Open the door, even slightly. The friends you trust most will welcome the gesture, and the excluded one will remember it longer than you expect."
+      ]
+    },
+    "source_index": 38
+  },
+  {
+    "slug": "four-of-cups",
+    "name": "Four of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 4,
+    "upright": {
+      "summary": "Your will has dissipated and your mind is distracted from its true goal.",
+      "body": [
+        "Decide that you are not as heavy as the cup of earth, not placid as is the cup of water, not turbulent as is the cup of air.",
+        "Rather, now may be the time to be as aroused as is the cup of fire.",
+        "This arousal may constitute liberation from the circumstances that may have brought you here."
+      ]
+    },
+    "reversed": {
+      "summary": "You turn away from the cup held out to you, as if every offer were another demand.",
+      "body": [
+        "The earlier distraction has hardened into refusal. Distrust of every offer has sealed you in a room of your own making, and you have begun to call it peace.",
+        "This is not peace -- it is a slow contraction that pretends to be choice. The arousal of fire still exists; you have simply refused to look at it.",
+        "Accept something small. Let one cup be poured without requiring it to be perfect, and notice what loosens."
+      ]
+    },
+    "source_index": 39
+  },
+  {
+    "slug": "five-of-cups",
+    "name": "Five of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 5,
+    "upright": {
+      "summary": "Take action to change past patterns.",
+      "body": [
+        "If something is truly yours, it cannot be lost.",
+        "When you are experiencing feelings of loss, it may be because of an inappropriate emotional attachment.",
+        "If you promise things that you cannot deliver, then you might be setting yourself up for disappointment to follow.",
+        "In overestimating our abilities, we are forced to face our limits.",
+        "Be grateful that as the cups fell, you lost only three of the five.",
+        "Two are still intact, pristine and full of sacred energy.",
+        "Do not cling to the setback. Focus on the potential."
+      ]
+    },
+    "reversed": {
+      "summary": "You have memorized the three spilled cups so thoroughly that the two still standing feel like a lie.",
+      "body": [
+        "Grief that rehearses itself becomes a residence. You have moved in with the loss and stopped noticing the present, and the lease on what remains is quietly expiring.",
+        "The intact cups do not erase what spilled -- they coexist with it. Turn your head and look at what is still full.",
+        "Your gratitude practice is waiting, not because it fixes anything, but because it returns your gaze to what is real and unreplaceable."
+      ]
+    },
+    "source_index": 40
+  },
+  {
+    "slug": "six-of-cups",
+    "name": "Six of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 6,
+    "upright": {
+      "summary": "You need to be more powerful, directing the flow rather than following.",
+      "body": [
+        "Until you analyze the past, you will continue to drift with its current.",
+        "Distill everything that is worthwhile from your memories and get as much value from it as you can.",
+        "Then use this as motivation for change. Make the very best use of hindsight, employing new strategies and trying new angles on these recurring issues."
+      ]
+    },
+    "reversed": {
+      "summary": "You keep returning to the harbor of what was, mistaking memory for direction.",
+      "body": [
+        "You have built a careful museum out of what used to be, and now you visit it daily instead of living. The past has become a soft prison with comfortable wallpaper.",
+        "Memory can be a soft trap: pleasant, detailed, and entirely useless for steering what comes next. Hindsight is only hindsight when it informs the present.",
+        "Take one small thing you have learned from the past and apply it to a current problem. The old shore can inform the new crossing without replacing it."
+      ]
+    },
+    "source_index": 41
+  },
+  {
+    "slug": "seven-of-cups",
+    "name": "Seven of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 7,
+    "upright": {
+      "summary": "Among your many options, choose the one closest to your heart.",
+      "body": [
+        "Allow yourself to imagine a truly positive outcome for this situation.",
+        "Perform an exercise in creative visualization by relaxing your guard and letting go of your fears. As the dreamscape unfolds, your electro-magnetic chemistry is stimulated to a point of achieving greater confidence in yourself and in what you are doing.",
+        "Even if it's only a temporary break from your fears, this is a helpful exercise because it gives your psyche and body a dose of unlimited thinking and optimism.",
+        "Think positively -- the results could truly be amazing."
+      ]
+    },
+    "reversed": {
+      "summary": "You keep adding cups to the vision, until the beautiful daydream replaces any actual choice.",
+      "body": [
+        "Imagination without selection becomes its own kind of evasion. Each option is a small escape from the weight of choosing, and the array keeps growing because nothing is at stake.",
+        "Pick one cup. Hold it. Notice how ordinary it feels compared with the shimmering lineup you have been entertaining.",
+        "The commitment to a single direction is what turns vision into a life. Everything else is rehearsal disguised as possibility."
+      ]
+    },
+    "source_index": 42
+  },
+  {
+    "slug": "eight-of-cups",
+    "name": "Eight of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 8,
+    "upright": {
+      "summary": "You are strong enough to gain wisdom from a challenging experience.",
+      "body": [
+        "Do not deny this pessimistic tendency.",
+        "Failing to recognize the truth only causes repression that flares up in another part of our psyche. Instead, seek to understand and accept the hesitation and the fear you may feel, and come to terms with them. Then you can put some old emotions in their rightful place--out of the way."
+      ]
+    },
+    "reversed": {
+      "summary": "You keep walking away from the old shore, never pausing long enough for the lessons to land.",
+      "body": [
+        "Departure without arrival becomes its own habit. Notice whether you are walking toward something or simply moving again, the way a door swings because no one has stepped through.",
+        "The wisdom you went looking for needs a place to land before it can take root. In transit, it stays a theory.",
+        "Stop somewhere this week. Make a small commitment to a place, a practice, or a person, and let the lessons arrive at last."
+      ]
+    },
+    "source_index": 43
+  },
+  {
+    "slug": "nine-of-cups",
+    "name": "Nine of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 9,
+    "upright": {
+      "summary": "You are finally where you had hoped and dreamed to be.",
+      "body": [
+        "Allow yourself to be attracted to what feels supportive.",
+        "Avoid what feels harsh, critical and judgmental.",
+        "If this requires that you change your style, so be it. The results of being intuitive are generally far superior to the results of being emotionally guarded and overly rational."
+      ]
+    },
+    "reversed": {
+      "summary": "Your wish has come true so completely that you have lost interest in what it left behind.",
+      "body": [
+        "Comfort can become its own kind of blindness. When the harsh and critical world is fully excluded, growth has nowhere to enter, and gratitude quietly goes stale.",
+        "You have arranged your life around what feels supportive and may now be mildly bored by what you have built. The wish answered did not promise stillness.",
+        "Invite a challenge through the door. Let one thing that unsettles you stay for a week, and watch what sharpens."
+      ]
+    },
+    "source_index": 44
+  },
+  {
+    "slug": "ten-of-cups",
+    "name": "Ten of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 10,
+    "upright": {
+      "summary": "Inner and outer harmony is cause for celebration.",
+      "body": [
+        "It's essential to follow a teamwork approach in order to maximize the benefits for yourself.",
+        "The good will that will emerge from such an approach will last long after the project is over.",
+        "You will be generously rewarded later if you take a selfless approach at this time."
+      ]
+    },
+    "reversed": {
+      "summary": "Your harmony is held together by silence, and everyone knows which topics are off-limits.",
+      "body": [
+        "A family or team that never disagrees is not unified -- it is performing. Notice what has been traded for the peace, and whose feelings have been quietly edited out.",
+        "Authentic warmth allows disagreement without threatening the bond. The bonds that cannot tolerate honesty were never as solid as they appeared.",
+        "Speak one true thing this week. Let the real harmony be tested by it, and notice which relationships survive the pressure."
+      ]
+    },
+    "source_index": 45
+  },
+  {
+    "slug": "page-of-cups",
+    "name": "Page of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 11,
+    "upright": {
+      "summary": "Beware forgetting to look out for yourself lest you be played for a fool.",
+      "body": [
+        "Make sure you understand what is needed and serve the situation with loyalty.",
+        "Look at individuals around you as the embodiment of the Divine, and try to fulfill each one's needs.",
+        "Be unconcerned with the outcome.",
+        "Later you will understand why you needed to be in this position."
+      ]
+    },
+    "reversed": {
+      "summary": "You keep handing the cup to others and have forgotten what you yourself wanted from it.",
+      "body": [
+        "The loyal servant who never looks up risks becoming invisible. Notice which of your own needs have been quietly postponed, and how long the queue has become.",
+        "Serving is not the same as disappearing. The page also deserves to be served, and the role of giver is only sustainable when the receiver takes a turn.",
+        "Ask for one thing today. Let someone else pour for you, and notice how unfamiliar the gesture feels."
+      ]
+    },
+    "source_index": 46
+  },
+  {
+    "slug": "knight-of-cups",
+    "name": "Knight of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 12,
+    "upright": {
+      "summary": "The final steps of a long journey are about to be completed.",
+      "body": [
+        "Be humble enough to look at things through new eyes.",
+        "At a deep level, your heart and soul are being nourished.",
+        "Don't be tempted to run away again -- this is where you belong. Your entire journey was designed to bring you home with new appreciation."
+      ]
+    },
+    "reversed": {
+      "summary": "You sense the homecoming almost complete, and you are already drafting your next departure.",
+      "body": [
+        "The romantic eye sees every arrival as a small death. Notice the urge to chase the next horizon before this one has ripened enough to taste.",
+        "Staying is its own kind of courage, and arguably the harder skill. The journey home was designed to teach it.",
+        "Plant something here. Let the next journey wait until this one has grown roots strong enough to remember you by."
+      ]
+    },
+    "source_index": 47
+  },
+  {
+    "slug": "queen-of-cups",
+    "name": "Queen of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 13,
+    "upright": {
+      "summary": "You are called upon to be a loving master of emotional integrity.",
+      "body": [
+        "You do not want your loved ones or teammates to become complacent or dependent, as if they can take your support for granted with little or no consideration for your needs.",
+        "Cultivate an awareness of love as freely giving and receiving.",
+        "In the process, help clarify the important difference between receiving energy and taking it. Do not allow your willingness to give be misunderstood or abused, as if it were a weakness."
+      ]
+    },
+    "reversed": {
+      "summary": "You have become so fluent in others' feelings that your own have gone somewhere you cannot find.",
+      "body": [
+        "Attunement without boundaries becomes a slow disappearance. Notice whose weather you are tracking more closely than your own, and whose mood sets the temperature of your day.",
+        "Loving mastery includes the discipline of putting your cup down sometimes. Not every feeling in the room needs to be held, and not every tide needs to be followed.",
+        "Return to your own interior. Ask what you want before you ask what they need, and let the answer be small if it has to be."
+      ]
+    },
+    "source_index": 48
+  },
+  {
+    "slug": "king-of-cups",
+    "name": "King of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 14,
+    "upright": {
+      "summary": "This is your time to shine and for your accomplishments to be recognized.",
+      "body": [
+        "As this sweetens the environment, others will be inspired to raise their own motives and intentions to match yours.",
+        "You will be providing an important kind of leadership that uses strong reassurance to help everyone work together.",
+        "The most persuasive thing about you is the example of generous behavior that you exhibit -- much more powerful than preaching alone."
+      ]
+    },
+    "reversed": {
+      "summary": "Your calm surface has become a wall, and no one can tell whether you feel anything at all.",
+      "body": [
+        "Reassurance is most powerful when it comes from someone visibly feeling. Notice where composure has quietly replaced contact, and where your steadiness has stopped being an example.",
+        "Leadership that hides its own depths can leave a team well-managed and emotionally alone. The sweetest environment is one where someone is brave enough to be moved in public.",
+        "Let one feeling through this week, on purpose. Generous behavior begins at home, with the people who already love you."
+      ]
+    },
+    "source_index": 49
+  },
+  {
+    "slug": "ace-of-swords",
+    "name": "Ace of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 1,
+    "upright": {
+      "summary": "You are clear about the principal objective you need to accomplish.",
+      "body": [
+        "Just concentrate on making your impact.",
+        "This could be your moment. The arrow is pointed straight at the target.",
+        "Your eye is keen, your grip is firm.",
+        "Let that arrow fly! If you set aside distractions and hit your mark, you will be rewarded with insight and clarity.",
+        "Remember that this is not the time to hold back, worrying about the consequences.",
+        "When you access this level of truth, you are very likely to cut through all illusion and nonsense."
+      ]
+    },
+    "reversed": {
+      "summary": "Your aim has gone dull, and confusion is winning the day.",
+      "body": [
+        "The arrow that was once pointed at a clear target now wobbles in flight. What felt like certainty has turned to fog, and the decisions on the table rest on assumptions that no longer hold.",
+        "Pull back before you swing. Naming the real question, in plain language, is the only move that restores the cutting edge of your thinking.",
+        "Do not mistake busyness for clarity. Sit with the discomfort of not knowing until the truth reappears, and it will."
+      ]
+    },
+    "source_index": 50
+  },
+  {
+    "slug": "two-of-swords",
+    "name": "Two of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 2,
+    "upright": {
+      "summary": "Spend some time gathering information before taking action.",
+      "body": [
+        "Neither allow others to push you beyond your boundaries, nor permit yourself to act impulsively.",
+        "You need to fully assimilate the situation before making any moves even if not having a solution as soon as you want causes tension.",
+        "Have patience.",
+        "There are circumstances in which action is better than non-action. This, however, is not one of them. Remain silent as much as possible and allow things to settle. A little meditation can help you achieve greater objectivity.",
+        "You do not have enough information, as all the evidence hasn't come in yet."
+      ]
+    },
+    "reversed": {
+      "summary": "You have all the evidence you need, and the choice is overdue.",
+      "body": [
+        "The pause that served you has curdled into a way of avoiding the verdict. Convenient blindness is no longer neutral; it is a choice with consequences.",
+        "Stop adding up the same arguments on the same abacus. The waiting has stopped protecting you and started protecting the story you would rather keep.",
+        "Open your eyes, name what is actually true, and act. A clean mistake is worth more than another year of suspended judgment."
+      ]
+    },
+    "source_index": 51
+  },
+  {
+    "slug": "three-of-swords",
+    "name": "Three of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 3,
+    "upright": {
+      "summary": "Misunderstandings are straining a relationship to the breaking point.",
+      "body": [
+        "Separate yourself from people and forces you do not feel compatible with.",
+        "Grow a thicker skin. Use your creativity and imagination and seek out situations where the way you see things makes sense to those around you.",
+        "Move towards those who can embrace and appreciate your talents and all you have to contribute."
+      ]
+    },
+    "reversed": {
+      "summary": "You are keeping the wound open, and it has become who you are.",
+      "body": [
+        "The hurt that was meant to teach you something has settled in for the long stay. What began as a reasonable response to a real injury is now the story you tell about yourself whenever you are asked.",
+        "Notice the cost. Holding the betrayal close may feel like loyalty to your own pain, but it keeps you tethered to someone who no longer has any claim on your attention.",
+        "Forgiveness is not a favor to the other person. It is the move that loosens the swords and lets your attention return to the living."
+      ]
+    },
+    "source_index": 52
+  },
+  {
+    "slug": "four-of-swords",
+    "name": "Four of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 4,
+    "upright": {
+      "summary": "Summon creativity and resourcefulness from the depths of your being.",
+      "body": [
+        "It might be that your ideas are not ripe enough or that you are not ready to listen to feedback from others.",
+        "If you spend more time in contemplation, you may successfully disregard the emotional occupations and biases of others.",
+        "For now, closely observe inner events. The time for sharing will come later."
+      ]
+    },
+    "reversed": {
+      "summary": "You keep dodging the rest your body is asking for.",
+      "body": [
+        "The body is asking for stillness, and you keep answering with one more task. Reflection is not a luxury you have earned; it is the means by which anything new becomes possible.",
+        "Ask what the busyness is defending against. A retreat, a long walk without your phone, a few hours with no agenda -- these are not wasted, they are how the next idea finds you.",
+        "Set the sword down. The work will still be there tomorrow, and you will return to it with a steadier hand."
+      ]
+    },
+    "source_index": 53
+  },
+  {
+    "slug": "five-of-swords",
+    "name": "Five of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 5,
+    "upright": {
+      "summary": "A feeling of imbalance and negativity prevails.",
+      "body": [
+        "Try not to be too quick to anger or jump to conclusions.",
+        "Just because others may have a pessimistic sense of the world, their reality does not have to undermine yours.",
+        "There is certainly no point in struggling or competing with them.",
+        "Your challenge now is to learn how to sidestep confrontation and evoke a more evolved response from people. At the very least, be assertive about setting boundaries for yourself."
+      ]
+    },
+    "reversed": {
+      "summary": "Victory is hollow, and you already know who paid for it.",
+      "body": [
+        "You can win every skirmish and lose the room. The cleverness that proves a point may have quietly cost you the trust you actually needed.",
+        "Soften the stance. A boundary held without contempt is far harder to dismiss than a point scored at someone's expense.",
+        "Walk away from the dispute you can already see the shape of. Nothing left to be won is worth the version of yourself that will be there at the end of it."
+      ]
+    },
+    "source_index": 54
+  },
+  {
+    "slug": "six-of-swords",
+    "name": "Six of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 6,
+    "upright": {
+      "summary": "Use a combination of technical skill and intuition to reach your goals.",
+      "body": [
+        "If the game plan has become clear, your next step could be to commit yourself to pursue changes that will lead to improvement.",
+        "Overcome the tendency to get distracted. You do not have time for approval seeking. Once you initiate action, others will be grateful for your clear thinking and quick reflexes.",
+        "It's a special gift to be able to navigate in times of rapidly changing and unpredictable circumstances, when a cool head and right timing are most essential."
+      ]
+    },
+    "reversed": {
+      "summary": "The boat has been ready for a while, and you are still on the dock.",
+      "body": [
+        "You have been packing for a long time. The oars are in the water, the bags are stowed, and still you linger at the edge, rearranging one more thing before you go.",
+        "Skill alone will not move you now. The further step requires you to actually leave, even if the new shore is only a faint line on the horizon.",
+        "Push off. One clean stroke is enough, and the rest of the crossing only becomes possible once you have actually committed to it."
+      ]
+    },
+    "source_index": 55
+  },
+  {
+    "slug": "seven-of-swords",
+    "name": "Seven of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 7,
+    "upright": {
+      "summary": "You have trained yourself to instinctively notice the opportunity.",
+      "body": [
+        "You may have enough of an overview to see how to advance through the maze and achieve your goal.",
+        "Continue to envision unobstructed success. Even as the path you are walking changes and the circumstances around you obscure your view, keep the desired outcome clear and sharp in your mind. You will quite likely reach your goal and gain tremendous self esteem in the process."
+      ]
+    },
+    "reversed": {
+      "summary": "Your clever plan is asking you to lie to someone, possibly yourself.",
+      "body": [
+        "The sharp read on opportunity that once served you so well is starting to slip into a private script. You are keeping more in reserve than the situation requires, and the gap between what you show and what you know is widening.",
+        "Ask what you are actually protecting. If the answer is your ego or your escape route, the strategy is no longer strategy -- it is evasion.",
+        "Come back into the open with at least one piece of it. Even one honest disclosure begins to steady your footing."
+      ]
+    },
+    "source_index": 56
+  },
+  {
+    "slug": "eight-of-swords",
+    "name": "Eight of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 8,
+    "upright": {
+      "summary": "This is your moment to be tested and tried.",
+      "body": [
+        "Be willing to make the rigorous effort that is being called for now.",
+        "Perform wholeheartedly, with good faith and hopefulness. As such, you'll forestall bickering and criticism, prevail against negative forces and overcome the demons of doubt and resistance.",
+        "Get excited about your challenges; be confident that you have what it takes to improve the situation.",
+        "If you do your internal homework, the external situation will open up for you."
+      ]
+    },
+    "reversed": {
+      "summary": "The prison you are stuck in is one you built and are keeping locked.",
+      "body": [
+        "The swords around you were not placed by anyone else. Step back and notice that the tight circle is the size of a story you keep telling yourself about what is possible.",
+        "The test is not whether you can break out by force. It is whether you can lower the blade that you are holding to your own throat.",
+        "Move an inch. One small action that contradicts the old narrative is often enough to loosen the whole arrangement."
+      ]
+    },
+    "source_index": 57
+  },
+  {
+    "slug": "nine-of-swords",
+    "name": "Nine of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 9,
+    "upright": {
+      "summary": "Allow yourself to look forward to the future with optimism.",
+      "body": [
+        "This could be a time to cut your losses.",
+        "If so, recognize how much time and energy you have sacrificed to a way of being that's not right for you. If you can do this you will look back at this time in your life as a turning point.",
+        "This may be an opportunity to heal as you shed a heavy burden that weighs you down."
+      ]
+    },
+    "reversed": {
+      "summary": "The worst of the night's thinking is beginning to lose its grip on you.",
+      "body": [
+        "You have lain awake with this long enough. The thoughts that visit at 3 a.m. are not the truth; they are the mind working a problem it does not have the data to solve.",
+        "Give the body what it is asking for -- a meal, daylight, a conversation that is not about the worry. Small physical things shift the climate of the mind more than you think.",
+        "Let some of the load down. The morning will be kinder than the night is suggesting, and the burden you fear can be set on the floor for now."
+      ]
+    },
+    "source_index": 58
+  },
+  {
+    "slug": "ten-of-swords",
+    "name": "Ten of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 10,
+    "upright": {
+      "summary": "You are up against the wall, and it is appropriate to admit it.",
+      "body": [
+        "The situation can be compared to a hurricane moving through the neighborhood.",
+        "You can't be sure whether it is going to pass over a corner of the field or whether it is going to slam into your house.",
+        "In the face of such unpredictability, protect yourself, hope for the best and wait it out. Sometimes, an extreme turn of events serves as a pressure relief valve for all the unexpressed and unresolved energy that had been building up.",
+        "Trust the process even though things may seem pretty drastic right now."
+      ]
+    },
+    "reversed": {
+      "summary": "The pressure has broken, and the worst is behind you now.",
+      "body": [
+        "What you have been carrying is finally over. The flatness you feel is not despair, it is the strange lightness of a body no longer bracing for the next blow.",
+        "You do not have to be wise about it yet. Tend to the immediate, ordinary needs -- sleep, food, a voice on the phone -- and let the meaning arrive later.",
+        "Look up. The sky is lighter than the version of this story you have been rehearsing, and a new chapter is already taking shape."
+      ]
+    },
+    "source_index": 59
+  },
+  {
+    "slug": "page-of-swords",
+    "name": "Page of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 11,
+    "upright": {
+      "summary": "Clarify your motives before you get involved.",
+      "body": [
+        "In contrast to times when one can best serve the greater good by being visible and heroic, this is a time when you must keep your own counsel, cover your tracks and stealthily accomplish what would be impossible to complete without privacy. Reduce your profile and increase your anonymity, no matter how your self-image might suffer.",
+        "Although it would be gratifying to accomplish what needs to be done and be aboveboard about it, that cannot be a priority at present."
+      ]
+    },
+    "reversed": {
+      "summary": "Words are slipping out before you have thought them through.",
+      "body": [
+        "The sharp mind you usually keep under cover is leaking everywhere. Gossip, half-formed opinions, jokes at someone else's expense -- each one feels small in the moment and accumulates.",
+        "Slow down before you speak. A sentence held for ten seconds can be revised; the same sentence out loud cannot be taken back.",
+        "Give the silence back its weight. The sharpest move available is the one you keep behind your teeth."
+      ]
+    },
+    "source_index": 60
+  },
+  {
+    "slug": "knight-of-swords",
+    "name": "Knight of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 12,
+    "upright": {
+      "summary": "When you answer a challenge, prepare for the consequences.",
+      "body": [
+        "Emulate his ability to communicate successfully by keeping your conversations impersonal and humorous so no hurt feelings are provoked.",
+        "Practice your negotiation skills so you will be in shape for imminent diplomatic challenges as they arise. A sparring partner could help you learn to control impulsive comments and stem your urge to be right at the expense of others being wrong."
+      ]
+    },
+    "reversed": {
+      "summary": "The blade you are swinging will cut someone, and it may be you.",
+      "body": [
+        "The charge felt righteous at the time. From a step back, it looks more like the need to be right than the need to be useful.",
+        "Drop the rhetorical armor. Conversations where one side has to lose are rarely the ones that move anything forward, and the cost of winning them tends to be paid in quiet resentment.",
+        "Let the next response be shorter and softer than the one you are composing. The skill you are most sure of is the one that needs the most watching."
+      ]
+    },
+    "source_index": 62
+  },
+  {
+    "slug": "queen-of-swords",
+    "name": "Queen of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 13,
+    "upright": {
+      "summary": "This is a good time to assert your individuality.",
+      "body": [
+        "There are times in life when no one can take care of you as well as you can. Leave sentimentality behind and take action. Make important decisions for yourself because it's up to you.",
+        "You are the final judge."
+      ]
+    },
+    "reversed": {
+      "summary": "Your clarity has hardened into a verdict, and the verdict is lonely.",
+      "body": [
+        "You can see the truth plainly, and the seeing has become a weapon. When every interaction turns into a quiet audit of someone else's failures, the room empties.",
+        "Make room for the feeling you have been editing out. Sentiment is not the enemy of clear sight; it is the correction that keeps clear sight from becoming cruelty.",
+        "Loosen one boundary today. Not every relationship needs a ruling, and not every favor needs to be paid back in kind."
+      ]
+    },
+    "source_index": 61
+  },
+  {
+    "slug": "king-of-swords",
+    "name": "King of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 14,
+    "upright": {
+      "summary": "Employ patient listening and ask penetrating questions.",
+      "body": [
+        "Instead, draw your own conclusions. Spend time reviewing all the ramifications because this King of Swords requires a thorough, methodical examination of ideas and possibilities. Call forth the sober and wise part of yourself -- the elder father figure.",
+        "Then act on the instructions given you."
+      ]
+    },
+    "reversed": {
+      "summary": "The wise judge is sliding into the tyrant, and the court is thinning out.",
+      "body": [
+        "The elder's patience is real, and it is being misused. Decisions made from the head alone, without input from the people who will live with them, are starting to feel less like wisdom and more like decree.",
+        "Listen before you conclude. The first opinion offered in a room is rarely the one with the most information.",
+        "Come down from the bench. A judgment rendered with even a little warmth will be heard in ways the unadorned verdict will not."
+      ]
+    },
+    "source_index": 63
+  },
+  {
+    "slug": "ace-of-wands",
+    "name": "Ace of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 1,
+    "upright": {
+      "summary": "Stay attentive to your goal even as change accelerates.",
+      "body": [
+        "You may need to make your move soon, so make sure you are fully prepared. Trust your instincts and spontaneity. When the opportunity comes you may want to seize it without hesitation.",
+        "So quicken your senses and raise you"
+      ]
+    },
+    "reversed": {
+      "summary": "Do not let urgency scatter your attention before your strongest opportunity is ready.",
+      "body": [
+        "The urge to move may be outrunning your preparation. You can mistake every new possibility for the goal that deserves your attention, leaving the original spark scattered across half-started efforts.",
+        "Select the opening that truly serves your aim, then prepare for it in practical ways. A short pause is not hesitation; it helps you act from readiness instead of adrenaline."
+      ]
+    },
+    "source_index": 22
+  },
+  {
+    "slug": "two-of-wands",
+    "name": "Two of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 2,
+    "upright": {
+      "summary": "Assess your situation with patience and self-restraint.",
+      "body": [
+        "Keep meditating, watching the situation and witnessing the forces at work.",
+        "At some point you will have enough information to see clearly.",
+        "The decision-making process will be over and the choice will be clear."
+      ]
+    },
+    "reversed": {
+      "summary": "Your caution has become avoidance; set a decision point and choose with the information available.",
+      "body": [
+        "Patience is helping less when you keep watching simply to avoid owning a choice. The information may never feel complete, and continued restraint can conceal your fear of choosing one direction.",
+        "Give yourself a clear deadline and identify the evidence that actually matters. When that point arrives, commit to the option that best fits your purpose, even if some uncertainty remains."
+      ]
+    },
+    "source_index": 23
+  },
+  {
+    "slug": "three-of-wands",
+    "name": "Three of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 3,
+    "upright": {
+      "summary": "You are prepared to take risks to explore new opportunities or enterprises.",
+      "body": [
+        "Every fiber of your being may be saying this is a great opportunity, even if those around you aren't as convinced.",
+        "There's nothing to lose from taking a risk; this is a great moment in your entrepreneurial growth.",
+        "Make your move and sort out the details later."
+      ]
+    },
+    "reversed": {
+      "summary": "Temper your appetite for new ventures with enough planning to keep boldness from becoming recklessness.",
+      "body": [
+        "Excitement may be urging you to leap before you have checked the ground. Missing resources, unclear terms, or avoidable costs may seem like minor details when you are eager to begin.",
+        "Keep the courage, but give the venture a workable first step and a limit for what you can afford to lose. A measured experiment will tell you more than an impulsive promise."
+      ]
+    },
+    "source_index": 24
+  },
+  {
+    "slug": "four-of-wands",
+    "name": "Four of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 4,
+    "upright": {
+      "summary": "When you act upon a shared vision it will have far reaching effects.",
+      "body": [
+        "Your enthusiasm empowers your vision, which is thriving with possibilities.",
+        "As you share more freely what is on your mind and in your heart, others will see themselves in your vision, so you naturally receive approval, support, assistance and abundance.",
+        "In your own way, you are addressing a universal need."
+      ]
+    },
+    "reversed": {
+      "summary": "Your vision may be crowding out other voices; make room for genuine collaboration and practical support.",
+      "body": [
+        "When you speak so forcefully about the future, others may feel recruited into your dream rather than included in it. Enthusiasm is not the same as agreement.",
+        "Ask what the people involved actually need and what they are willing to contribute. Turn the shared vision into specific roles and next steps; support grows when people can recognize their own stake."
+      ]
+    },
+    "source_index": 25
+  },
+  {
+    "slug": "five-of-wands",
+    "name": "Five of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 5,
+    "upright": {
+      "summary": "Let your focus be on advancing your cause.",
+      "body": [
+        "Identify what energizes you, what you would fight for and what you are passionate about -- even when you're tired or discouraged. Strive to make that the centerpiece of your mission. This is how you find your livelihood and establish your path of service."
+      ]
+    },
+    "reversed": {
+      "summary": "Stop spending your fire on every argument; direct it toward the cause that gives your work meaning.",
+      "body": [
+        "A desire to advance may have turned into constant opposition. When every disagreement feels like a battle, your need to be right or seen fighting can hide the cause.",
+        "Name the principle you are actually serving, then direct your time toward work that advances it. Let smaller provocations pass; focused commitment will carry your mission farther than repeated conflict."
+      ]
+    },
+    "source_index": 26
+  },
+  {
+    "slug": "six-of-wands",
+    "name": "Six of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 6,
+    "upright": {
+      "summary": "Your enthusiastic stewardship is producing dramatic results.",
+      "body": [
+        "You may find yourself becoming something of a leader.",
+        "Usually the first person to break away from conventional thought is the one to define a new trend.",
+        "Under the circumstances, there is a solid need for a fresh voice and vision -- so make your move. Those around you who are ready for change will support your leadership."
+      ]
+    },
+    "reversed": {
+      "summary": "Lead for the work itself, not for applause, and let results earn the trust your title cannot.",
+      "body": [
+        "Recognition may have become more important to you than the people or work you were meant to guide. A new idea does not become leadership simply because it attracts attention.",
+        "Resume the practical responsibility of stewardship. Invite capable people to shape the direction, share credit openly, and let consistent results build confidence in you."
+      ]
+    },
+    "source_index": 27
+  },
+  {
+    "slug": "seven-of-wands",
+    "name": "Seven of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 7,
+    "upright": {
+      "summary": "A positive attitude and strong potential will prime you to achieve your personal best.",
+      "body": [
+        "Even if slightly unprepared, you may want to push yourself beyond your usual limits, thinking in larger terms and tweaking your competitive nature.",
+        "Time and effort spent in preparation could pay off handsomely. You might be the one who vaults right over the heads of those who thought they could outdo you. Move beyond rhetoric and verbal challenges.",
+        "Now could be the moment to prove what puts you head and shoulders above the rest by demonstrating it in action."
+      ]
+    },
+    "reversed": {
+      "summary": "Do not confuse defending your position with proving yourself; prepare quietly and let your work answer.",
+      "body": [
+        "Pressure to stay on top can make every challenge feel personal. You may spend more effort arguing for your ability than strengthening the skill or preparation that would demonstrate it.",
+        "Commit yourself to the standard you genuinely want to meet and train toward it without theatrics. A firm boundary is useful, but you do not need to answer every provocation."
+      ]
+    },
+    "source_index": 28
+  },
+  {
+    "slug": "eight-of-wands",
+    "name": "Eight of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 8,
+    "upright": {
+      "summary": "Accelerating growth challenges you to keep up with what you are creating in your life.",
+      "body": [
+        "Even if you had to leave it all behind, you know you could start all over among total strangers and succeed once again.",
+        "This valuable self-confidence makes you free to strike out in new directions and not just cling to past successes and previous accomplishments."
+      ]
+    },
+    "reversed": {
+      "summary": "Your momentum is outrunning your capacity; consolidate your gains before launching into another direction.",
+      "body": [
+        "Starting again may feel easier than tending what is already growing. Too many new directions can turn healthy momentum into unfinished work, missed details, and a life organized around constant acceleration.",
+        "Review what you have created and sort it into maintenance, delegation, or release. A sustainable pace will preserve your freedom better than proving you can always begin again."
+      ]
+    },
+    "source_index": 29
+  },
+  {
+    "slug": "nine-of-wands",
+    "name": "Nine of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 9,
+    "upright": {
+      "summary": "Find someone who can fill in for you and take time to refresh your energy.",
+      "body": [
+        "There is nothing more to bring to the mission unless you regenerate and restore the energy you have put into the cause.",
+        "While it is praiseworthy to give all you have for something or someone that means a lot to you, masochism and martyrdom are ill advised.",
+        "Take a break. No one can fault you for it now."
+      ]
+    },
+    "reversed": {
+      "summary": "You are treating exhaustion as proof of loyalty; accept help before commitment becomes self-neglect.",
+      "body": [
+        "Rest may be available, yet you keep yourself on duty to prove that the cause matters. Pride in endurance can make a useful substitute, a handoff, or an honest limit feel like betrayal.",
+        "Name what is beyond your capacity and let someone else take a defined part. Recovery is not abandoning your commitment; it is how you return without resentment."
+      ]
+    },
+    "source_index": 30
+  },
+  {
+    "slug": "ten-of-wands",
+    "name": "Ten of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 10,
+    "upright": {
+      "summary": "You are beginning to realize that what you have been pursuing is actually internal.",
+      "body": [
+        "Now may be the time to reach deep into yourself and identify your purest, most wholesome impulses.",
+        "As you do this, allow your optimistic and honorable side to see what's good about the world.",
+        "Look beyond the challenges, setbacks, disappointments and frustrations you tend to see so easily.",
+        "As you reawaken your high minded inner child, you will refresh your daily life with a joyful purpose."
+      ]
+    },
+    "reversed": {
+      "summary": "Release the pressure to feel inspired and choose one honest value to practice in ordinary life.",
+      "body": [
+        "Looking inward for a wholesome purpose, you may have created another performance. Forcing yourself to see the good can obscure the disappointment and frustration that still require acknowledgment before genuine optimism returns.",
+        "Set aside the demand for a grand answer. Name one value you still trust, then express it in a small daily action; purpose becomes lighter when it is lived rather than hunted."
+      ]
+    },
+    "source_index": 31
+  },
+  {
+    "slug": "page-of-wands",
+    "name": "Page of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 11,
+    "upright": {
+      "summary": "You are an agent of innovation and change.",
+      "body": [
+        "Think of yourself as a secret agent for the greater good. In due time, others may recognize the role you play in the transformation from divisiveness to unity. However, right now you are being asked to watch quietly from the sidelines."
+      ]
+    },
+    "reversed": {
+      "summary": "Protect your new idea from impatience, but do not hide behind secrecy when useful feedback is needed.",
+      "body": [
+        "Your innovative impulse can get tangled with a demand for immediate recognition. Keeping everyone out can protect a fragile idea, but it can also leave you guessing while making the work seem self-important or unfinished.",
+        "Share the concept with one trustworthy, practical person and ask for specific feedback. Stay observant, yet remember that quiet preparation should strengthen your contribution, not keep you permanently on the sidelines."
+      ]
+    },
+    "source_index": 32
+  },
+  {
+    "slug": "knight-of-wands",
+    "name": "Knight of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 12,
+    "upright": {
+      "summary": "A new journey of discovery is about to be embarked upon.",
+      "body": [
+        "Not only can you get a clear sense of the proper path, but you will also have enough instructions to be self-directing. Necessary skills and resources are available to you, and the time is right for you to act.",
+        "Once you get started, you may be surprised how easy it can feel, but don't be seduced by that feeling.",
+        "There will be comfortable stretches of the road and there will be distinctly uncomfortable ones. Know that any form of motion is better than no motion."
+      ]
+    },
+    "reversed": {
+      "summary": "Keep moving with purpose; restless action will not substitute for choosing a route you can sustain.",
+      "body": [
+        "Movement alone can become a way to avoid commitment. You may chase the easiest stretch, change direction when the road turns uncomfortable, or mistake a fresh destination for a clear plan.",
+        "Before you set off again, define what this journey should develop and what resources it requires. Accept both ease and difficulty as part of the route, then keep a steady course."
+      ]
+    },
+    "source_index": 33
+  },
+  {
+    "slug": "queen-of-wands",
+    "name": "Queen of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 13,
+    "upright": {
+      "summary": "Decisiveness and a willingness to lead produce tangible rewards.",
+      "body": [
+        "A perceived deficiency in leadership may make you want to take hold of the reins, but don't do it! Restrain yourself and remain loyal to your higher-ups.",
+        "Stay focused and energetic.",
+        "Enthusiastically confront the challenges directly in front of you. Perform in good faith and encourage others to do the same."
+      ]
+    },
+    "reversed": {
+      "summary": "Do not seize control to compensate for someone else's weakness; lead your part without undermining the structure.",
+      "body": [
+        "Decisiveness can turn into your reflex to take over. When another person appears ineffective, you may rush to correct everything and create resistance instead of the results you want.",
+        "Use your energy where you have real authority, while making your concerns clear without humiliating or bypassing others. Loyal cooperation is not passivity; it lets your initiative strengthen the whole effort."
+      ]
+    },
+    "source_index": 34
+  },
+  {
+    "slug": "king-of-wands",
+    "name": "King of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 14,
+    "upright": {
+      "summary": "Stay balanced and use power wisely to set a good example.",
+      "body": [
+        "You are the determining factor in this situation and circumstances will proceed in the direction that you steer them.",
+        "Indecision or doubt are not appropriate responses when clarity and confidence are critical.",
+        "As you take on a bigger role, it will begin to feel more comfortable.",
+        "Seize the opportunity to influence events, because everything is waiting for you."
+      ]
+    },
+    "reversed": {
+      "summary": "Use your authority without making every decision yourself; confidence becomes stronger when it leaves room for others.",
+      "body": [
+        "When you assume you are the determining factor, other people can become instruments rather than partners. Steering every detail may resemble confidence while quietly weakening the work and the people around you.",
+        "Set the direction, then listen to those who must carry it out. Share responsibility and revise your course when good evidence calls for it; wise power makes others more capable, not more dependent."
+      ]
+    },
+    "source_index": 35
+  }
+]

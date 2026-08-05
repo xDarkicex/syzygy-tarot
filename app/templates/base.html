@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" x-data="{ profile: $persist({ name: '', age: 30, resonance: 'Unspecified' }).as('syzygy_profile') }" x-init="if (!profile.name) profile = { name: '', age: 30, resonance: 'Unspecified' }">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}syzygy · tarot{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/site.css" />
+  <script src="/static/js/htmx.min.js" defer></script>
+  <script src="/static/js/alpine.min.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="/">
+      <span class="brand__mark" aria-hidden="true">✶</span>
+      <span class="brand__name">syzygy</span>
+      <span class="brand__sub">tarot</span>
+    </a>
+    <nav class="masthead__nav">
+      <a href="/">Draw</a>
+      <a href="/history">History</a>
+      <a href="/about">About</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>A modern revisioning of <code>xDarkicex/tarot</code>. All 78 cards authored for both upright and reversed meanings.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}About · syzygy{% endblock %}
+{% block content %}
+<section class="about">
+  <h1>About</h1>
+  <p>Syzygy is a modern revisioning of <a href="https://github.com/xDarkicex/tarot">xDarkicex/tarot</a>, originally a Java console reader. This version keeps the numerology-driven daily reading and the original three-card spread (Hear Me / Help Me / Hold Me), while adding a web GUI and reversed meanings for all 78 cards.</p>
+  <h2>The original bug, fixed</h2>
+  <p>The Java source declares a <code>reversed</code> field on every card but never populates it. Reversed draws print a blank. This revision authors a genuine shadow reading for every card and lets the GUI show it when the dealt card is reversed.</p>
+  <h2>The seed</h2>
+  <p>The shuffle is seeded from your name length, age, resonance choice, and the day of the year, then divided by your age. So the same person gets the same reading all day. The full calculation is shown on every reading under <em>The numerology behind this reading</em>.</p>
+  <h2>Profiles</h2>
+  <p>Profiles live in your browser's localStorage, mirrored into a signed cookie so the server can prefill the form. Nothing leaves the SQLite file on this device.</p>
+</section>
+{% endblock %}

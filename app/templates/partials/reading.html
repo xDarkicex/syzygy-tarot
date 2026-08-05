@@ -1,0 +1,61 @@
+<article class="reading" data-share-slug="{{ share_slug or '' }}">
+  <header class="reading__header">
+    <div>
+      <p class="reading__eyebrow">{{ reading.spread.name }}</p>
+      <h2 class="reading__title">A reading for {{ (querent.name or 'you') }}.</h2>
+      <p class="reading__meta">
+        {{ reading.drawn_on.strftime("%B %-d, %Y") }} ·
+        seed <code>{{ reading.seed }}</code> ·
+        {{ reading.reversed_count }} reversed
+        {% if reading.major_count %} · {{ reading.major_count }} major{% endif %}
+      </p>
+    </div>
+    {% if share_slug %}
+      <a class="share-link" href="/readings/{{ share_slug }}" target="_blank" rel="noopener">
+        Share ↗
+      </a>
+    {% endif %}
+  </header>
+
+  {% if reading.numerology %}
+  <details class="numerology">
+    <summary>The numerology behind this reading</summary>
+    <dl>
+      <div><dt>Name value</dt><dd>{{ reading.numerology.name_value }}</dd></div>
+      <div><dt>Age value</dt><dd>{{ reading.numerology.age_value }}</dd></div>
+      <div><dt>Resonance value</dt><dd>{{ reading.numerology.resonance_value }}</dd></div>
+      <div><dt>Day of year</dt><dd>{{ reading.numerology.day_of_year }}</dd></div>
+    </dl>
+  </details>
+  {% endif %}
+
+  <ol class="cards">
+    {% for d in reading.drawn %}
+      <li class="card-slot card-slot--{{ d.position.accent }}" data-index="{{ loop.index0 }}">
+        <button
+          type="button"
+          class="card {% if d.is_reversed %}card--reversed{% endif %}"
+          aria-label="Reveal {{ d.card.name }}{% if d.is_reversed %}, reversed{% endif %}"
+          hx-get="/readings/{{ share_slug or 'preview' }}/card/{{ loop.index0 }}"
+          hx-trigger="click"
+          hx-target="closest .card-slot"
+          hx-swap="outerHTML"
+          {% if not share_slug %}disabled{% endif %}>
+          <span class="card__face card__face--back">
+            <span class="card__glyph" aria-hidden="true">✶</span>
+            <span class="card__hint">Tap to reveal</span>
+          </span>
+          <span class="card__face card__face--front">
+            <span class="card__position">{{ d.position.title }}</span>
+            <span class="card__name">{{ d.card.name }}{% if d.is_reversed %} <em>(reversed)</em>{% endif %}</span>
+            <span class="card__prompt">{{ d.position.prompt }}</span>
+            <span class="card__summary">{{ d.summary }}</span>
+            <span class="card__body">
+              {% for paragraph in d.body %}<span>{{ paragraph }}</span>{% endfor %}
+            </span>
+          </span>
+        </button>
+      </li>
+    {% endfor %}
+  </ol>
+</article>

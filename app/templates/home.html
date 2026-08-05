@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Draw · syzygy{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>A reading for {{ profile | querent_name }}.</h1>
+  <p class="hero__lede">{{ today.strftime("%A, %B %-d, %Y") }} — pick a spread, then deal.</p>
+</section>
+
+<form class="draw-form" hx-post="/readings/" hx-target="#reading-slot" hx-swap="innerHTML" hx-disabled-elt="this">
+  <fieldset class="profile">
+    <legend>About you</legend>
+    <label>
+      <span>Name</span>
+      <input type="text" name="name" required maxlength="64" x-model="profile.name" value="{{ profile.name if profile else '' }}" />
+    </label>
+    <label>
+      <span>Age</span>
+      <input type="number" name="age" required min="1" max="120" x-model.number="profile.age" value="{{ profile.age if profile else 30 }}" />
+    </label>
+    <label>
+      <span>Resonance</span>
+      <select name="resonance" x-model="profile.resonance">
+        {% for option in ["Male", "Female", "Nonbinary", "Fluid", "Unspecified"] %}
+          <option value="{{ option }}" {% if profile and profile.resonance == option %}selected{% endif %}>{{ option }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </fieldset>
+
+  <fieldset class="spread-picker">
+    <legend>Spread</legend>
+    {% for spread in spreads %}
+      <label class="spread">
+        <input type="radio" name="spread_slug" value="{{ spread.slug }}" {% if loop.first %}checked{% endif %} />
+        <span class="spread__body">
+          <span class="spread__name">{{ spread.name }}</span>
+          <span class="spread__tag">{{ spread.tagline }}</span>
+        </span>
+      </label>
+    {% endfor %}
+  </fieldset>
+
+  <button class="draw-button" type="submit">
+    <span class="draw-button__mark" aria-hidden="true">✶</span>
+    <span>Deal the cards</span>
+  </button>
+</form>
+
+<article id="reading-slot" class="reading-slot">
+  <p class="empty">No reading yet. Fill in your details and deal the cards.</p>
+</article>
+{% endblock %}

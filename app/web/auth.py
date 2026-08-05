@@ -1,0 +1,76 @@
+"""Profile cookie.
+
+Profiles are stored in localStorage on the client and mirrored into a signed cookie so
+the server can prefill the form on first paint. Nothing here is sensitive — it's just
+name, age, and resonance.
+"""
+
+from __future__ import annotations
+
+import json
+from dataclasses import asdict
+from typing import Any
+
+from fastapi import Response
+from itsdangerous import BadSignature, URLSafeSerializer
+
+from app.config import get_settings
+from app.domain.seeding import Querent
+
+SALT = "profile-v1"
+
+
+def _signer() -> URLSafeSerializer:
+    return URLSafeSerializer(get_settings().secret_key, salt=SALT)
+
+
+def profile_cookie_value(querent: Querent) -> str:
+    payload = {"name": querent.name, "age": querent.age, "resonance": querent.resonance}
+    return _signer().dumps(payload)
+
+
+def read_profile_cookie(raw: str | None) -> Querent | None:
+    if not raw:
+        return None
+    try:
+        payload: dict[str, Any] = _signer().loads(raw)
+    except BadSignature:
+        return None
+    try:
+        return Querent(name=payload["name"], age=payload["age"], resonance=payload["resonance"])
+    except Exception:
+        return None
+
+
+def set_profile_cookie(response: Response, querent: Querent) -> None:
+    settings = get_settings()
+    response.set_cookie(
+        key=settings.profile_cookie,
+        value=profile_cookie_value(querent),
+        max_age=settings.cookie_max_age,
+        secure=settings.cookie_secure,
+        httponly=True,
+        samesite="lax",
+    )
+
+
+def clear_profile_cookie(response: Response) -> None:
+    settings = get_settings()
+    response.delete_cookie(settings.profile_cookie)
+
+
+def querent_from_form(form: Any) -> Querent:
+    """Adapt a FastAPI/Starlette form for :class:`Querent`."""
+    return Querent(
+        name=str(form.get("name", "")).strip(),
+        age=int(form.get("age", 0)),
+        resonance=str(form.get("resonance", "")),
+    )
+
+
+def querent_to_dict(querent: Querent) -> dict[str, Any]:
+    return asdict(querent)
+
+
+def querent_to_json(querent: Querent) -> str:
+    return json.dumps(querent_to_dict(querent))
