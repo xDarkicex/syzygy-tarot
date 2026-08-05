@@ -154,17 +154,41 @@ def build_prompt(reading: Reading) -> str:
         f"The querent asked the cards: \"{reading.question}\"\n\n"
         if reading.question else ""
     )
+    # For a single-card draw with a question, the model often defaults to a
+    # generic card interpretation. Force a different structure: the question
+    # is the headline, the card is the body, the answer is the close.
+    if reading.question and len(reading.drawn) == 1:
+        answer_format = (
+            "Write exactly three short paragraphs in this order:\n"
+            "1. The question and the card. Open with the querent's name "
+            "and restate their question in one breath, then name the card "
+            "and what it shows. This paragraph is the headline; the rest "
+            "of the reading unpacks it.\n"
+            "2. The bridge. Name how the card answers the question. The "
+            "card's imagery is the bridge to the querent's situation. "
+            "Find the specific image, the specific gesture, the specific "
+            "detail that speaks to the question. This is the body.\n"
+            "3. The direct answer. Give the querent a direct answer to "
+            "their question in one or two sentences. If the question is "
+            "yes/no, the answer comes from the card's orientation: "
+            "upright is yes, reversed is no or not yet. The card's own "
+            "texture colours the yes or the no. This is the close.\n"
+        )
+    else:
+        answer_format = (
+            "Write the combined meaning. If the querent asked a question, "
+            "open with a sentence that names the question and the card "
+            "together, then walk the positions in order and show how they "
+            "speak to each other, then close with a short paragraph on "
+            "what to carry away. The carry-away should be the direct "
+            "answer to the question when one was asked. Two to four short "
+            "paragraphs total, grounded in the specific cards."
+        )
     return (
         f"{question_block}"
         f"Read the following {spread_name.lower()}. {querent_context}\n\n"
         f"{card_lines}\n\n"
-        "Write the combined meaning. If the querent asked a question, "
-        "open with a sentence that names the question and the card together, "
-        "then walk the positions in order and show how they speak to each "
-        "other, then close with a short paragraph on what to carry away. "
-        "The carry-away should be the direct answer to the question when "
-        "one was asked. Two to four short paragraphs total, grounded in the "
-        "specific cards."
+        f"{answer_format}"
     )
 
 
