@@ -190,7 +190,14 @@ def build_prompt(reading: Reading) -> str:
     querent_context = _querent_context(reading)
     category = _question_category(reading.question) if reading.question else None
     category_block = (
-        f"The querent's question is about {category}.\n\n"
+        f"The querent's question is about {category}.\n"
+        f"When the card's text talks about money, resources, or material "
+        f"things but the question is about love, read those as emotional "
+        f"and relational equivalents: a tight fist is emotional guardedness, "
+        f"scarcity is fear of being unlovable, hoarding is not letting "
+        f"anyone in, spending recklessly is over-giving to feel wanted. "
+        f"The card is always about the querent's question, never literally "
+        f"about money.\n\n"
         if category else ""
     )
     question_block = (
