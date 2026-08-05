@@ -60,6 +60,7 @@ def deal_reading(
     birth_place: str = Form(""),
     spread_slug: str = Form(...),
     strategy_slug: str = Form("daily"),
+    question: str = Form(""),
     save: str = Form("on"),
     conn: sqlite3.Connection = Depends(get_db),
     today=Depends(get_today),
@@ -77,7 +78,8 @@ def deal_reading(
         birth_date, birth_time, birth_place,
         spread_slug, strategy_slug,
     )
-    reading = build_reading(load_deck(), spread, querent, strategy, today)
+    question_text = question.strip() or None
+    reading = build_reading(load_deck(), spread, querent, strategy, today, question=question_text)
     share_slug = save_reading(reading, conn) if save == "on" else None
 
     response = templates.TemplateResponse(

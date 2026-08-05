@@ -119,13 +119,19 @@ def build_prompt(reading: Reading) -> str:
     spread_name = reading.spread.name
     card_lines = "\n".join(_card_line(d.card, d) for d in reading.drawn)
     querent_context = _querent_context(reading)
+    question_block = (
+        f"\n\nThe querent's question for the cards: \"{reading.question}\""
+        if reading.question else ""
+    )
     return (
-        f"Read the following {spread_name.lower()}. {querent_context}\n\n"
+        f"Read the following {spread_name.lower()}. {querent_context}{question_block}\n\n"
         f"{card_lines}\n\n"
         "Write the combined meaning: a short opening that names the overall tone, "
-        "then a paragraph that walks through the positions in order and shows how "
-        "they speak to each other, then a closing paragraph on what to carry away. "
-        "Keep it to two to four short paragraphs, grounded in the specific cards."
+        "then walk the positions in order and show how they speak to each other "
+        "and to the querent's situation, then close with one short paragraph on "
+        "what to carry away. If the querent asked a question, address it directly "
+        "in the closing — the cards were drawn for that question. Keep it to two "
+        "to four short paragraphs, grounded in the specific cards."
     )
 
 

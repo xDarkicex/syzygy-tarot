@@ -64,6 +64,17 @@
     {% endfor %}
   </fieldset>
 
+  <div class="question-field" x-data="{ open: false }"
+       x-show="$root.querySelector('input[name=spread_slug]:checked')?.value === 'question'">
+    <label>
+      <span>Your question</span>
+      <textarea name="question" rows="3" maxlength="500"
+                placeholder="What do you want to ask the cards?"
+                x-model="profile.question"></textarea>
+    </label>
+    <p class="question-field__hint">The cards will speak to this specific question.</p>
+  </div>
+
   <fieldset class="strategy-picker">
     <legend>Seeding</legend>
     {% for strategy in strategies %}

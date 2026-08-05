@@ -21,6 +21,7 @@ class Reading:
     drawn: tuple[DrawnCard, ...]
     drawn_on: date
     numerology: Numerology | None = None
+    question: str | None = None
 
     @property
     def reversed_count(self) -> int:
@@ -37,6 +38,7 @@ def build_reading(
     querent: Querent,
     strategy: SeedStrategy,
     on: date,
+    question: str | None = None,
 ) -> Reading:
     """Deal a reading for a querent on a given day."""
     seed = strategy.seed(querent, on, spread.slug)
@@ -49,4 +51,5 @@ def build_reading(
         drawn=deal(deck, spread, seed),
         drawn_on=on,
         numerology=numerology,
+        question=question,
     )

@@ -105,7 +105,157 @@ TIMELINE = Spread(
     ),
 )
 
-SPREADS: dict[str, Spread] = {s.slug: s for s in (SIGNATURE, SINGLE, TIMELINE)}
+YOU_THEM_CONNECTION = Spread(
+    slug="you-them-connection",
+    name="You · Them · Connection",
+    tagline="Two people, one bond",
+    description=(
+        "Three cards for the dynamic between two people. You, them, and the energy "
+        "that runs between."
+    ),
+    positions=(
+        Position(
+            key="you",
+            title="You",
+            prompt="What you bring to this",
+            accent="ember",
+        ),
+        Position(
+            key="them",
+            title="Them",
+            prompt="What they bring, or withhold",
+            accent="iris",
+        ),
+        Position(
+            key="connection",
+            title="The Connection",
+            prompt="What runs between you, the bond, the obstacle, the potential",
+            accent="aqua",
+        ),
+    ),
+)
+
+HERE_THERE_NOWHERE = Spread(
+    slug="here-there-nowhere",
+    name="Here · There · Nowhere",
+    tagline="Where you are, where you're going, what to release",
+    description=(
+        "Three cards for when something feels stuck. The current moment, the possible "
+        "direction, and the place you should not go."
+    ),
+    positions=(
+        Position(
+            key="here",
+            title="Here",
+            prompt="Where you stand right now",
+            accent="ember",
+        ),
+        Position(
+            key="there",
+            title="There",
+            prompt="Where this is heading, if you keep going",
+            accent="iris",
+        ),
+        Position(
+            key="nowhere",
+            title="Nowhere",
+            prompt="What to release, the path to avoid, the void that lacks grounding",
+            accent="aqua",
+        ),
+    ),
+)
+
+SITUATION_CHALLENGE_ADVICE = Spread(
+    slug="situation-challenge-advice",
+    name="Situation · Challenge · Advice",
+    tagline="What's happening, what's in the way, what to do",
+    description=(
+        "Three cards for a specific decision or stuck situation. The current state, "
+        "the obstacle, and the path forward."
+    ),
+    positions=(
+        Position(
+            key="situation",
+            title="Situation",
+            prompt="The current state, the heart of the matter",
+            accent="ember",
+        ),
+        Position(
+            key="challenge",
+            title="Challenge",
+            prompt="What blocks you, the tension, the difficulty",
+            accent="iris",
+        ),
+        Position(
+            key="advice",
+            title="Advice",
+            prompt="What to do next, the guidance to act on",
+            accent="aqua",
+        ),
+    ),
+)
+
+MIND_BODY_SPIRIT = Spread(
+    slug="mind-body-spirit",
+    name="Mind · Body · Spirit",
+    tagline="A holistic check-in",
+    description=(
+        "Three cards for a daily self-check. Where the mind is, where the body is, "
+        "where the spirit is."
+    ),
+    positions=(
+        Position(
+            key="mind",
+            title="Mind",
+            prompt="Your mental state, what you are thinking, what is on your mind",
+            accent="ember",
+        ),
+        Position(
+            key="body",
+            title="Body",
+            prompt="Your physical state, your energy, the material and practical",
+            accent="iris",
+        ),
+        Position(
+            key="spirit",
+            title="Spirit",
+            prompt="Your deeper state, your intuition, what wants to emerge",
+            accent="aqua",
+        ),
+    ),
+)
+
+QUESTION_CARD = Spread(
+    slug="question",
+    name="Question",
+    tagline="One card for a specific question",
+    description=(
+        "A single card for when you have a specific question on your mind. "
+        "Type your question, draw a card, and the reading addresses what you asked."
+    ),
+    positions=(
+        Position(
+            key="answer",
+            title="The Card",
+            prompt="The answer to the question you brought",
+            accent="ember",
+        ),
+    ),
+)
+
+SPREADS: dict[str, Spread] = {
+    s.slug: s
+    for s in (
+        SIGNATURE,
+        SINGLE,
+        TIMELINE,
+        YOU_THEM_CONNECTION,
+        HERE_THERE_NOWHERE,
+        SITUATION_CHALLENGE_ADVICE,
+        MIND_BODY_SPIRIT,
+        QUESTION_CARD,
+    )
+}
 DEFAULT_SPREAD = SIGNATURE.slug
 
 
