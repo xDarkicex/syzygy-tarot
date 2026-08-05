@@ -74,11 +74,17 @@ def _get_or_start_state(share_slug: str, conn: sqlite3.Connection) -> tuple[thre
         def _worker() -> None:
             worker_conn = connect(_db_path())
             try:
-                for delta in stream_interpretation(stored.reading):
-                    with lock:
-                        buf.append(delta)
-                full = "".join(buf)
+                deltas: list[str] = []
+                try:
+                    deltas = list(stream_interpretation(stored.reading))
+                except Exception:  # noqa: BLE001
+                    # The model occasionally fails. Retry once — the second
+                    # call often succeeds where the first stalled.
+                    deltas = list(stream_interpretation(stored.reading))
                 with lock:
+                    buf.clear()
+                    buf.extend(deltas)
+                    full = "".join(buf)
                     buf.clear()
                     buf.append(full)
                 try:
