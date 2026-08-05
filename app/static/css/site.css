@@ -336,6 +336,8 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .interpretation__body--pending { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 0; }
 .interpretation__body--pending p { font-family: var(--serif); font-style: italic; color: var(--ink-soft); margin: 0; }
 .question-field { display: none; margin-top: 0.5rem; }
+.question-field[style*="display: block"],
+.question-field[style*="display:block"] { display: block !important; }
 .question-field label { display: flex; flex-direction: column; gap: 0.4rem; }
 .question-field span { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); }
 .question-field textarea {
@@ -345,8 +347,6 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 }
 .question-field textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 .question-field__hint { font-size: 0.75rem; color: var(--ink-faint); font-style: italic; margin: 0.25rem 0 0 0; }
-.question-field[style*="display: block"],
-.question-field[style*="display:block"] { display: block; }
 .interpretation__body::after {
   content: "▍";
   display: inline-block;

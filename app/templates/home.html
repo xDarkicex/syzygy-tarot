@@ -55,7 +55,10 @@
     <legend>Spread</legend>
     {% for spread in spreads %}
       <label class="spread">
-        <input type="radio" name="spread_slug" value="{{ spread.slug }}" {% if loop.first %}checked{% endif %} />
+        <input type="radio" name="spread_slug" value="{{ spread.slug }}"
+               x-model="profile.spread"
+               @change="profile.spread = $el.value"
+               {% if loop.first %}checked{% endif %} />
         <span class="spread__body">
           <span class="spread__name">{{ spread.name }}</span>
           <span class="spread__tag">{{ spread.tagline }}</span>
@@ -64,8 +67,7 @@
     {% endfor %}
   </fieldset>
 
-  <div class="question-field"
-       x-show="($root.querySelector('input[name=spread_slug]:checked')?.value) === 'single'">
+  <div class="question-field" x-show="profile.spread === 'single'">
     <label>
       <span>Your question <span class="question-field__opt">(optional)</span></span>
       <textarea name="question" rows="3" maxlength="500"
