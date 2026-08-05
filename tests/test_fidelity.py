@@ -17,7 +17,7 @@ from app.domain.cards import Orientation
 from app.domain.deck import deal
 from app.domain.reading import build_reading
 from app.domain.seeding import NumerologySeed, Querent, compute_numerology
-from app.domain.spreads import Position, Spread
+from app.domain.spreads import Position, Spread, get_spread
 
 FIXTURE = pathlib.Path(__file__).parent / "fixtures" / "java_deal_golden.tsv"
 DRAW_COUNT = 6
@@ -114,7 +114,7 @@ def test_daily_seed_differs_every_day_of_the_year() -> None:
     strategy = DailySeed()
     querent = Querent(name="Ada", age=29, resonance="Female")
     seeds = {
-        strategy.seed(querent, date(2026, 1, 1) + timedelta(days=offset))
+        strategy.seed(querent, date(2026, 1, 1) + timedelta(days=offset), "hear-help-hold")
         for offset in range(365)
     }
     assert len(seeds) == 365, "DailySeed collapsed at least one day-of-year"
@@ -124,8 +124,38 @@ def test_daily_seed_is_stable_for_the_same_querent_same_day() -> None:
     from app.domain.seeding import DailySeed
 
     strategy, querent = DailySeed(), Querent(name="Ada", age=29, resonance="Female")
-    on = date(2026, 8, 5)
-    assert strategy.seed(querent, on) == strategy.seed(querent, on)
+    on, spread = date(2026, 8, 5), "hear-help-hold"
+    assert strategy.seed(querent, on, spread) == strategy.seed(querent, on, spread)
+
+
+def test_different_spreads_produce_different_cards() -> None:
+    """Regression: Hear/Help/Hold and Past/Present/Future must not return the same
+    cards. The seed is salted with the spread slug, so the same querent on the same
+    day gets a different reading for each spread.
+    """
+    from app.domain.seeding import DailySeed
+
+    deck, strategy, querent, on = load_deck(), DailySeed(), Querent(name="Ada", age=29, resonance="Female"), date(2026, 8, 5)
+    a = build_reading(deck, get_spread("hear-help-hold"), querent, strategy, on)
+    b = build_reading(deck, get_spread("past-present-future"), querent, strategy, on)
+    assert [d.card.slug for d in a.drawn] != [d.card.slug for d in b.drawn], (
+        "Different spreads produced the same cards — the spread slug is not salted into the seed."
+    )
+
+
+def test_numerology_seed_is_spread_agnostic() -> None:
+    """The faithful mode is bit-exact to the original Java: one spread, one reading.
+    Different spreads MUST produce the same cards under NumerologySeed so the
+    'faithful 1997' promise is preserved.
+    """
+    from app.domain.seeding import NumerologySeed
+
+    deck, strategy, querent, on = load_deck(), NumerologySeed(), Querent(name="Ada", age=29, resonance="Female"), date(2026, 8, 5)
+    a = build_reading(deck, get_spread("hear-help-hold"), querent, strategy, on)
+    b = build_reading(deck, get_spread("past-present-future"), querent, strategy, on)
+    assert [d.card.slug for d in a.drawn] == [d.card.slug for d in b.drawn], (
+        "NumerologySeed must reproduce the original single-spread behaviour"
+    )
 
 
 def test_reversed_cards_render_reversed_text() -> None:

@@ -39,7 +39,7 @@ def build_reading(
     on: date,
 ) -> Reading:
     """Deal a reading for a querent on a given day."""
-    seed = strategy.seed(querent, on)
+    seed = strategy.seed(querent, on, spread.slug)
     numerology = compute_numerology(querent, on) if strategy.slug == "numerology" else None
     return Reading(
         querent=querent,

@@ -100,38 +100,48 @@ class SeedStrategy(Protocol):
     label: str
     description: str
 
-    def seed(self, querent: Querent, on: date) -> int: ...
+    def seed(self, querent: Querent, on: date, spread_slug: str) -> int: ...
 
 
 @dataclass(frozen=True, slots=True)
 class NumerologySeed:
-    """Deterministic: the same querent gets the same reading for a whole day."""
+    """The faithful original formula. Same querent+day = same reading, always,
+    regardless of spread. Bit-exact to the Java source.
+    """
 
     slug: str = "numerology"
     label: str = "Numerology (faithful)"
     description: str = "Your name, age, and today's date fix the shuffle. Stable all day."
 
-    def seed(self, querent: Querent, on: date) -> int:
+    def seed(self, querent: Querent, on: date, spread_slug: str) -> int:
+        # spread_slug is intentionally ignored: this strategy reproduces the original
+        # Java behaviour exactly, where there was only one spread.
+        _ = spread_slug
         return compute_numerology(querent, on).seed
 
 
 @dataclass(frozen=True, slots=True)
 class DailySeed:
-    """The faithful formula folded with the day-of-year so consecutive days differ.
-
-    The original ``NumerologySeed`` divides by age, which collapses consecutive days
-    into the same seed for ~age days in a row. This strategy keeps the same numerology
-    but XOR-mixes the day-of-year in, so every day of the year yields a different
-    shuffle while the same querent still gets a stable reading for the same day.
+    """The faithful formula folded with day-of-year and spread, so different
+    spreads produce different readings on the same day for the same querent.
     """
 
     slug: str = "daily"
     label: str = "Daily"
-    description: str = "Numerology folded with the day-of-year. A different reading every day."
+    description: str = "Numerology folded with the day-of-year and spread. Every spread draws a different reading."
 
-    def seed(self, querent: Querent, on: date) -> int:
+    def seed(self, querent: Querent, on: date, spread_slug: str) -> int:
         numerology = compute_numerology(querent, on)
-        return (numerology.seed * 397) ^ numerology.day_of_year
+        spread_salt = _spread_salt(spread_slug)
+        return ((numerology.seed * 397) ^ numerology.day_of_year ^ spread_salt)
+
+
+def _spread_salt(slug: str) -> int:
+    """Stable, deterministic salt derived from the spread slug."""
+    h = 0
+    for ch in slug:
+        h = (h * 131 + ord(ch)) & 0xFFFFFFFF
+    return h
 
 
 STRATEGIES: dict[str, SeedStrategy] = {s.slug: s for s in (NumerologySeed(), DailySeed())}
