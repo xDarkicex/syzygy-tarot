@@ -40,6 +40,19 @@
     {% endfor %}
   </fieldset>
 
+  <fieldset class="strategy-picker">
+    <legend>Seeding</legend>
+    {% for strategy in strategies %}
+      <label class="strategy">
+        <input type="radio" name="strategy_slug" value="{{ strategy.slug }}" {% if strategy.slug == 'daily' %}checked{% endif %} />
+        <span class="strategy__body">
+          <span class="strategy__name">{{ strategy.label }}</span>
+          <span class="strategy__tag">{{ strategy.description }}</span>
+        </span>
+      </label>
+    {% endfor %}
+  </fieldset>
+
   <button class="draw-button" type="submit">
     <span class="draw-button__mark" aria-hidden="true">✶</span>
     <span>Deal the cards</span>

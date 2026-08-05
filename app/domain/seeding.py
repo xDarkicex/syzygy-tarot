@@ -108,15 +108,34 @@ class NumerologySeed:
     """Deterministic: the same querent gets the same reading for a whole day."""
 
     slug: str = "numerology"
-    label: str = "Numerology"
+    label: str = "Numerology (faithful)"
     description: str = "Your name, age, and today's date fix the shuffle. Stable all day."
 
     def seed(self, querent: Querent, on: date) -> int:
         return compute_numerology(querent, on).seed
 
 
-STRATEGIES: dict[str, SeedStrategy] = {s.slug: s for s in (NumerologySeed(),)}
-DEFAULT_STRATEGY = "numerology"
+@dataclass(frozen=True, slots=True)
+class DailySeed:
+    """The faithful formula folded with the day-of-year so consecutive days differ.
+
+    The original ``NumerologySeed`` divides by age, which collapses consecutive days
+    into the same seed for ~age days in a row. This strategy keeps the same numerology
+    but XOR-mixes the day-of-year in, so every day of the year yields a different
+    shuffle while the same querent still gets a stable reading for the same day.
+    """
+
+    slug: str = "daily"
+    label: str = "Daily"
+    description: str = "Numerology folded with the day-of-year. A different reading every day."
+
+    def seed(self, querent: Querent, on: date) -> int:
+        numerology = compute_numerology(querent, on)
+        return (numerology.seed * 397) ^ numerology.day_of_year
+
+
+STRATEGIES: dict[str, SeedStrategy] = {s.slug: s for s in (NumerologySeed(), DailySeed())}
+DEFAULT_STRATEGY = "daily"
 
 
 def get_strategy(slug: str | None) -> SeedStrategy:

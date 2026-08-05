@@ -27,6 +27,8 @@ def test_home_renders(client: TestClient) -> None:
     assert "syzygy" in response.text.lower()
     assert "Hear Me" in response.text
     assert "Single Card" in response.text
+    assert "alpine-persist.min.js" in response.text, "Alpine persist plugin must load before Alpine"
+    assert "fonts.googleapis.com" in response.text, "Google Fonts must be linked"
 
 
 def test_history_renders_empty(client: TestClient) -> None:

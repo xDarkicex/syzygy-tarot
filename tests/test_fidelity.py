@@ -8,7 +8,7 @@ so this catches ordering regressions that the RNG tests alone would not.
 from __future__ import annotations
 
 import pathlib
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 
@@ -91,8 +91,7 @@ def test_seed_advances_after_an_age_interval() -> None:
 
     Seed = (total) // age, so readings stay the same until ``day_of_year`` advances far
     enough to bump the integer quotient. For age 29 the seed holds for a 29-day window
-    before changing. This is faithful to the original; a different ``SeedStrategy`` can
-    fix it without touching this one.
+    before changing. This is faithful to the original; :class:`DailySeed` is the fix.
     """
     strategy, on = NumerologySeed(), date(2026, 1, 1)
     querent = Querent(name="Ada", age=29, resonance="Female")
@@ -106,6 +105,27 @@ def test_seed_advances_after_an_age_interval() -> None:
         load_deck(), _probe_spread(1), querent, strategy, on.replace(day=2 + 29)
     )
     assert advanced.seed != same_day.seed, "after one age-window the seed must advance"
+
+
+def test_daily_seed_differs_every_day_of_the_year() -> None:
+    """DailySeed is the user-facing fix: every day yields a different reading."""
+    from app.domain.seeding import DailySeed
+
+    strategy = DailySeed()
+    querent = Querent(name="Ada", age=29, resonance="Female")
+    seeds = {
+        strategy.seed(querent, date(2026, 1, 1) + timedelta(days=offset))
+        for offset in range(365)
+    }
+    assert len(seeds) == 365, "DailySeed collapsed at least one day-of-year"
+
+
+def test_daily_seed_is_stable_for_the_same_querent_same_day() -> None:
+    from app.domain.seeding import DailySeed
+
+    strategy, querent = DailySeed(), Querent(name="Ada", age=29, resonance="Female")
+    on = date(2026, 8, 5)
+    assert strategy.seed(querent, on) == strategy.seed(querent, on)
 
 
 def test_reversed_cards_render_reversed_text() -> None:

@@ -35,7 +35,7 @@ def deal_reading(
     age: int = Form(...),
     resonance: str = Form(...),
     spread_slug: str = Form(...),
-    strategy_slug: str = Form("numerology"),
+    strategy_slug: str = Form("daily"),
     save: str = Form("on"),
     conn: sqlite3.Connection = Depends(get_db),
     today=Depends(get_today),

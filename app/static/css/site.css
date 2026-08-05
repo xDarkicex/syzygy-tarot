@@ -80,6 +80,14 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .spread__name { font-family: var(--serif); font-size: 1.05rem; }
 .spread__tag { font-size: 0.8rem; color: var(--ink-faint); }
 
+.strategy-picker { display: grid; gap: 0.5rem; }
+.strategy { display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.7rem 0.9rem; border: 1px solid var(--rule); border-radius: 3px; cursor: pointer; }
+.strategy:hover { border-color: var(--ink-faint); }
+.strategy input { margin-top: 0.3rem; accent-color: var(--iris); }
+.strategy__body { display: flex; flex-direction: column; gap: 0.15rem; }
+.strategy__name { font-family: var(--serif); font-size: 1rem; }
+.strategy__tag { font-size: 0.78rem; color: var(--ink-faint); }
+
 .draw-button {
   justify-self: start;
   display: inline-flex; align-items: center; gap: 0.75rem;
