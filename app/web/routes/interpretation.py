@@ -47,31 +47,16 @@ def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[s
         yield _sse("done", "complete")
         return
 
-    # The Merge gateway streams deltas as the LLM produces them. If the model
-    # gets stuck in a thinking loop and produces no text, retry once before
-    # giving up — the second call often succeeds where the first stalled.
     accumulated: list[str] = []
-    last_was_empty = False
-    try:
-        for delta in stream_interpretation(reading):
-            accumulated.append(delta)
-            yield _sse("token", delta)
-    except Exception as exc:  # noqa: BLE001
-        yield _sse("error", f"{type(exc).__name__}: {exc}")
-        return
+    for delta in _stream_with_one_retry(reading):
+        accumulated.append(delta)
+        yield _sse("token", delta)
 
     if not accumulated:
-        # Retry once: the model occasionally gets stuck, but a re-prompt often works.
-        try:
-            for delta in stream_interpretation(reading):
-                accumulated.append(delta)
-                yield _sse("token", delta)
-        except Exception as exc:  # noqa: BLE001
-            yield _sse("error", f"{type(exc).__name__}: {exc}")
-            return
-
-    if not accumulated:
-        yield _sse("error", "The model is not responding right now. Your cards above are still yours to read.")
+        yield _sse(
+            "error",
+            "The model is not responding right now. Your cards above are still yours to read.",
+        )
         return
 
     full_text = "".join(accumulated)
@@ -82,6 +67,27 @@ def _stream_for_reading(share_slug: str, conn: sqlite3.Connection) -> Iterator[s
         pass
 
     yield _sse("done", "complete")
+
+
+def _stream_with_one_retry(reading) -> Iterator[str]:
+    """Yield deltas, retrying once if the first attempt produced none.
+
+    The Merge gateway occasionally gets stuck in a long thinking phase and
+    returns no text. A second call often succeeds where the first stalled.
+    """
+    first = list(_safe_deltas(reading))
+    if first:
+        yield from first
+        return
+    yield from _safe_deltas(reading)
+
+
+def _safe_deltas(reading) -> Iterator[str]:
+    """Wrap the LLM stream in try/except so the route can stay clean."""
+    try:
+        yield from stream_interpretation(reading)
+    except Exception:  # noqa: BLE001
+        return
 
 
 @router.get("/{share_slug}/stream")
