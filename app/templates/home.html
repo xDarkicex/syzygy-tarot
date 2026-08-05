@@ -67,14 +67,14 @@
     {% endfor %}
   </fieldset>
 
-  <div class="question-field" x-show="profile.spread === 'single'">
+  <div class="question-field">
     <label>
       <span>Your question <span class="question-field__opt">(optional)</span></span>
       <textarea name="question" rows="3" maxlength="500"
                 placeholder="What do you want to ask the cards?"
                 x-model="profile.question"></textarea>
     </label>
-    <p class="question-field__hint">Single card with a question is the deepest kind of reading. Leave blank and the card speaks to the day.</p>
+    <p class="question-field__hint">Type a specific question and the cards will answer it. Leave blank and the cards speak to the day.</p>
   </div>
 
   <fieldset class="strategy-picker">

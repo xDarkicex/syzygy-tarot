@@ -335,9 +335,7 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .interpretation__strong { color: var(--ember); font-weight: 500; }
 .interpretation__body--pending { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem 0; }
 .interpretation__body--pending p { font-family: var(--serif); font-style: italic; color: var(--ink-soft); margin: 0; }
-.question-field { display: none; margin-top: 0.5rem; }
-.question-field[style*="display: block"],
-.question-field[style*="display:block"] { display: block !important; }
+.question-field { display: block; margin-top: 0.5rem; }
 .question-field label { display: flex; flex-direction: column; gap: 0.4rem; }
 .question-field span { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); }
 .question-field textarea {
