@@ -126,3 +126,36 @@ def test_profile_save_and_clear(client: TestClient) -> None:
     assert clear.status_code == 303
     cookie = clear.headers.get("set-cookie", "")
     assert "syzygy_profile" in cookie and "Max-Age=0" in cookie or "syzygy_profile=" in cookie
+
+
+def test_question_is_persisted_and_restored(client: TestClient) -> None:
+    """The question must survive the deal → DB → SSE-worker round trip.
+
+    Regression: the question was captured on the Reading at deal time but
+    never written to the DB, so the SSE worker (which reconstructs the
+    Reading from storage) saw question=None and the LLM never knew what
+    the user asked.
+    """
+    response = client.post(
+        "/readings/",
+        data={
+            "name": "Gentry", "age": "33", "resonance": "Male",
+            "drawn_to": "Women", "spread_slug": "single",
+            "question": "Will I find love soon?", "save": "on",
+        },
+    )
+    import re
+    match = re.search(r"/readings/([A-Za-z0-9_-]+)", response.text)
+    assert match, "deal should produce a share slug"
+    slug = match.group(1)
+
+    # The reading reconstructed from the DB must carry the question.
+    import sqlite3
+    from app.config import get_settings
+    conn = sqlite3.connect(get_settings().database_path)
+    conn.row_factory = sqlite3.Row
+    from app.storage.readings import fetch_reading
+    stored = fetch_reading(slug, conn)
+    assert stored is not None
+    assert stored.reading.question == "Will I find love soon?", stored.reading.question
+    conn.close()

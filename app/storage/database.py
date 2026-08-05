@@ -26,6 +26,7 @@ def init_database(database_path: Path) -> None:
         _ensure_column(conn, "readings", "interpretation", "TEXT NOT NULL DEFAULT ''")
         _ensure_column(conn, "readings", "querent_age", "INTEGER NOT NULL DEFAULT 0")
         _ensure_column(conn, "readings", "querent_resonance", "TEXT NOT NULL DEFAULT ''")
+        _ensure_column(conn, "readings", "question", "TEXT NOT NULL DEFAULT ''")
 
 
 def _ensure_column(conn: sqlite3.Connection, table: str, column: str, definition: str) -> None:

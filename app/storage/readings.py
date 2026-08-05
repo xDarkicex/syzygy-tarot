@@ -72,8 +72,9 @@ def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str
             """
             INSERT INTO readings (
                 share_slug, querent_name, querent_age, querent_resonance,
-                spread_slug, strategy_slug, seed, drawn_on, cards_json, interpretation
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                spread_slug, strategy_slug, seed, drawn_on, cards_json, interpretation,
+                question
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 slug,
@@ -86,6 +87,7 @@ def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str
                 reading.drawn_on.isoformat(),
                 _serialise_drawn(reading.drawn),
                 interpretation,
+                reading.question or "",
             ),
         )
     return slug
@@ -102,6 +104,7 @@ def update_interpretation(share_slug: str, interpretation: str, conn: sqlite3.Co
 def _row_to_reading(row: sqlite3.Row) -> Reading:
     querent = Querent(name=row["querent_name"], age=row["querent_age"], resonance=row["querent_resonance"])
     spread = get_spread(row["spread_slug"])
+    question = row["question"] or None if "question" in row.keys() else None
     return Reading(
         querent=querent,
         spread=spread,
@@ -109,6 +112,7 @@ def _row_to_reading(row: sqlite3.Row) -> Reading:
         seed=row["seed"],
         drawn=_deserialise_drawn(row["cards_json"]),
         drawn_on=date.fromisoformat(row["drawn_on"]),
+        question=question,
     )
 
 

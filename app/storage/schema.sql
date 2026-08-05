@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS readings (
     seed              INTEGER NOT NULL,
     drawn_on          TEXT    NOT NULL,
     cards_json        TEXT    NOT NULL,
+    interpretation    TEXT    NOT NULL DEFAULT '',
+    question          TEXT    NOT NULL DEFAULT '',
     created_at        TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
