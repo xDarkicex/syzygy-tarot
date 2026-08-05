@@ -71,6 +71,15 @@
         var body = document.getElementById("interpretation-body");
         if (!body) return;
 
+        // Close any prior reading's EventSource. When the user re-deals,
+        // htmx swaps the partial but the old EventSource (created by the
+        // previous partial's inline script) is still alive. Without this
+        // it keeps writing to the body and the user sees two streams
+        // interleaved.
+        if (window.__syzygy_active_stream) {
+          try { window.__syzygy_active_stream.close(); } catch (e) {}
+        }
+
         // The body initially has the "Generating your interpretation…"
         // placeholder. Replace it with a fresh buffer on first token.
         var firstToken = true;
@@ -122,6 +131,7 @@
         }
 
         var src = new EventSource("/readings/" + slug + "/stream");
+        window.__syzygy_active_stream = src;
         src.addEventListener("token", function(e) {
           if (firstToken) {
             body.textContent = "";
@@ -139,6 +149,7 @@
         src.addEventListener("done", function() {
           flushParagraph();
           src.close();
+          window.__syzygy_active_stream = null;
         });
         src.addEventListener("error", function() {
           if (firstToken) {
@@ -148,6 +159,7 @@
             flushParagraph();
           }
           src.close();
+          window.__syzygy_active_stream = null;
         });
       })();
     </script>
