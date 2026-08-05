@@ -43,53 +43,78 @@ def test_prompt_names_querent_and_lists_every_card() -> None:
         assert "reversed" if d.is_reversed else "upright" in prompt
 
 
-def test_text_block_picks_text_and_skips_thinking() -> None:
-    event = {
-        "output": [{
-            "content": [
-                {"type": "thinking", "thinking": "secret reasoning"},
-                {"type": "text", "text": "Hello "},
-                {"type": "text", "text": "world."},
-            ]
-        }]
-    }
-    assert interpretation._text_block(event) == "Hello world."
-
-
-def test_text_block_returns_none_when_no_text_yet() -> None:
-    assert interpretation._text_block({"output": [{"content": [{"type": "thinking", "thinking": "x"}]}]}) is None
-    assert interpretation._text_block({"output": []}) is None
-    assert interpretation._text_block({}) is None
-
-
-def test_streaming_yields_deltas_only() -> None:
-    """Simulate the cumulative-text stream: text grows, we emit only the new chars."""
+def test_stream_emits_deltas_from_cumulative_events() -> None:
+    """The Merge gateway emits events where each event's output[0].content[]
+    contains the cumulative text so far. We track the previous total length
+    and emit only the new characters as deltas.
+    """
+    # Simulate the cumulative-text stream: text grows, we emit only the new chars.
     events = [
-        {"output": [{"content": [{"type": "text", "text": "He"}]}]},
-        {"output": [{"content": [{"type": "text", "text": "Hello"}]}]},
-        {"output": [{"content": [{"type": "text", "text": "Hello,"}, {"type": "text", "text": " world"}]}]},
+        {"output": [{"content": [{"type": "text", "text": "Gentry"}]}]},
+        {"output": [{"content": [{"type": "text", "text": "Gentry,"}]}]},
+        {"output": [{"content": [{"type": "text", "text": "Gentry, the"}]}]},
+        {"output": [{"content": [{"type": "text", "text": "Gentry, the shape"}]}]},
     ]
-    seen_lengths: list[int] = []
 
-    def fake_stream():
-        for e in events:
-            text = interpretation._text_block(e)
-            if text is not None:
-                seen_lengths.append(len(text))
-            yield e
+    class FakeStream:
+        def __init__(self):
+            self._events = iter(events)
+        def __iter__(self):
+            return self._events
 
-    # Replace stream_interpretation's internal call by feeding the fake stream
-    deltas: list[str] = []
-    last = 0
-    for event in fake_stream():
-        text = interpretation._text_block(event)
-        if text is None or len(text) <= last:
-            continue
-        delta = text[last:]
-        last = len(text)
-        if delta:
-            deltas.append(delta)
-    assert "".join(deltas) == "Hello, world"
+    from app.services import interpretation as mod
+    original = mod._client
+
+    def client():
+        return type("S", (), {"responses": type(
+            "R", (), {"create": staticmethod(lambda **kw: FakeStream())}
+        )()})()
+
+    mod._client = client
+    try:
+        deltas = mod.stream_interpretation(_reading(3))
+    finally:
+        mod._client = original
+
+    assert deltas == ["Gentry", ",", " the", " shape"], (
+        f"each event should produce a delta equal to the new chars, got {deltas}"
+    )
+
+
+def test_stream_skips_thinking_blocks() -> None:
+    """Thinking blocks should be ignored; only the text block is read."""
+    events = [
+        {"output": [{"content": [
+            {"type": "thinking", "thinking": "secret reasoning"},
+            {"type": "text", "text": "Hello"},
+        ]}]},
+        {"output": [{"content": [
+            {"type": "thinking", "thinking": "more secret"},
+            {"type": "text", "text": "Hello world"},
+        ]}]},
+    ]
+
+    class FakeStream:
+        def __init__(self):
+            self._events = iter(events)
+        def __iter__(self):
+            return self._events
+
+    from app.services import interpretation as mod
+    original = mod._client
+
+    def client():
+        return type("S", (), {"responses": type(
+            "R", (), {"create": staticmethod(lambda **kw: FakeStream())}
+        )()})()
+
+    mod._client = client
+    try:
+        deltas = mod.stream_interpretation(_reading(3))
+    finally:
+        mod._client = original
+
+    assert deltas == ["Hello", " world"], deltas
 
 
 def test_generate_interpretation_without_api_key_raises(monkeypatch) -> None:

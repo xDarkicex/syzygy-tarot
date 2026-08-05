@@ -27,6 +27,11 @@ interpretation and let the reversal shape what the card is saying.
 
 You write short paragraphs. No bullet points, no numbered lists, no headings.
 Two to four paragraphs total. Aim for 180 to 320 words.
+
+Open with the querent's first name. Then write one opening sentence that names
+the overall tone. Then walk the spread's positions in order — for each
+position, read its card as an answer to that position's specific question.
+Close with one short paragraph on what to carry away.
 """
 
 
@@ -86,13 +91,15 @@ def generate_interpretation(reading: Reading) -> str:
     return "".join(chunks).strip()
 
 
-def stream_interpretation(reading: Reading) -> Iterable[str]:
-    """Yield the full text-so-far each time new characters appear.
+def stream_interpretation(reading: Reading) -> list[str]:
+    """Return a list of text deltas as the LLM streams.
 
-    The Merge gateway streams cumulative text per content block — the text field
-    grows on each event, not the delta. We yield the full cumulative text on
-    every change, so the SSE consumer can swap it in as `innerHTML` and get a
-    typewriter effect.
+    The Merge gateway emits events where each event carries the cumulative text
+    so far inside ``output[0].content[].text`` (alongside any thinking blocks
+    the model produced). We track the last-seen length and emit only the
+    characters that were added in the latest event. Deltas are returned as a
+    list (not yielded) so the underlying httpx SSE iterator is fully consumed
+    by the time we return.
     """
     stream = _client().responses.create(
         model="deepseek-v4-flash",
@@ -101,23 +108,38 @@ def stream_interpretation(reading: Reading) -> Iterable[str]:
         stream=True,
     )
     last_text_len = 0
-    for event in stream:
-        text = _text_block(event)
-        if text is None or len(text) <= last_text_len:
-            continue
-        last_text_len = len(text)
-        yield text
-    stream.close()
+    deltas: list[str] = []
+    try:
+        for event in stream:
+            text = _text_block(event)
+            if text is None or len(text) <= last_text_len:
+                continue
+            delta = text[last_text_len:]
+            last_text_len = len(text)
+            if delta:
+                deltas.append(delta)
+    finally:
+        if hasattr(stream, "close"):
+            stream.close()
+    return deltas
 
 
-def _text_block(event: dict) -> str | None:
-    """Pull the cumulative text from an event's output, ignoring thinking blocks."""
-    if not isinstance(event, dict):
+def _text_block(event: object) -> str | None:
+    """Pull the cumulative text from an event's output, ignoring thinking blocks.
+
+    Each streaming event has the cumulative text inside output[0].content[],
+    and there is one block per content type (thinking or text). The text block
+    grows across events; the thinking block also grows but we skip it.
+    """
+    output = _get_attr(event, "output")
+    if not isinstance(output, list) or not output:
         return None
-    first = _first_output_item(event)
-    if first is None:
-        return None
-    content = _get_attr(first, "content")
+    first = output[0]
+    if not isinstance(first, dict):
+        # The merge-gateway-python SDK parses each event into a Pydantic model.
+        content = getattr(first, "content", None)
+    else:
+        content = first.get("content")
     if not isinstance(content, list):
         return None
     parts: list[str] = []
@@ -128,11 +150,16 @@ def _text_block(event: dict) -> str | None:
     return "".join(parts) if parts else None
 
 
-def _first_output_item(event: dict) -> object | None:
-    output = _get_attr(event, "output")
-    if not isinstance(output, list) or not output:
-        return None
-    return output[0]
+def _get_attr(obj: object, key: str) -> object | None:
+    """Read a key from either a dict or a Pydantic-style object.
+
+    The merge-gateway-python package parses SSE events into Pydantic models,
+    so we need to support attribute access. Some fallbacks (the non-streaming
+    path) return dicts, so we accept those too.
+    """
+    if isinstance(obj, dict):
+        return obj.get(key)
+    return getattr(obj, key, None)
 
 
 def _text_field(item: object) -> str | None:
@@ -154,15 +181,11 @@ def _text_field(item: object) -> str | None:
 
 
 def _extract_text(response) -> str:
-    """Pull the human-readable text from a non-streaming response.
-
-    The Merge gateway's OutputMessage wraps its content blocks: ``item.content``
-    is a list of ThinkingContent and TextContent objects, with the actual answer
-    in any block whose ``type == "text"``. The streaming variant uses the same
-    shape, so ``_text_block`` and this function walk the same data.
-    """
+    """Pull the human-readable text from a non-streaming response."""
+    output = _get_attr(response, "output")
+    if not isinstance(output, list):
+        return ""
     parts: list[str] = []
-    output = _get_attr(response, "output") or []
     for item in output:
         content = _get_attr(item, "content")
         if not isinstance(content, list):
@@ -174,8 +197,3 @@ def _extract_text(response) -> str:
     return "".join(parts).strip()
 
 
-def _get_attr(obj: object, key: str) -> object | None:
-    """Read a key from either a dict or a Pydantic-style object."""
-    if isinstance(obj, dict):
-        return obj.get(key)
-    return getattr(obj, key, None)

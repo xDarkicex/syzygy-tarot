@@ -63,5 +63,27 @@
          style="animation-delay: {{ reading.drawn|length * 0.4 + 0.6 }}s">
       {% include "partials/interpretation.html" %}
     </div>
+    <script>
+      (function() {
+        var body = document.getElementById("interpretation-body");
+        var err = document.getElementById("interpretation-error");
+        if (!body) return;
+        var src = new EventSource("/readings/{{ share_slug }}/stream");
+        src.addEventListener("token", function(e) {
+          if (err) err.textContent = "";
+          // Append each token's data, preserving any whitespace/paragraphs.
+          body.append(e.data);
+        });
+        src.addEventListener("done", function() { src.close(); });
+        src.addEventListener("error", function(e) {
+          // The browser fires an error event when the connection drops. If we
+          // already got a 'done' it was a clean close; otherwise surface it.
+          if (body.textContent.trim() === "") {
+            if (err) err.textContent = "The interpretation could not be generated right now.";
+          }
+          src.close();
+        });
+      })();
+    </script>
   {% endif %}
 </article>
