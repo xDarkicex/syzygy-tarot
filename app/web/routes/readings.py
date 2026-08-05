@@ -78,7 +78,10 @@ def deal_reading(
         birth_date, birth_time, birth_place,
         spread_slug, strategy_slug,
     )
-    question_text = question.strip() or None
+    # The question belongs to single-card draws. For multi-card spreads the
+    # positions ARE the question, so drop it even if the form submitted one
+    # (e.g. a leftover value in the persisted profile).
+    question_text = (question.strip() or None) if len(spread) == 1 else None
     reading = build_reading(load_deck(), spread, querent, strategy, today, question=question_text)
     share_slug = save_reading(reading, conn) if save == "on" else None
 
