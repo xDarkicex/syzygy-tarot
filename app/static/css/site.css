@@ -194,46 +194,62 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
   pointer-events: none;
 }
 
-.card__position { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-faint); }
-.card__name { font-family: var(--serif); font-size: 1.4rem; margin: 0.4rem 0 0.5rem; line-height: 1.2; color: var(--ink); }
+/* Position label: small caps with a thin accent underline that sits flush with the
+   text, evoking a deck of physical cards where the position name is the most
+   important piece of metadata. */
+.card__position {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--ink);
+  display: inline-block; padding-bottom: 0.35rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  width: fit-content;
+  margin-bottom: 0.6rem;
+}
+
+.card__name {
+  font-family: var(--serif); font-size: 1.6rem;
+  margin: 0.3rem 0 0.6rem; line-height: 1.1; color: var(--ink);
+  font-weight: 500; letter-spacing: -0.005em;
+}
 .card__name em { font-style: italic; color: var(--accent); font-size: 0.9em; }
-.card__prompt { font-size: 0.85rem; color: var(--ink-soft); font-style: italic; margin-bottom: 0.85rem; }
-.card__summary { font-family: var(--serif); font-size: 1.05rem; font-style: italic; color: var(--ink); margin-bottom: 0.85rem; }
-.card__body { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--ink-soft); }
+
+.card__prompt {
+  font-size: 0.88rem; color: var(--ink-soft); font-style: italic;
+  margin-bottom: 0.85rem; line-height: 1.35;
+}
+.card__summary {
+  font-family: var(--serif); font-size: 1.05rem; font-style: italic;
+  color: var(--ink); margin-bottom: 0.85rem; line-height: 1.3;
+}
+.card__body {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  font-size: 0.9rem; color: var(--ink-soft); line-height: 1.45;
+}
 .card__body span { display: block; }
 
 /* Text floats above the dark wash and the art. */
 .card__face--front > :not(.card__art) { position: relative; z-index: 2; }
 
-/* Reversed: the accent stripe moves to the BOTTOM of the card and a small "reversed"
-   badge appears. The text stays right-side up. The art itself is rotated. */
+/* Reversed: the accent stripe moves to the BOTTOM of the card. The badge is a
+   glass-style chip: blurred translucent background, accent-tinted border, soft
+   shadow. The text stays right-side up. The art itself is rotated. */
 .card--reversed .card__face--front { border-top: none; border-bottom: 3px solid var(--accent); }
 .card--reversed .card__face--front::before {
   content: "REVERSED";
-  position: absolute; top: 0.6rem; right: 0.7rem;
-  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.3em;
-  color: var(--accent); opacity: 0.85; z-index: 2;
+  position: absolute; top: 0.65rem; right: 0.7rem;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.3em;
+  font-weight: 500; color: var(--accent);
+  background: color-mix(in srgb, var(--paper-2) 55%, transparent);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  z-index: 3;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.2) inset;
 }
+
 .card--revealed .card__face--front { transform: rotateY(0); }
 .card--revealed .card__face--back  { transform: rotateY(180deg); opacity: 0; pointer-events: none; }
-
-/* Reversed: the accent stripe moves to the BOTTOM of the card and a small "reversed"
-   badge appears. The text stays right-side up. The image itself rotates 180°. */
-.card--reversed .card__face--front { border-top: none; border-bottom: 3px solid var(--accent); }
-.card--reversed .card__face--front::before {
-  content: "REVERSED";
-  position: absolute; top: 0.55rem; right: 0.65rem;
-  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.3em;
-  color: var(--accent); opacity: 0.9; z-index: 2;
-}
-
-.card__position { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-faint); }
-.card__name { font-family: var(--serif); font-size: 1.05rem; margin: 0.3rem 0 0.4rem; line-height: 1.15; color: var(--ink); }
-.card__name em { font-style: italic; color: var(--accent); font-size: 0.9em; }
-.card__prompt { font-size: 0.72rem; color: var(--ink-soft); font-style: italic; margin-bottom: 0.5rem; line-height: 1.3; }
-.card__summary { font-family: var(--serif); font-size: 0.85rem; font-style: italic; color: var(--ink); margin-bottom: 0.5rem; line-height: 1.3; }
-.card__body { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.75rem; color: var(--ink-soft); line-height: 1.4; }
-.card__body span { display: block; }
 
 /* ───── history ───── */
 .history { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
