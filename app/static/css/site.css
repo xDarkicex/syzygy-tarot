@@ -175,15 +175,24 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
   scrollbar-color: var(--rule) transparent;
 }
 
-/* Card art: faint background that sits behind the text. Sits behind everything via
-   z-index 0; the text elements float on top at z-index 1. */
+/* Card art: fills the card edge-to-edge as a background, at reduced opacity. */
 .card__art {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  object-fit: contain; object-position: right bottom;
-  opacity: 0.18; pointer-events: none; z-index: 0;
+  object-fit: cover; object-position: center;
+  opacity: 0.32; pointer-events: none; z-index: 0;
   border-radius: 0;
 }
 .card--reversed .card__art { transform: rotate(180deg); }
+
+/* Dark wash over the art to keep text legible everywhere. Sits above the art,
+   below the text. */
+.card__face--front::after {
+  content: "";
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(14, 13, 18, 0.78) 0%, rgba(14, 13, 18, 0.55) 35%, rgba(14, 13, 18, 0.85) 100%);
+  pointer-events: none;
+}
 
 .card__position { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-faint); }
 .card__name { font-family: var(--serif); font-size: 1.4rem; margin: 0.4rem 0 0.5rem; line-height: 1.2; color: var(--ink); }
@@ -193,8 +202,8 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .card__body { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--ink-soft); }
 .card__body span { display: block; }
 
-/* Text floats above the faint art background. */
-.card__face--front > :not(.card__art) { position: relative; z-index: 1; }
+/* Text floats above the dark wash and the art. */
+.card__face--front > :not(.card__art) { position: relative; z-index: 2; }
 
 /* Reversed: the accent stripe moves to the BOTTOM of the card and a small "reversed"
    badge appears. The text stays right-side up. The art itself is rotated. */
