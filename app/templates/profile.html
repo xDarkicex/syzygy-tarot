@@ -88,4 +88,61 @@
             formaction="/profile/clear" formmethod="post">Clear</button>
   </div>
 </form>
+
+<section class="dashboard">
+  <h2 class="dashboard__title">Your reading history</h2>
+  {% if today_sky %}
+  <p class="dashboard__vector">
+    The sky suggests <strong>{{ today_sky.moon_sign | vector_focus }}</strong> today
+    (moon in {{ today_sky.moon_sign }}, {{ today_sky.moon_phase }}).
+  </p>
+  {% endif %}
+  {% if history %}
+  <div class="dashboard__charts">
+    <div class="chart-box"><canvas id="chart-focus"></canvas></div>
+    <div class="chart-box"><canvas id="chart-moon"></canvas></div>
+  </div>
+  {% else %}
+  <p class="empty">No readings yet. Deal some cards and the pattern will appear here.</p>
+  {% endif %}
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var history = {{ history_json | safe }};
+    if (!history.length || typeof Chart === 'undefined') return;
+
+    // Focus areas pulled on over time.
+    var focusData = {};
+    history.forEach(function(h) {
+      (h.focus || []).forEach(function(f) { focusData[f] = (focusData[f] || 0) + 1; });
+    });
+    new Chart(document.getElementById('chart-focus'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(focusData),
+        datasets: [{ data: Object.values(focusData), backgroundColor: [
+          '#ff6a3d', '#b07cff', '#4dd0c1', '#d9b66c', '#7ea6ff', '#f08db4'
+        ]}]
+      },
+      options: { plugins: { legend: { position: 'bottom', labels: { color: '#d8cdb1' } } } }
+    });
+
+    // Moon signs at each reading.
+    var moonCounts = {};
+    history.forEach(function(h) {
+      if (h.sky && h.sky.moon) moonCounts[h.sky.moon] = (moonCounts[h.sky.moon] || 0) + 1;
+    });
+    new Chart(document.getElementById('chart-moon'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(moonCounts),
+        datasets: [{ label: 'Readings', data: Object.values(moonCounts),
+          backgroundColor: '#b07cff' }]
+      },
+      options: { plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#d8cdb1' } }, y: { ticks: { color: '#d8cdb1' } } } }
+    });
+  });
+</script>
 {% endblock %}

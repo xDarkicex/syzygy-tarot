@@ -102,6 +102,11 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .draw-button:hover { transform: translateY(-1px); background: var(--gold); }
 .draw-button__mark { color: var(--ember); font-size: 1.1rem; transform: translateY(0.05em); }
 .draw-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.dashboard { margin-top: 2.5rem; }
+.dashboard__title { font-family: var(--serif); font-size: 1.4rem; font-weight: 500; margin: 0 0 0.75rem; }
+.dashboard__vector { color: var(--ink-soft); margin: 0 0 1.25rem; }
+.dashboard__charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+.chart-box { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; padding: 1.25rem; }
 .quiz { max-width: 620px; margin: 0 auto; }
 .quiz__fieldset {
   border: 1px solid var(--rule); border-radius: 6px; padding: 2rem;

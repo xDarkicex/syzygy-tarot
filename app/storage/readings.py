@@ -32,6 +32,8 @@ class StoredReading:
     share_slug: str
     created_at: str
     interpretation: str = ""
+    focus: tuple[str, ...] = ()
+    sky: dict[str, str] | None = None
 
 
 def _serialise_drawn(drawn: tuple[DrawnCard, ...]) -> str:
@@ -67,14 +69,15 @@ def _deserialise_drawn(payload: str) -> tuple[DrawnCard, ...]:
 
 def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str = "") -> str:
     slug = generate_share_slug()
+    sky = _sky_for(reading.drawn_on)
     with conn:  # commits on success, rolls back on exception
         conn.execute(
             """
             INSERT INTO readings (
                 share_slug, querent_name, querent_age, querent_resonance,
                 spread_slug, strategy_slug, seed, drawn_on, cards_json, interpretation,
-                question
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                question, focus, sky_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 slug,
@@ -88,9 +91,28 @@ def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str
                 _serialise_drawn(reading.drawn),
                 interpretation,
                 reading.question or "",
+                ", ".join(sorted(reading.querent.focus)),
+                json.dumps(sky) if sky else "",
             ),
         )
     return slug
+
+
+def _sky_for(on: date) -> dict[str, str] | None:
+    """Capture the sky snapshot at the reading date for the dashboard."""
+    try:
+        from app.services.ephemeris import sky_snapshot
+        snap = sky_snapshot(on)
+        if snap is None:
+            return None
+        return {
+            "sun": snap.sun_sign,
+            "moon": snap.moon_sign,
+            "phase": snap.moon_phase,
+            "hour": snap.planetary_hour,
+        }
+    except Exception:  # noqa: BLE001
+        return None
 
 
 def update_interpretation(share_slug: str, interpretation: str, conn: sqlite3.Connection) -> None:
@@ -127,6 +149,8 @@ def fetch_reading(share_slug: str, conn: sqlite3.Connection) -> StoredReading | 
         share_slug=row["share_slug"],
         created_at=row["created_at"],
         interpretation=row["interpretation"] or "",
+        focus=_parse_focus(row["focus"]),
+        sky=_parse_sky(row["sky_json"]),
     )
 
 
@@ -140,9 +164,27 @@ def fetch_recent_readings(limit: int, conn: sqlite3.Connection) -> list[StoredRe
             share_slug=row["share_slug"],
             created_at=row["created_at"],
             interpretation=row["interpretation"] or "",
+            focus=_parse_focus(row["focus"]),
+            sky=_parse_sky(row["sky_json"]),
         )
         for row in rows
     ]
+
+
+def _parse_focus(raw: str) -> tuple[str, ...]:
+    if not raw:
+        return ()
+    return tuple(part.strip() for part in raw.split(",") if part.strip())
+
+
+def _parse_sky(raw: str) -> dict[str, str] | None:
+    if not raw:
+        return None
+    try:
+        value = json.loads(raw)
+        return value if isinstance(value, dict) else None
+    except ValueError:
+        return None
 
 
 def get_connection() -> sqlite3.Connection:

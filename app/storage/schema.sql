@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS readings (
     cards_json        TEXT    NOT NULL,
     interpretation    TEXT    NOT NULL DEFAULT '',
     question          TEXT    NOT NULL DEFAULT '',
+    focus             TEXT    NOT NULL DEFAULT '',   -- comma-joined focus areas
+    sky_json          TEXT    NOT NULL DEFAULT '',   -- sun/moon/phase/hour at deal
     created_at        TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 

@@ -4,6 +4,7 @@ cookie so the server can prefill pages. No auth yet — the profile is per-brows
 
 from __future__ import annotations
 
+import json
 from datetime import date
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
@@ -19,9 +20,12 @@ from app.domain.seeding import (
 )
 from app.services.birth_chart import compute_birth_chart
 from app.services.quiz import QUESTIONS, archetype_for, compute_type
+from app.services.ephemeris import sky_snapshot
+from app.storage.readings import fetch_recent_readings
 from app.web.auth import clear_profile_cookie, set_profile_cookie
-from app.web.dependencies import get_profile
+from app.web.dependencies import get_db, get_profile
 from app.web.templating import templates
+
 
 router = APIRouter(prefix="/profile")
 
@@ -33,9 +37,22 @@ def _chart(querent: Querent | None):
 
 
 @router.get("", response_class=HTMLResponse)
-def profile_page(request: Request, querent: Querent | None = Depends(get_profile)) -> HTMLResponse:
-    """View + edit the profile. Shows the computed birth chart when birth data exists."""
+def profile_page(
+    request: Request,
+    querent: Querent | None = Depends(get_profile),
+    conn: sqlite3.Connection = Depends(get_db),
+) -> HTMLResponse:
+    """View + edit the profile. Shows the chart, archetype, and a reading dashboard."""
     archetype = archetype_for(querent.mbti) if querent and querent.mbti else None
+    history = fetch_recent_readings(50, conn)
+    history_json = json.dumps([
+        {
+            "focus": list(h.focus),
+            "sky": h.sky,
+            "date": h.reading.drawn_on.isoformat(),
+        }
+        for h in history
+    ])
     return templates.TemplateResponse(
         request,
         "profile.html",
@@ -47,6 +64,9 @@ def profile_page(request: Request, querent: Querent | None = Depends(get_profile
             "drawn_to_options": DRAWN_TO,
             "focus_areas": FOCUS_AREAS,
             "relationship_statuses": RELATIONSHIP_STATUSES,
+            "history": history,
+            "history_json": history_json,
+            "today_sky": sky_snapshot(date.today()),
             "today": date.today(),
         },
     )
