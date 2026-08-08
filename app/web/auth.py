@@ -35,6 +35,8 @@ def profile_cookie_value(querent: Querent) -> str:
         "birth_time": querent.birth_time or "",
         "birth_place": querent.birth_place or "",
         "mbti": querent.mbti or "",
+        "focus": list(querent.focus),
+        "relationship_status": querent.relationship_status or "",
     }
     return _signer().dumps(payload)
 
@@ -56,6 +58,8 @@ def read_profile_cookie(raw: str | None) -> Querent | None:
             birth_time=payload.get("birth_time") or None,
             birth_place=payload.get("birth_place") or None,
             mbti=payload.get("mbti") or None,
+            focus=tuple(payload.get("focus", []) or []),
+            relationship_status=payload.get("relationship_status") or None,
         )
     except Exception:
         return None

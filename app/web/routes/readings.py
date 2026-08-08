@@ -62,6 +62,8 @@ def deal_reading(
     birth_time: str = Form(""),
     birth_place: str = Form(""),
     mbti: str = Form(""),
+    focus: list[str] = Form(default=[]),
+    relationship_status: str = Form(""),
     spread_slug: str = Form(...),
     strategy_slug: str = Form("daily"),
     question: str = Form(""),
@@ -80,6 +82,7 @@ def deal_reading(
     querent, spread, strategy = _form_parts(
         name, age, resonance, drawn_to,
         birth_date, birth_time, birth_place, mbti,
+        focus, relationship_status,
         spread_slug, strategy_slug,
     )
     # The question belongs to single-card draws. For multi-card spreads the
@@ -205,6 +208,8 @@ def _form_parts(
     birth_time: str,
     birth_place: str,
     mbti: str,
+    focus: list[str],
+    relationship_status: str,
     spread_slug: str,
     strategy_slug: str,
 ) -> tuple[Querent, Spread, SeedStrategy]:
@@ -220,6 +225,8 @@ def _form_parts(
             birth_time=birth_time or None,
             birth_place=birth_place or None,
             mbti=mbti or None,
+            focus=tuple(f for f in focus if f),
+            relationship_status=relationship_status or None,
         )
     except InvalidQuerent as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

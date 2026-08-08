@@ -40,6 +40,26 @@ DRAWN_TO: tuple[str, ...] = (
     "Prefer not to say",
 )
 
+# What the querent is working on right now. Multi-select.
+FOCUS_AREAS: tuple[str, ...] = (
+    "Love & Relationships",
+    "Career & Work",
+    "Self & Growth",
+    "Family",
+    "Money & Security",
+    "Health & Vitality",
+)
+
+# Relationship status. Single-select.
+RELATIONSHIP_STATUSES: tuple[str, ...] = (
+    "Single",
+    "Dating",
+    "In a relationship",
+    "Complicated",
+    "Not looking",
+    "Prefer not to say",
+)
+
 
 class InvalidQuerent(ValueError):
     """Raised when querent details fall outside the supported range."""
@@ -57,6 +77,8 @@ class Querent:
     birth_time: str | None = None  # "HH:MM" 24-hour, optional
     birth_place: str | None = None  # free-text city name, optional
     mbti: str | None = None  # 4-letter MBTI type, e.g. "INTJ"
+    focus: tuple[str, ...] = ()  # which FOCUS_AREAS the querent is working on
+    relationship_status: str | None = None
 
     def __post_init__(self) -> None:
         # Age is derived from birth_date when it's present — they're the same
@@ -70,6 +92,8 @@ class Querent:
         _validate_birth_date(self.birth_date)
         _validate_birth_time(self.birth_time)
         _validate_mbti(self.mbti)
+        _validate_focus(self.focus)
+        _validate_relationship_status(self.relationship_status)
 
     @property
     def choice(self) -> int:
@@ -87,6 +111,17 @@ MBTI_TYPES: frozenset[str] = frozenset(
 def _validate_mbti(mbti: str | None) -> None:
     if mbti is not None and mbti not in MBTI_TYPES:
         raise InvalidQuerent(f"MBTI type must be one of the 16 valid codes, got {mbti!r}.")
+
+
+def _validate_focus(focus: tuple[str, ...]) -> None:
+    unknown = [f for f in focus if f not in FOCUS_AREAS]
+    if unknown:
+        raise InvalidQuerent(f"Unknown focus areas: {unknown}. Choose from {', '.join(FOCUS_AREAS)}.")
+
+
+def _validate_relationship_status(status: str | None) -> None:
+    if status is not None and status not in RELATIONSHIP_STATUSES:
+        raise InvalidQuerent(f"Relationship status must be one of: {', '.join(RELATIONSHIP_STATUSES)}.")
 
 
 def age_from_birth_date(birth_date: date, on: date) -> int:
@@ -196,6 +231,8 @@ class SeedComponents:
     day_vibration: int
     resonance_index: int
     mbti: str = ""
+    focus: str = ""  # sorted, comma-joined focus areas
+    relationship_status: str = ""
     # Astronomical components are optional. None if birth data wasn't given
     # or the ephemeris isn't installed.
     sun_sign: str | None = None
@@ -217,6 +254,8 @@ def compute_seed(components: SeedComponents) -> int:
         str(components.day_vibration),
         str(components.resonance_index),
         components.mbti or "",
+        components.focus or "",
+        components.relationship_status or "",
         components.sun_sign or "",
         components.moon_sign or "",
         components.moon_phase or "",
@@ -322,6 +361,8 @@ def _build_components(querent: Querent, on: date, spread_slug: str) -> SeedCompo
         day_vibration=day,
         resonance_index=querent.choice,
         mbti=querent.mbti or "",
+        focus=", ".join(sorted(querent.focus)) if querent.focus else "",
+        relationship_status=querent.relationship_status or "",
         sun_sign=sun,
         moon_sign=moon,
         moon_phase=phase,

@@ -108,6 +108,9 @@ def _querent_context(reading: Reading) -> str:
         from app.services.quiz import archetype_for
         a = archetype_for(q.mbti)
         parts.append(f"Archetype: {a.type_code}, {a.archetype} ({a.card} energy).")
+    if q.focus:
+        parts.append(f"Working on: {', '.join(q.focus)}.")
+    parts.extend(_labeled_value("Relationship status", q.relationship_status))
     if reading.numerology is not None:
         parts.append(
             f"Numerology: name vibration {reading.numerology.name_value}, "

@@ -48,7 +48,27 @@
       <select name="drawn_to" x-model="p.drawn_to">
         {% for option in drawn_to_options %}<option value="{{ option }}" {% if profile and profile.drawn_to == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
       </select></label>
+    <label><span>Relationship status</span>
+      <select name="relationship_status" x-model="p.relationship_status">
+        <option value="">Prefer not to say</option>
+        {% for option in relationship_statuses %}<option value="{{ option }}" {% if profile and profile.relationship_status == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
+      </select></label>
   </fieldset>
+
+  <fieldset>
+    <legend>What you're working on <span class="profile__hint">(pick all that apply)</span></legend>
+    <div class="focus-grid">
+      {% for area in focus_areas %}
+      <label class="focus-option">
+        <input type="checkbox" name="focus" value="{{ area }}" x-model="p.focus"
+               {% if profile and area in profile.focus %}checked{% endif %} />
+        <span>{{ area }}</span>
+      </label>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <input type="hidden" name="mbti" x-model="p.mbti" value="{{ profile.mbti if profile and profile.mbti else '' }}" />
 
   <fieldset>
     <legend>When you were born <span class="profile__hint">(for the chart and deeper readings)</span></legend>

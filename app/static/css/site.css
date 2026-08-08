@@ -149,6 +149,14 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
   padding: 0.65rem 0.75rem; border-radius: 3px; font-family: inherit; font-size: 0.95rem;
 }
 .profile-form input:focus, .profile-form select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.focus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; }
+.focus-option {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.6rem 0.8rem; border: 1px solid var(--rule); border-radius: 4px; cursor: pointer;
+}
+.focus-option:hover { border-color: var(--ink-faint); }
+.focus-option input { accent-color: var(--gold); }
+.focus-option span { color: var(--ink-soft); font-size: 0.9rem; }
 .profile-form__actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
 .draw-button--danger { background: transparent; border: 1px solid color-mix(in srgb, var(--ember) 50%, transparent); color: var(--ember); }
 .draw-button--danger:hover { background: color-mix(in srgb, var(--ember) 15%, transparent); border-color: var(--ember); }

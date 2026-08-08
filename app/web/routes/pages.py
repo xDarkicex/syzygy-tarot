@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app.domain.seeding import Querent, STRATEGIES
+from app.domain.seeding import Querent, STRATEGIES, FOCUS_AREAS
 from app.domain.spreads import list_spreads
 from app.storage.readings import fetch_recent_readings
 from app.web.dependencies import get_db, get_profile, get_today
@@ -26,6 +26,7 @@ def home(request: Request, today=Depends(get_today), profile: Querent | None = D
             "today": today,
             "spreads": list_spreads(),
             "strategies": list(STRATEGIES.values()),
+            "focus_areas": FOCUS_AREAS,
         },
     )
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"

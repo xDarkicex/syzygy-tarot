@@ -9,7 +9,14 @@ from datetime import date
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 
-from app.domain.seeding import InvalidQuerent, Querent, RESONANCES, DRAWN_TO
+from app.domain.seeding import (
+    InvalidQuerent,
+    Querent,
+    RESONANCES,
+    DRAWN_TO,
+    FOCUS_AREAS,
+    RELATIONSHIP_STATUSES,
+)
 from app.services.birth_chart import compute_birth_chart
 from app.services.quiz import QUESTIONS, archetype_for, compute_type
 from app.web.auth import clear_profile_cookie, set_profile_cookie
@@ -38,6 +45,8 @@ def profile_page(request: Request, querent: Querent | None = Depends(get_profile
             "archetype": archetype,
             "resonances": RESONANCES,
             "drawn_to_options": DRAWN_TO,
+            "focus_areas": FOCUS_AREAS,
+            "relationship_statuses": RELATIONSHIP_STATUSES,
             "today": date.today(),
         },
     )
@@ -90,6 +99,9 @@ def save_profile(
     birth_date: str = Form(""),
     birth_time: str = Form(""),
     birth_place: str = Form(""),
+    mbti: str = Form(""),
+    focus: list[str] = Form(default=[]),
+    relationship_status: str = Form(""),
 ) -> Response:
     """Update the profile and mirror it into the cookie.
 
@@ -106,6 +118,9 @@ def save_profile(
             birth_date=_parse_date(birth_date),
             birth_time=birth_time or None,
             birth_place=birth_place or None,
+            mbti=mbti or None,
+            focus=tuple(f for f in focus if f),
+            relationship_status=relationship_status or None,
         )
     except InvalidQuerent as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
