@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Profile · syzygy{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Your profile</h1>
+  <p class="hero__lede">Who you are is the seed of every reading. Stored on this device, no account needed.</p>
+</section>
+
+{% if chart %}
+<aside class="chart-card">
+  <h2 class="chart-card__title">Your sky</h2>
+  <dl class="chart-card__grid">
+    <div><dt>Sun</dt><dd>{{ chart.sun }}</dd></div>
+    <div><dt>Moon</dt><dd>{{ chart.moon }}</dd></div>
+    <div><dt>Venus</dt><dd>{{ chart.venus }}</dd></div>
+    <div><dt>Mars</dt><dd>{{ chart.mars }}</dd></div>
+    <div><dt>Mercury</dt><dd>{{ chart.mercury }}</dd></div>
+    {% if chart.rising %}<div><dt>Rising</dt><dd>{{ chart.rising }}</dd></div>{% endif %}
+  </dl>
+  {% if not chart.precise %}
+    <p class="chart-card__note">Approximate — add your birth time and place for the rising sign.</p>
+  {% endif %}
+</aside>
+{% endif %}
+
+<form class="profile-form" method="post" action="/profile/save"
+      x-data="{ p: profile }">
+  <fieldset>
+    <legend>About you</legend>
+    <label><span>Name</span>
+      <input type="text" name="name" maxlength="64" x-model="p.name" value="{{ profile.name if profile else '' }}" /></label>
+    <label><span>Age</span>
+      <input type="number" name="age" min="1" max="120" x-model.number="p.age" value="{{ profile.age if profile else 30 }}" /></label>
+    <label><span>Resonance</span>
+      <select name="resonance" x-model="p.resonance">
+        {% for option in resonances %}<option value="{{ option }}" {% if profile and profile.resonance == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
+      </select></label>
+    <label><span>Drawn to</span>
+      <select name="drawn_to" x-model="p.drawn_to">
+        {% for option in drawn_to_options %}<option value="{{ option }}" {% if profile and profile.drawn_to == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
+      </select></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>When you were born <span class="profile__hint">(for the chart and deeper readings)</span></legend>
+    <label><span>Date</span>
+      <input type="date" name="birth_date" x-model="p.birth_date" value="{{ profile.birth_date if profile and profile.birth_date else '' }}" max="{{ today.isoformat() }}" /></label>
+    <label><span>Time</span>
+      <input type="time" name="birth_time" x-model="p.birth_time" value="{{ profile.birth_time if profile else '' }}" /></label>
+    <label><span>Place</span>
+      <input type="text" name="birth_place" x-model="p.birth_place" value="{{ profile.birth_place if profile else '' }}" placeholder="City, country" /></label>
+  </fieldset>
+
+  <div class="profile-form__actions">
+    <button class="draw-button" type="submit">Save profile</button>
+    <a class="draw-button draw-button--ghost" href="/">Back to the cards</a>
+    <button class="draw-button draw-button--danger" type="submit"
+            formaction="/profile/clear" formmethod="post">Clear</button>
+  </div>
+</form>
+{% endblock %}

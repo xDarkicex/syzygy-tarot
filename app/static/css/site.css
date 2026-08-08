@@ -59,6 +59,8 @@ code { font-family: var(--mono); font-size: 0.85em; color: var(--ink-soft); padd
 
 /* ───── draw form ───── */
 .draw-form { display: grid; gap: 1.5rem; }
+.draw-form__profile-link { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+.draw-form__profile-link a { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; margin-left: 0.5em; }
 .draw-form fieldset { border: 1px solid var(--rule); border-radius: 4px; padding: 1.5rem; background: var(--paper-2); }
 .draw-form legend { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-faint); padding: 0 0.75rem; }
 
@@ -100,6 +102,36 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .draw-button:hover { transform: translateY(-1px); background: var(--gold); }
 .draw-button__mark { color: var(--ember); font-size: 1.1rem; transform: translateY(0.05em); }
 .draw-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.chart-card {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.chart-card__title { font-family: var(--serif); font-size: 1.2rem; font-weight: 500; margin: 0 0 0.75rem; }
+.chart-card__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.5rem 1rem; margin: 0; }
+.chart-card__grid dt { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); }
+.chart-card__grid dd { margin: 0; font-family: var(--serif); font-size: 1.1rem; }
+.chart-card__note { font-size: 0.75rem; color: var(--ink-faint); font-style: italic; margin: 0.75rem 0 0; }
+.profile-form { display: grid; gap: 1.5rem; }
+.profile-form fieldset {
+  border: 1px solid var(--rule); border-radius: 4px; padding: 1.5rem;
+  background: var(--paper-2);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;
+}
+.profile-form legend { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-faint); padding: 0 0.75rem; }
+.profile-form label { display: flex; flex-direction: column; gap: 0.4rem; }
+.profile-form span { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); }
+.profile-form input, .profile-form select {
+  background: var(--paper-3); border: 1px solid var(--rule); color: var(--ink);
+  padding: 0.65rem 0.75rem; border-radius: 3px; font-family: inherit; font-size: 0.95rem;
+}
+.profile-form input:focus, .profile-form select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.profile-form__actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.draw-button--danger { background: transparent; border: 1px solid color-mix(in srgb, var(--ember) 50%, transparent); color: var(--ember); }
+.draw-button--danger:hover { background: color-mix(in srgb, var(--ember) 15%, transparent); border-color: var(--ember); }
+@media (max-width: 720px) { .profile-form fieldset { grid-template-columns: 1fr; } }
 .draw-button--ghost {
   background: transparent;
   border: 1px solid var(--rule);

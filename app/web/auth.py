@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict
+from datetime import date
 from typing import Any
 
 from fastapi import Response
@@ -25,7 +26,15 @@ def _signer() -> URLSafeSerializer:
 
 
 def profile_cookie_value(querent: Querent) -> str:
-    payload = {"name": querent.name, "age": querent.age, "resonance": querent.resonance}
+    payload = {
+        "name": querent.name,
+        "age": querent.age,
+        "resonance": querent.resonance,
+        "drawn_to": querent.drawn_to,
+        "birth_date": querent.birth_date.isoformat() if querent.birth_date else "",
+        "birth_time": querent.birth_time or "",
+        "birth_place": querent.birth_place or "",
+    }
     return _signer().dumps(payload)
 
 
@@ -37,8 +46,25 @@ def read_profile_cookie(raw: str | None) -> Querent | None:
     except BadSignature:
         return None
     try:
-        return Querent(name=payload["name"], age=payload["age"], resonance=payload["resonance"])
+        return Querent(
+            name=payload.get("name", ""),
+            age=payload.get("age", 30),
+            resonance=payload.get("resonance", "Unspecified"),
+            drawn_to=payload.get("drawn_to", "Prefer not to say"),
+            birth_date=_parse_date(payload.get("birth_date")),
+            birth_time=payload.get("birth_time") or None,
+            birth_place=payload.get("birth_place") or None,
+        )
     except Exception:
+        return None
+
+
+def _parse_date(value: Any) -> date | None:
+    if not value:
+        return None
+    try:
+        return date.fromisoformat(str(value))
+    except ValueError:
         return None
 
 

@@ -7,49 +7,19 @@
 </section>
 
 <form class="draw-form" hx-post="/readings/" hx-target="#reading-slot" hx-swap="innerHTML" hx-disabled-elt="this">
-  <fieldset class="profile">
-    <legend>About you</legend>
-    <label>
-      <span>Name</span>
-      <input type="text" name="name" required maxlength="64" x-model="profile.name" value="{{ profile.name if profile else '' }}" />
-    </label>
-    <label>
-      <span>Age</span>
-      <input type="number" name="age" required min="1" max="120" x-model.number="profile.age" value="{{ profile.age if profile else 30 }}" />
-    </label>
-    <label>
-      <span>Resonance</span>
-      <select name="resonance" x-model="profile.resonance">
-        {% for option in ["Male", "Female", "Nonbinary", "Fluid", "Unspecified"] %}
-          <option value="{{ option }}" {% if profile and profile.resonance == option %}selected{% endif %}>{{ option }}</option>
-        {% endfor %}
-      </select>
-    </label>
-    <label>
-      <span>Drawn to</span>
-      <select name="drawn_to" x-model="profile.drawn_to">
-        {% for option in ["Men", "Women", "Nonbinary people", "All / exploring", "No preference", "Prefer not to say"] %}
-          <option value="{{ option }}" {% if profile and profile.drawn_to == option %}selected{% endif %}>{{ option }}</option>
-        {% endfor %}
-      </select>
-    </label>
-  </fieldset>
+  <!-- Profile rides along from the Alpine store. Edit it on /profile. -->
+  <input type="hidden" name="name" :value="profile.name || ''" value="{{ profile.name if profile else '' }}" />
+  <input type="hidden" name="age" :value="profile.age" value="{{ profile.age if profile else 30 }}" />
+  <input type="hidden" name="resonance" :value="profile.resonance || 'Unspecified'" value="{{ profile.resonance if profile else 'Unspecified' }}" />
+  <input type="hidden" name="drawn_to" :value="profile.drawn_to || 'Prefer not to say'" value="{{ profile.drawn_to if profile else 'Prefer not to say' }}" />
+  <input type="hidden" name="birth_date" :value="profile.birth_date || ''" value="{{ profile.birth_date if profile else '' }}" />
+  <input type="hidden" name="birth_time" :value="profile.birth_time || ''" value="{{ profile.birth_time if profile else '' }}" />
+  <input type="hidden" name="birth_place" :value="profile.birth_place || ''" value="{{ profile.birth_place if profile else '' }}" />
 
-  <fieldset class="profile">
-    <legend>When you were born <span class="profile__hint">(optional — deepens the reading)</span></legend>
-    <label>
-      <span>Date</span>
-      <input type="date" name="birth_date" x-model="profile.birth_date" value="{{ profile.birth_date if profile else '' }}" max="{{ today.isoformat() }}" />
-    </label>
-    <label>
-      <span>Time</span>
-      <input type="time" name="birth_time" x-model="profile.birth_time" value="{{ profile.birth_time if profile else '' }}" />
-    </label>
-    <label>
-      <span>Place</span>
-      <input type="text" name="birth_place" x-model="profile.birth_place" value="{{ profile.birth_place if profile else '' }}" placeholder="City, country" />
-    </label>
-  </fieldset>
+  <p class="draw-form__profile-link">
+    Reading as <strong>{{ profile.name if profile and profile.name else 'you' }}</strong>
+    <a href="/profile">edit profile ↗</a>
+  </p>
 
   <fieldset class="spread-picker">
     <legend>Spread</legend>
