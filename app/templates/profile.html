@@ -6,6 +6,17 @@
   <p class="hero__lede">Who you are is the seed of every reading. Stored on this device, no account needed.</p>
 </section>
 
+{% if archetype %}
+<aside class="chart-card">
+  <h2 class="chart-card__title">Your archetype</h2>
+  <p class="chart-card__archetype">
+    <span class="chart-card__archetype-name">{{ archetype.archetype }}</span>
+    <span class="chart-card__archetype-code">{{ archetype.type_code }}</span>
+  </p>
+  <p class="chart-card__note">The cards read you as {{ archetype.archetype }} — {{ archetype.card }} energy.</p>
+</aside>
+{% endif %}
+
 {% if chart %}
 <aside class="chart-card">
   <h2 class="chart-card__title">Your sky</h2>
@@ -51,6 +62,7 @@
 
   <div class="profile-form__actions">
     <button class="draw-button" type="submit">Save profile</button>
+    <a class="draw-button draw-button--ghost" href="/profile/quiz">Take the archetype quiz</a>
     <a class="draw-button draw-button--ghost" href="/">Back to the cards</a>
     <button class="draw-button draw-button--danger" type="submit"
             formaction="/profile/clear" formmethod="post">Clear</button>

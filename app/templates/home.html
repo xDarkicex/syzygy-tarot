@@ -15,6 +15,7 @@
   <input type="hidden" name="birth_date" :value="profile.birth_date || ''" value="{{ profile.birth_date if profile else '' }}" />
   <input type="hidden" name="birth_time" :value="profile.birth_time || ''" value="{{ profile.birth_time if profile else '' }}" />
   <input type="hidden" name="birth_place" :value="profile.birth_place || ''" value="{{ profile.birth_place if profile else '' }}" />
+  <input type="hidden" name="mbti" :value="profile.mbti || ''" value="{{ profile.mbti if profile else '' }}" />
 
   <p class="draw-form__profile-link">
     Reading as <strong>{{ profile.name if profile and profile.name else 'you' }}</strong>

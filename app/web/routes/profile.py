@@ -8,11 +8,10 @@ from datetime import date
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 
-from app.config import get_settings
 from app.domain.seeding import InvalidQuerent, Querent, RESONANCES, DRAWN_TO
 from app.services.birth_chart import compute_birth_chart
+from app.services.quiz import QUESTIONS, archetype_for, compute_type
 from app.web.auth import clear_profile_cookie, set_profile_cookie
 from app.web.dependencies import get_profile
 from app.web.templating import templates
@@ -29,17 +28,53 @@ def _chart(querent: Querent | None):
 @router.get("", response_class=HTMLResponse)
 def profile_page(request: Request, querent: Querent | None = Depends(get_profile)) -> HTMLResponse:
     """View + edit the profile. Shows the computed birth chart when birth data exists."""
+    archetype = archetype_for(querent.mbti) if querent and querent.mbti else None
     return templates.TemplateResponse(
         request,
         "profile.html",
         {
             "profile": querent,
             "chart": _chart(querent),
+            "archetype": archetype,
             "resonances": RESONANCES,
             "drawn_to_options": DRAWN_TO,
             "today": date.today(),
         },
     )
+
+
+@router.get("/quiz", response_class=HTMLResponse)
+def quiz_page(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request, "quiz.html", {"questions": QUESTIONS})
+
+
+@router.post("/quiz")
+async def quiz_submit(
+    request: Request,
+    profile: Querent | None = Depends(get_profile),
+) -> Response:
+    """Compute the MBTI type from the quiz answers and save it to the profile."""
+    form = await request.form()
+    answers = {
+        key[len("q_"):]: value
+        for key, value in form.items()
+        if key.startswith("q_") and isinstance(value, str)
+    }
+    type_code = compute_type(answers)
+    existing = profile or Querent(name="You", age=30, resonance="Unspecified")
+    querent = Querent(
+        name=existing.name or "You",
+        age=existing.age,
+        resonance=existing.resonance,
+        drawn_to=existing.drawn_to,
+        birth_date=existing.birth_date,
+        birth_time=existing.birth_time,
+        birth_place=existing.birth_place,
+        mbti=type_code,
+    )
+    response = _redirect("/profile")
+    set_profile_cookie(response, querent)
+    return response
 
 
 def _redirect(url: str) -> Response:

@@ -56,6 +56,7 @@ class Querent:
     birth_date: date | None = None
     birth_time: str | None = None  # "HH:MM" 24-hour, optional
     birth_place: str | None = None  # free-text city name, optional
+    mbti: str | None = None  # 4-letter MBTI type, e.g. "INTJ"
 
     def __post_init__(self) -> None:
         # Age is derived from birth_date when it's present — they're the same
@@ -68,11 +69,24 @@ class Querent:
         _validate_drawn_to(self.drawn_to)
         _validate_birth_date(self.birth_date)
         _validate_birth_time(self.birth_time)
+        _validate_mbti(self.mbti)
 
     @property
     def choice(self) -> int:
         """The original's 1-based menu index for the resonance."""
         return RESONANCES.index(self.resonance) + 1
+
+
+# The 16 valid MBTI type codes.
+MBTI_TYPES: frozenset[str] = frozenset(
+    f"{e}{s}{t}{j}"
+    for e in "EI" for s in "SN" for t in "TF" for j in "JP"
+)
+
+
+def _validate_mbti(mbti: str | None) -> None:
+    if mbti is not None and mbti not in MBTI_TYPES:
+        raise InvalidQuerent(f"MBTI type must be one of the 16 valid codes, got {mbti!r}.")
 
 
 def age_from_birth_date(birth_date: date, on: date) -> int:
@@ -181,6 +195,7 @@ class SeedComponents:
     life_path: int
     day_vibration: int
     resonance_index: int
+    mbti: str = ""
     # Astronomical components are optional. None if birth data wasn't given
     # or the ephemeris isn't installed.
     sun_sign: str | None = None
@@ -201,6 +216,7 @@ def compute_seed(components: SeedComponents) -> int:
         str(components.life_path),
         str(components.day_vibration),
         str(components.resonance_index),
+        components.mbti or "",
         components.sun_sign or "",
         components.moon_sign or "",
         components.moon_phase or "",
@@ -305,6 +321,7 @@ def _build_components(querent: Querent, on: date, spread_slug: str) -> SeedCompo
         life_path=life,
         day_vibration=day,
         resonance_index=querent.choice,
+        mbti=querent.mbti or "",
         sun_sign=sun,
         moon_sign=moon,
         moon_phase=phase,

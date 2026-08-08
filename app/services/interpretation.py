@@ -104,6 +104,10 @@ def _querent_context(reading: Reading) -> str:
         parts.append(f"Date of birth: {q.birth_date.isoformat()} (life path {life_path(q.birth_date)}).")
     parts.extend(_labeled_value("Birth time", q.birth_time))
     parts.extend(_labeled_value("Birth place", q.birth_place))
+    if q.mbti:
+        from app.services.quiz import archetype_for
+        a = archetype_for(q.mbti)
+        parts.append(f"Archetype: {a.type_code}, {a.archetype} ({a.card} energy).")
     if reading.numerology is not None:
         parts.append(
             f"Numerology: name vibration {reading.numerology.name_value}, "

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}The archetype quiz · syzygy{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>The archetype quiz</h1>
+  <p class="hero__lede">Twelve questions. They map the shape of how you meet the world, and the cards will read for that shape.</p>
+</section>
+
+<form class="quiz" method="post" action="/profile/quiz" x-data="{ step: 0, answers: {} }">
+  <p class="quiz__intro">Answer honestly — there are no wrong shapes, only different ones. The cards will read for whatever you are.</p>
+  {% for q in questions %}
+  <fieldset class="quiz__fieldset" x-show="step === {{ loop.index0 }}" x-cloak>
+    <p class="quiz__counter">{{ loop.index }} / {{ questions|length }}</p>
+    <legend class="quiz__question">{{ q.text }}</legend>
+    <label class="quiz__option">
+      <input type="radio" name="q_{{ q.key }}" value="{{ q.a_letter }}"
+             x-model="answers['{{ q.key }}']" />
+      <span>{{ q.a }}</span>
+    </label>
+    <label class="quiz__option">
+      <input type="radio" name="q_{{ q.key }}" value="{{ q.b_letter }}"
+             x-model="answers['{{ q.key }}']" />
+      <span>{{ q.b }}</span>
+    </label>
+    <div class="quiz__nav">
+      <button type="button" class="draw-button draw-button--ghost"
+              x-show="step > 0" x-on:click="step--">Back</button>
+      <button type="button" class="draw-button"
+              x-show="step < {{ questions|length - 1 }}"
+              x-on:click="step++"
+              :disabled="!answers['{{ q.key }}']">Next</button>
+      <button type="submit" class="draw-button"
+              x-show="step === {{ questions|length - 1 }}"
+              :disabled="!answers['{{ q.key }}']">
+        Reveal my archetype
+      </button>
+    </div>
+  </fieldset>
+  {% endfor %}
+</form>
+{% endblock %}
