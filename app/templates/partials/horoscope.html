@@ -1,0 +1,17 @@
+<section class="interpretation">
+  <header class="interpretation__head">
+    <h3 class="interpretation__title">Today's sky for {{ querent.name or 'you' }}</h3>
+    <p class="interpretation__sub">
+      Sun in {{ chart.sun }}{% if chart.rising %}, rising in {{ chart.rising }}{% endif %}
+      · Venus in {{ chart.venus }} · Moon in {{ chart.moon }}
+    </p>
+  </header>
+
+  <div class="interpretation__body">
+    {% if horoscope %}
+      {{ horoscope | md | safe }}
+    {% else %}
+      <p class="interpretation__sub">The stars could not be read right now. The chart above is still yours.</p>
+    {% endif %}
+  </div>
+</section>

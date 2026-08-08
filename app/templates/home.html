@@ -89,10 +89,22 @@
     {% endfor %}
   </fieldset>
 
-  <button class="draw-button" type="submit">
-    <span class="draw-button__mark" aria-hidden="true">✶</span>
-    <span>Deal the cards</span>
-  </button>
+  <div class="draw-actions">
+    <button class="draw-button" type="submit" name="mode" value="cards">
+      <span class="draw-button__mark" aria-hidden="true">✶</span>
+      <span>Deal the cards</span>
+    </button>
+    <button class="draw-button draw-button--ghost" type="submit"
+            name="mode" value="astrology"
+            hx-post="/readings/horoscope"
+            hx-target="#reading-slot"
+            hx-swap="innerHTML"
+            hx-include=".draw-form"
+            hx-disabled-elt="this">
+      <span class="draw-button__mark" aria-hidden="true">☾</span>
+      <span>Read the stars</span>
+    </button>
+  </div>
 </form>
 
 <article id="reading-slot" class="reading-slot">

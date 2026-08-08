@@ -16,7 +16,7 @@ from app.config import get_settings
 from app.data.loader import load_deck
 from app.domain.deck import Deck
 from app.domain.reading import build_reading
-from app.services.interpretation import generate_interpretation
+from app.services.horoscope import compute_birth_chart, generate_horoscope
 import markdown as _markdown
 from app.domain.seeding import (
     InvalidQuerent,
@@ -46,6 +46,9 @@ def _md(text: str) -> str:
         extensions=["extra", "sane_lists"],
         output_format="html5",
     )
+
+
+templates.env.filters["md"] = _md
 
 
 @router.post("/", response_class=HTMLResponse)
@@ -145,6 +148,50 @@ def reveal_card(
         request,
         "partials/card_panel.html",
         {"drawn": stored.reading.drawn[index], "position": index + 1, "total": len(stored.reading.drawn)},
+    )
+
+
+@router.post("/horoscope", response_class=HTMLResponse)
+def deal_horoscope(
+    request: Request,
+    name: str = Form(...),
+    age: int = Form(...),
+    resonance: str = Form(...),
+    drawn_to: str = Form("Prefer not to say"),
+    birth_date: str = Form(""),
+    birth_time: str = Form(""),
+    birth_place: str = Form(""),
+    today=Depends(get_today),
+) -> HTMLResponse:
+    """An astrology reading from the profile's birth data. No cards — a
+    horoscope for today, computed from the real natal chart + today's sky."""
+    parsed_birth = _parse_birth_date(birth_date)
+    try:
+        querent = Querent(
+            name=name,
+            age=age,
+            resonance=resonance,
+            drawn_to=drawn_to or "Prefer not to say",
+            birth_date=parsed_birth,
+            birth_time=birth_time or None,
+            birth_place=birth_place or None,
+        )
+    except InvalidQuerent as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    if querent.birth_date is None:
+        raise HTTPException(status_code=400, detail="An astrology reading needs your date of birth.")
+
+    text = ""
+    try:
+        text = generate_horoscope(querent, today)
+    except Exception:  # noqa: BLE001
+        text = ""
+
+    return templates.TemplateResponse(
+        request,
+        "partials/horoscope.html",
+        {"querent": querent, "chart": compute_birth_chart(querent.birth_date, querent.birth_time, querent.birth_place), "horoscope": text},
     )
 
 

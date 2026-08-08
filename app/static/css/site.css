@@ -99,6 +99,14 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 }
 .draw-button:hover { transform: translateY(-1px); background: var(--gold); }
 .draw-button__mark { color: var(--ember); font-size: 1.1rem; transform: translateY(0.05em); }
+.draw-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.draw-button--ghost {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+.draw-button--ghost:hover { background: var(--paper-3); border-color: var(--ink-faint); transform: none; }
+.draw-button--ghost .draw-button__mark { color: var(--iris); }
 
 /* ───── reading ───── */
 .reading { margin-top: 2.5rem; }
