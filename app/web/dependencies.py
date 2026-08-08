@@ -33,7 +33,7 @@ def get_today() -> date:
     return date.today()
 
 
-def get_profile(profile_cookie: str | None = Cookie(default=None)) -> Querent | None:
+def get_profile(profile_cookie: str | None = Cookie(default=None, alias="syzygy_profile")) -> Querent | None:
     return read_profile_cookie(profile_cookie)
 
 
