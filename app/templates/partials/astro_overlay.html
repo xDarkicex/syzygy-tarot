@@ -1,0 +1,23 @@
+<details class="astro-overlay">
+  <summary>The sky behind this reading</summary>
+  <div class="astro-overlay__body">
+    {% if sky %}
+    <p class="astro-overlay__line">
+      Today: sun in <strong>{{ sky.sun }}</strong>, moon in
+      <strong>{{ sky.moon }}</strong> ({{ sky.phase }}),
+      hour of {{ sky.hour }}.
+    </p>
+    {% endif %}
+    {% if chart %}
+    <p class="astro-overlay__line">
+      Your chart: sun in <strong>{{ chart.sun }}</strong>,
+      moon in <strong>{{ chart.moon }}</strong>,
+      venus in <strong>{{ chart.venus }}</strong>
+      {% if chart.rising %}, rising in <strong>{{ chart.rising }}</strong>{% endif %}.
+    </p>
+    {% endif %}
+    {% if not sky and not chart %}
+    <p class="astro-overlay__line">Add your birth details in your profile to see the sky behind your cards.</p>
+    {% endif %}
+  </div>
+</details>

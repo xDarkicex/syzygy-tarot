@@ -15,6 +15,12 @@ CREATE TABLE IF NOT EXISTS readings (
     question          TEXT    NOT NULL DEFAULT '',
     focus             TEXT    NOT NULL DEFAULT '',   -- comma-joined focus areas
     sky_json          TEXT    NOT NULL DEFAULT '',   -- sun/moon/phase/hour at deal
+    querent_drawn_to  TEXT    NOT NULL DEFAULT '',
+    querent_birth_date TEXT   NOT NULL DEFAULT '',
+    querent_birth_time TEXT   NOT NULL DEFAULT '',
+    querent_birth_place TEXT  NOT NULL DEFAULT '',
+    querent_mbti      TEXT    NOT NULL DEFAULT '',
+    querent_relationship_status TEXT NOT NULL DEFAULT '',
     created_at        TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 

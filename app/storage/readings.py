@@ -95,6 +95,25 @@ def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str
                 json.dumps(sky) if sky else "",
             ),
         )
+        # Persist the full querent (birth data, mbti, drawn-to, status) so the
+        # share page can recompute the chart without re-asking the user.
+        conn.execute(
+            """
+            UPDATE readings SET
+                querent_drawn_to = ?, querent_birth_date = ?, querent_birth_time = ?,
+                querent_birth_place = ?, querent_mbti = ?, querent_relationship_status = ?
+            WHERE share_slug = ?
+            """,
+            (
+                reading.querent.drawn_to,
+                reading.querent.birth_date.isoformat() if reading.querent.birth_date else "",
+                reading.querent.birth_time or "",
+                reading.querent.birth_place or "",
+                reading.querent.mbti or "",
+                reading.querent.relationship_status or "",
+                slug,
+            ),
+        )
     return slug
 
 
@@ -124,9 +143,9 @@ def update_interpretation(share_slug: str, interpretation: str, conn: sqlite3.Co
 
 
 def _row_to_reading(row: sqlite3.Row) -> Reading:
-    querent = Querent(name=row["querent_name"], age=row["querent_age"], resonance=row["querent_resonance"])
+    querent = _querent_from_row(row)
     spread = get_spread(row["spread_slug"])
-    question = row["question"] or None if "question" in row.keys() else None
+    question = _row_get(row, "question") or None
     return Reading(
         querent=querent,
         spread=spread,
@@ -135,6 +154,30 @@ def _row_to_reading(row: sqlite3.Row) -> Reading:
         drawn=_deserialise_drawn(row["cards_json"]),
         drawn_on=date.fromisoformat(row["drawn_on"]),
         question=question,
+    )
+
+
+def _row_get(row: sqlite3.Row, key: str) -> str:
+    """Read a column, tolerating rows that predate a migration."""
+    return row[key] if key in row.keys() else ""
+
+
+def _querent_from_row(row: sqlite3.Row) -> Querent:
+    """Rebuild the full querent, including birth data and personality fields."""
+    raw_birth = _row_get(row, "querent_birth_date")
+    birth_date = date.fromisoformat(raw_birth) if raw_birth else None
+    drawn_to = _row_get(row, "querent_drawn_to") or "Prefer not to say"
+    return Querent(
+        name=row["querent_name"],
+        age=row["querent_age"],
+        resonance=row["querent_resonance"],
+        drawn_to=drawn_to,
+        birth_date=birth_date,
+        birth_time=_row_get(row, "querent_birth_time") or None,
+        birth_place=_row_get(row, "querent_birth_place") or None,
+        mbti=_row_get(row, "querent_mbti") or None,
+        focus=_parse_focus(_row_get(row, "focus")),
+        relationship_status=_row_get(row, "querent_relationship_status") or None,
     )
 
 

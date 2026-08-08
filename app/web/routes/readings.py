@@ -122,6 +122,11 @@ def view_reading(
     stored = fetch_reading(share_slug, conn)
     if stored is None:
         raise HTTPException(status_code=404, detail="Reading not found")
+    querent = stored.reading.querent
+    chart = (
+        compute_birth_chart(querent.birth_date, querent.birth_time, querent.birth_place)
+        if querent.birth_date else None
+    )
     return templates.TemplateResponse(
         request,
         "reading.html",
@@ -129,8 +134,10 @@ def view_reading(
             "reading": stored.reading,
             "share_slug": stored.share_slug,
             "created_at": stored.created_at,
-            "querent": stored.reading.querent,
+            "querent": querent,
             "interpretation": _md(stored.interpretation) if stored.interpretation else "",
+            "sky": stored.sky,
+            "chart": chart,
         },
     )
 

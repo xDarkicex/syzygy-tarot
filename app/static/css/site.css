@@ -105,6 +105,17 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .dashboard { margin-top: 2.5rem; }
 .dashboard__title { font-family: var(--serif); font-size: 1.4rem; font-weight: 500; margin: 0 0 0.75rem; }
 .dashboard__vector { color: var(--ink-soft); margin: 0 0 1.25rem; }
+.astro-overlay {
+  margin-top: 2rem; padding: 0.9rem 1.25rem;
+  background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px;
+}
+.astro-overlay summary {
+  cursor: pointer; font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-faint);
+}
+.astro-overlay__body { margin-top: 0.75rem; }
+.astro-overlay__line { color: var(--ink-soft); margin: 0.25rem 0; font-size: 0.95rem; }
+.astro-overlay__line strong { color: var(--ink); }
 .dashboard__charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
 .chart-box { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; padding: 1.25rem; }
 .quiz { max-width: 620px; margin: 0 auto; }
