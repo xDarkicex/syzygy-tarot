@@ -29,8 +29,6 @@
     <legend>About you</legend>
     <label><span>Name</span>
       <input type="text" name="name" maxlength="64" x-model="p.name" value="{{ profile.name if profile else '' }}" /></label>
-    <label><span>Age</span>
-      <input type="number" name="age" min="1" max="120" x-model.number="p.age" value="{{ profile.age if profile else 30 }}" /></label>
     <label><span>Resonance</span>
       <select name="resonance" x-model="p.resonance">
         {% for option in resonances %}<option value="{{ option }}" {% if profile and profile.resonance == option %}selected{% endif %}>{{ option }}</option>{% endfor %}

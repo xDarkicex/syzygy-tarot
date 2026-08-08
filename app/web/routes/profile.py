@@ -49,18 +49,23 @@ def _redirect(url: str) -> Response:
 @router.post("/save")
 def save_profile(
     name: str = Form(...),
-    age: int = Form(...),
+    age: int = Form(0),
     resonance: str = Form(...),
     drawn_to: str = Form("Prefer not to say"),
     birth_date: str = Form(""),
     birth_time: str = Form(""),
     birth_place: str = Form(""),
 ) -> Response:
-    """Update the profile and mirror it into the cookie."""
+    """Update the profile and mirror it into the cookie.
+
+    Age is derived from birth_date inside Querent; the form no longer
+    collects it, so the submitted age (0 by default) is overridden when
+    a birth date is present.
+    """
     try:
         querent = Querent(
             name=name,
-            age=age,
+            age=age or 30,
             resonance=resonance,
             drawn_to=drawn_to or "Prefer not to say",
             birth_date=_parse_date(birth_date),

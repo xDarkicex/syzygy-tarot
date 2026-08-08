@@ -162,3 +162,20 @@ def test_reversed_cards_render_reversed_text() -> None:
         assert card.reversed.body
         assert card.face(Orientation.REVERSED) is card.reversed
         assert card.face(Orientation.UPRIGHT) is card.upright
+
+
+def test_age_is_derived_from_birth_date() -> None:
+    """Age and birth date are the same fact. Age must derive from birth date."""
+    from app.domain.seeding import Querent
+
+    # Born 1993-04-12, reading on 2026-08-05 → 33 (birthday already passed).
+    q = Querent(name="Gentry", age=99, resonance="Male", birth_date=date(1993, 4, 12))
+    assert q.age == 33, f"age should derive from birth date, got {q.age}"
+
+    # Born 1993-12-25 → still 32 on 2026-08-05 (birthday not yet passed).
+    q2 = Querent(name="Gentry", age=99, resonance="Male", birth_date=date(1993, 12, 25))
+    assert q2.age == 32, f"age should respect the not-yet-passed birthday, got {q2.age}"
+
+    # No birth date → age stays as provided.
+    q3 = Querent(name="Gentry", age=40, resonance="Male")
+    assert q3.age == 40

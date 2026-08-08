@@ -58,6 +58,10 @@ class Querent:
     birth_place: str | None = None  # free-text city name, optional
 
     def __post_init__(self) -> None:
+        # Age is derived from birth_date when it's present — they're the same
+        # fact and keeping both in sync by hand is how they drift apart.
+        if self.birth_date is not None:
+            object.__setattr__(self, "age", age_from_birth_date(self.birth_date, date.today()))
         _validate_name(self.name)
         _validate_age(self.age)
         _validate_resonance(self.resonance)
@@ -69,6 +73,14 @@ class Querent:
     def choice(self) -> int:
         """The original's 1-based menu index for the resonance."""
         return RESONANCES.index(self.resonance) + 1
+
+
+def age_from_birth_date(birth_date: date, on: date) -> int:
+    """Age in whole years on `on`, derived from the birth date."""
+    years = on.year - birth_date.year
+    if (on.month, on.day) < (birth_date.month, birth_date.day):
+        years -= 1
+    return years
 
 
 def _validate_name(name: str) -> None:
