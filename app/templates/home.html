@@ -65,7 +65,8 @@
   </fieldset>
 
   <div class="draw-actions">
-    <button class="draw-button" type="submit" name="mode" value="cards">
+    <button class="draw-button" type="submit" name="mode" value="cards"
+            hx-indicator="#reading-loading">
       <span class="draw-button__mark" aria-hidden="true">✶</span>
       <span>Deal the cards</span>
     </button>
@@ -75,7 +76,8 @@
             hx-target="#reading-slot"
             hx-swap="innerHTML"
             hx-include=".draw-form"
-            hx-disabled-elt="this">
+            hx-disabled-elt="this"
+            hx-indicator="#reading-loading">
       <span class="draw-button__mark" aria-hidden="true">☾</span>
       <span>Read the stars</span>
     </button>
@@ -85,4 +87,13 @@
 <article id="reading-slot" class="reading-slot">
   <p class="empty">No reading yet. Fill in your details and deal the cards.</p>
 </article>
+
+<div id="reading-loading" class="reading-loading htmx-indicator" aria-live="polite">
+  <div class="reading-loading__orbits">
+    <span class="reading-loading__star" aria-hidden="true">☾</span>
+    <span class="reading-loading__star" aria-hidden="true">✶</span>
+    <span class="reading-loading__star" aria-hidden="true">☀</span>
+  </div>
+  <p class="reading-loading__text">Reading the signs…</p>
+</div>
 {% endblock %}
