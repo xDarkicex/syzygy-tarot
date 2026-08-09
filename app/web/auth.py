@@ -37,6 +37,7 @@ def profile_cookie_value(querent: Querent) -> str:
         "mbti": querent.mbti or "",
         "focus": list(querent.focus),
         "relationship_status": querent.relationship_status or "",
+        "user_id": querent.user_id or "",
     }
     return _signer().dumps(payload)
 
@@ -49,20 +50,31 @@ def read_profile_cookie(raw: str | None) -> Querent | None:
     except BadSignature:
         return None
     try:
-        return Querent(
-            name=payload.get("name", ""),
-            age=payload.get("age", 30),
-            resonance=payload.get("resonance", "Unspecified"),
-            drawn_to=payload.get("drawn_to", "Prefer not to say"),
-            birth_date=_parse_date(payload.get("birth_date")),
-            birth_time=payload.get("birth_time") or None,
-            birth_place=payload.get("birth_place") or None,
-            mbti=payload.get("mbti") or None,
-            focus=tuple(payload.get("focus", []) or []),
-            relationship_status=payload.get("relationship_status") or None,
-        )
+        return _querent_from_payload(payload)
     except Exception:
         return None
+
+
+def _querent_from_payload(payload: dict[str, Any]) -> Querent:
+    """Build a Querent from the cookie payload, coercing defaults."""
+    birth_time = payload.get("birth_time") or None
+    birth_place = payload.get("birth_place") or None
+    mbti = payload.get("mbti") or None
+    rel_status = payload.get("relationship_status") or None
+    user_id = payload.get("user_id") or None
+    return Querent(
+        name=payload.get("name", ""),
+        age=payload.get("age", 30),
+        resonance=payload.get("resonance", "Unspecified"),
+        drawn_to=payload.get("drawn_to", "Prefer not to say"),
+        birth_date=_parse_date(payload.get("birth_date")),
+        birth_time=birth_time,
+        birth_place=birth_place,
+        mbti=mbti,
+        focus=tuple(payload.get("focus", []) or []),
+        relationship_status=rel_status,
+        user_id=user_id,
+    )
 
 
 def _parse_date(value: Any) -> date | None:

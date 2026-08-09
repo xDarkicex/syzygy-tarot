@@ -5,6 +5,7 @@ cookie so the server can prefill pages. No auth yet — the profile is per-brows
 from __future__ import annotations
 
 import json
+import secrets
 from datetime import date
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
@@ -66,7 +67,8 @@ def profile_page(
 ) -> HTMLResponse:
     """The profile show page: who you are, your chart, and your reading pattern."""
     archetype = archetype_for(querent.mbti) if querent and querent.mbti else None
-    history = fetch_recent_readings(50, conn)
+    user_id = querent.user_id if querent else None
+    history = fetch_recent_readings(50, conn, user_id=user_id)
     history_json = json.dumps([
         {
             "focus": list(h.focus),
@@ -125,6 +127,7 @@ def _profile_json(querent: Querent | None) -> str:
         "mbti": q.mbti or "",
         "focus": list(q.focus),
         "relationship_status": q.relationship_status or "",
+        "user_id": q.user_id or "",
     }
     return json.dumps(payload)
 
@@ -167,6 +170,10 @@ def _redirect(url: str) -> Response:
     return Response(status_code=303, headers={"Location": url})
 
 
+def _new_user_id() -> str:
+    return secrets.token_urlsafe(8)
+
+
 @router.post("/save")
 def save_profile(
     name: str = Form(...),
@@ -179,12 +186,14 @@ def save_profile(
     mbti: str = Form(""),
     focus: list[str] = Form(default=[]),
     relationship_status: str = Form(""),
+    user_id: str = Form(""),
 ) -> Response:
     """Update the profile and mirror it into the cookie.
 
     Age is derived from birth_date inside Querent; the form no longer
     collects it, so the submitted age (0 by default) is overridden when
-    a birth date is present.
+    a birth date is present. user_id is preserved if present, or kept
+    from the existing cookie so identity is stable across edits.
     """
     try:
         querent = Querent(
@@ -198,6 +207,7 @@ def save_profile(
             mbti=mbti or None,
             focus=tuple(f for f in focus if f),
             relationship_status=relationship_status or None,
+            user_id=user_id or _new_user_id(),
         )
     except InvalidQuerent as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

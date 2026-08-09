@@ -101,7 +101,8 @@ def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str
             """
             UPDATE readings SET
                 querent_drawn_to = ?, querent_birth_date = ?, querent_birth_time = ?,
-                querent_birth_place = ?, querent_mbti = ?, querent_relationship_status = ?
+                querent_birth_place = ?, querent_mbti = ?, querent_relationship_status = ?,
+                querent_user_id = ?
             WHERE share_slug = ?
             """,
             (
@@ -111,6 +112,7 @@ def save_reading(reading: Reading, conn: sqlite3.Connection, interpretation: str
                 reading.querent.birth_place or "",
                 reading.querent.mbti or "",
                 reading.querent.relationship_status or "",
+                reading.querent.user_id or "",
                 slug,
             ),
         )
@@ -178,6 +180,7 @@ def _querent_from_row(row: sqlite3.Row) -> Querent:
         mbti=_row_get(row, "querent_mbti") or None,
         focus=_parse_focus(_row_get(row, "focus")),
         relationship_status=_row_get(row, "querent_relationship_status") or None,
+        user_id=_row_get(row, "querent_user_id") or None,
     )
 
 
@@ -197,10 +200,18 @@ def fetch_reading(share_slug: str, conn: sqlite3.Connection) -> StoredReading | 
     )
 
 
-def fetch_recent_readings(limit: int, conn: sqlite3.Connection) -> list[StoredReading]:
-    rows = conn.execute(
-        "SELECT * FROM readings ORDER BY created_at DESC LIMIT ?", (limit,)
-    ).fetchall()
+def fetch_recent_readings(
+    limit: int, conn: sqlite3.Connection, user_id: str | None = None
+) -> list[StoredReading]:
+    if user_id:
+        rows = conn.execute(
+            "SELECT * FROM readings WHERE querent_user_id = ? ORDER BY created_at DESC LIMIT ?",
+            (user_id, limit),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT * FROM readings ORDER BY created_at DESC LIMIT ?", (limit,)
+        ).fetchall()
     return [
         StoredReading(
             reading=_row_to_reading(row),

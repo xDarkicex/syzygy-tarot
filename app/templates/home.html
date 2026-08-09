@@ -20,6 +20,7 @@
     <input type="hidden" name="focus" :value="(profile.focus || []).includes('{{ area }}') ? '{{ area }}' : ''" value="{{ area if profile and area in profile.focus else '' }}" />
   {% endfor %}
   <input type="hidden" name="relationship_status" :value="profile.relationship_status || ''" value="{{ profile.relationship_status if profile else '' }}" />
+  <input type="hidden" name="user_id" :value="profile.user_id || ''" value="{{ profile.user_id if profile else '' }}" />
 
   <p class="draw-form__profile-link">
     Reading as <strong>{{ profile.name if profile and profile.name else 'you' }}</strong>

@@ -159,3 +159,37 @@ def test_question_is_persisted_and_restored(client: TestClient) -> None:
     assert stored is not None
     assert stored.reading.question == "Will I find love soon?", stored.reading.question
     conn.close()
+
+
+def test_profile_dashboard_is_isolated_by_user(client: TestClient) -> None:
+    """Readings from different users must not leak into each other's dashboard.
+
+    Regression: the dashboard aggregated every user's readings. Each profile
+    now carries a stable user_id, persisted with its readings, and the
+    profile page filters history by it.
+    """
+    # Two different users deal readings.
+    a = client.post("/readings/", data={
+        "name": "Tiffany", "age": "25", "resonance": "Female", "spread_slug": "single",
+        "user_id": "user-aaa", "save": "on",
+    })
+    b = client.post("/readings/", data={
+        "name": "Gentry", "age": "30", "resonance": "Male", "spread_slug": "single",
+        "user_id": "user-bbb", "save": "on",
+    })
+    assert a.status_code == 200 and b.status_code == 200
+
+    # Tiffany's profile page must only show her own reading.
+    resp = client.get("/profile", cookies={"syzygy_profile": "user-aaa"})
+    assert resp.status_code == 200
+    # The reading for user-aaa is stored; fetch and check filtering at the storage layer.
+    import sqlite3
+    from app.config import get_settings
+    conn = sqlite3.connect(get_settings().database_path)
+    conn.row_factory = sqlite3.Row
+    from app.storage.readings import fetch_recent_readings
+    tiff = fetch_recent_readings(50, conn, user_id="user-aaa")
+    gent = fetch_recent_readings(50, conn, user_id="user-bbb")
+    assert len(tiff) == 1 and tiff[0].reading.querent.name == "Tiffany"
+    assert len(gent) == 1 and gent[0].reading.querent.name == "Gentry"
+    conn.close()

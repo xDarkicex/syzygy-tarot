@@ -69,6 +69,7 @@ def deal_reading(
     mbti: str = Form(""),
     focus: list[str] = Form(default=[]),
     relationship_status: str = Form(""),
+    user_id: str = Form(""),
     spread_slug: str = Form(...),
     strategy_slug: str = Form("daily"),
     question: str = Form(""),
@@ -87,7 +88,7 @@ def deal_reading(
     querent, spread, strategy = _form_parts(
         name, age, resonance, drawn_to,
         birth_date, birth_time, birth_place, mbti,
-        focus, relationship_status,
+        focus, relationship_status, user_id,
         spread_slug, strategy_slug,
     )
     # The question belongs to single-card draws. For multi-card spreads the
@@ -177,6 +178,7 @@ def deal_horoscope(
     birth_date: str = Form(""),
     birth_time: str = Form(""),
     birth_place: str = Form(""),
+    user_id: str = Form(""),
     today=Depends(get_today),
 ) -> HTMLResponse:
     """An astrology reading from the profile's birth data. No cards — a
@@ -185,7 +187,7 @@ def deal_horoscope(
     Falls back to the signed profile cookie when the htmx form fields are
     empty (e.g. the Alpine store hasn't synced the profile yet).
     """
-    querent = _horoscope_querent(request, name, age, resonance, drawn_to, birth_date, birth_time, birth_place)
+    querent = _horoscope_querent(request, name, age, resonance, drawn_to, birth_date, birth_time, birth_place, user_id)
 
     if querent.birth_date is None:
         return templates.TemplateResponse(
@@ -207,12 +209,16 @@ def deal_horoscope(
     )
 
 
-def _horoscope_querent(request, name, age, resonance, drawn_to, birth_date, birth_time, birth_place) -> Querent:
+def _horoscope_querent(request, name, age, resonance, drawn_to, birth_date, birth_time, birth_place, user_id) -> Querent:
     """Build the querent for a horoscope, preferring the cookie profile when the form is empty."""
     if not name:
         cookie = _cookie_profile(request)
         if cookie:
-            return _from_cookie(cookie, drawn_to, birth_date, birth_time, birth_place)
+            return _from_cookie(cookie, drawn_to, birth_date, birth_time, birth_place, user_id)
+    return _build_querent(name, age, resonance, drawn_to, birth_date, birth_time, birth_place, user_id)
+
+
+def _build_querent(name, age, resonance, drawn_to, birth_date, birth_time, birth_place, user_id) -> Querent:
     parsed_birth = _parse_birth_date(birth_date)
     try:
         return Querent(
@@ -223,25 +229,24 @@ def _horoscope_querent(request, name, age, resonance, drawn_to, birth_date, birt
             birth_date=parsed_birth,
             birth_time=birth_time or None,
             birth_place=birth_place or None,
+            user_id=user_id or None,
         )
     except InvalidQuerent as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-def _from_cookie(cookie, drawn_to, birth_date, birth_time, birth_place) -> Querent:
+def _from_cookie(cookie, drawn_to, birth_date, birth_time, birth_place, user_id) -> Querent:
     """Build a querent from the cookie profile, overriding with any form values."""
-    try:
-        return Querent(
-            name=cookie.name,
-            age=cookie.age,
-            resonance=cookie.resonance,
-            drawn_to=drawn_to or cookie.drawn_to,
-            birth_date=cookie.birth_date,
-            birth_time=cookie.birth_time or None,
-            birth_place=cookie.birth_place or None,
-        )
-    except InvalidQuerent as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return _build_querent(
+        cookie.name,
+        cookie.age,
+        cookie.resonance,
+        drawn_to or cookie.drawn_to,
+        birth_date or cookie.birth_date.isoformat() if cookie.birth_date else "",
+        cookie.birth_time or "",
+        cookie.birth_place or "",
+        user_id or cookie.user_id or "",
+    )
 
 
 def _form_parts(
@@ -255,6 +260,7 @@ def _form_parts(
     mbti: str,
     focus: list[str],
     relationship_status: str,
+    user_id: str,
     spread_slug: str,
     strategy_slug: str,
 ) -> tuple[Querent, Spread, SeedStrategy]:
@@ -272,6 +278,7 @@ def _form_parts(
             mbti=mbti or None,
             focus=tuple(f for f in focus if f),
             relationship_status=relationship_status or None,
+            user_id=user_id or None,
         )
     except InvalidQuerent as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

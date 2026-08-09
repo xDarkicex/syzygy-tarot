@@ -79,6 +79,7 @@ class Querent:
     mbti: str | None = None  # 4-letter MBTI type, e.g. "INTJ"
     focus: tuple[str, ...] = ()  # which FOCUS_AREAS the querent is working on
     relationship_status: str | None = None
+    user_id: str | None = None  # stable per-browser identity for isolating readings
 
     def __post_init__(self) -> None:
         # Age is derived from birth_date when it's present — they're the same
