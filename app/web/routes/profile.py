@@ -36,6 +36,27 @@ def _chart(querent: Querent | None):
     return None
 
 
+def _profile_stats(history) -> dict:
+    """Small stats for the profile dashboard's KPI tiles."""
+    card_counts: dict[str, int] = {}
+    element_counts: dict[str, int] = {}
+    for stored in history:
+        for drawn in stored.reading.drawn:
+            card_counts[drawn.card.name] = card_counts.get(drawn.card.name, 0) + 1
+            element = drawn.card.element
+            if element:
+                element_counts[element] = element_counts.get(element, 0) + 1
+    most_card = max(card_counts.items(), key=lambda kv: kv[1]) if card_counts else (None, 0)
+    element = max(element_counts.items(), key=lambda kv: kv[1]) if element_counts else (None, 0)
+    return {
+        "readings": len(history),
+        "most_card": most_card[0],
+        "most_card_count": most_card[1],
+        "element": element[0],
+        "element_count": element[1],
+    }
+
+
 @router.get("", response_class=HTMLResponse)
 def profile_page(
     request: Request,
@@ -66,6 +87,7 @@ def profile_page(
             "relationship_statuses": RELATIONSHIP_STATUSES,
             "history": history,
             "history_json": history_json,
+            "stats": _profile_stats(history),
             "today_sky": sky_snapshot(date.today()),
             "today": date.today(),
         },

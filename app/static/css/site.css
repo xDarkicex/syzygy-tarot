@@ -160,9 +160,44 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 
 .p-dash { margin: 2rem 0; }
 .p-dash__title { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; font-style: italic; margin: 0 0 0.5rem; }
-.p-dash__vector { color: var(--ink-soft); margin: 0 0 1.25rem; }
+.p-dash__vector { color: var(--ink-soft); margin: 0 0 1.5rem; }
 .p-dash__vector strong { color: var(--gold); }
-.p-dash__charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+
+/* KPI stat tiles — small, one number each, gold accent. */
+.p-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin: 0 0 1.5rem; }
+.p-stat {
+  display: flex; flex-direction: column; gap: 0.35rem;
+  padding: 1rem 1.1rem; background: var(--paper-2);
+  border: 1px solid var(--rule); border-radius: 6px;
+  border-top: 2px solid color-mix(in srgb, var(--gold) 55%, transparent);
+}
+.p-stat__label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); }
+.p-stat__value { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; }
+.p-stat__value--sm { font-size: 1.1rem; line-height: 1.25; font-style: italic; }
+
+/* Charts — side by side, never full-width stacked. */
+.p-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin: 0 0 2rem; }
+.chart-box { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.25rem; }
+.chart-box__title { font-family: var(--serif); font-size: 1rem; font-style: italic; font-weight: 400; margin: 0 0 0.75rem; color: var(--ink-soft); }
+.chart-box canvas { max-height: 220px; }
+
+/* Recent readings — horizontal scroll of card thumbnails. */
+.p-recent__title { font-family: var(--serif); font-size: 1rem; font-style: italic; font-weight: 400; margin: 0 0 0.75rem; color: var(--ink-soft); }
+.p-recent__scroller {
+  display: flex; gap: 0.85rem; overflow-x: auto; padding-bottom: 0.5rem;
+  scrollbar-width: thin; scrollbar-color: var(--rule) transparent;
+}
+.p-recent__card {
+  flex: 0 0 92px; display: flex; flex-direction: column; gap: 0.4rem;
+  color: var(--ink); text-decoration: none;
+}
+.p-recent__card:hover .p-recent__art { transform: translateY(-2px); }
+.p-recent__art { width: 92px; height: 128px; object-fit: cover; border-radius: 4px; border: 1px solid var(--rule); transition: transform 150ms; }
+.p-recent__meta { display: flex; flex-direction: column; }
+.p-recent__spread { font-size: 0.72rem; color: var(--ink-soft); line-height: 1.2; }
+.p-recent__date { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); }
+
+@media (max-width: 720px) { .p-charts { grid-template-columns: 1fr; } }
 
 .p-edit { margin: 2rem 0; }
 .p-edit__title { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; font-style: italic; margin: 0 0 1.25rem; }
