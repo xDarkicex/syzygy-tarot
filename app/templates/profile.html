@@ -108,6 +108,27 @@
 </section>
 
 <script>
+  document.addEventListener('alpine:init', () => {
+    // Sync this browser's localStorage user_id into the server cookie once,
+    // then reload so the dashboard filters for the right person. Guarded so
+    // it doesn't loop.
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('synced')) {
+      window.Alpine.$nextTick(() => {
+        const profile = window.Alpine.$data(document.body).profile;
+        if (profile && profile.user_id) {
+          fetch('/profile/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'user_id=' + encodeURIComponent(profile.user_id),
+          }).then(() => {
+            window.location.replace('/profile?synced=1');
+          });
+        }
+      });
+    }
+  });
+
   document.addEventListener('DOMContentLoaded', function() {
     var history = {{ history_json | safe }};
     var elements = {{ elements_json | safe }};

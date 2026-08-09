@@ -8,7 +8,7 @@ import json
 import secrets
 from datetime import date
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from fastapi import APIRouter, Cookie, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 
 from app.domain.seeding import (
@@ -23,7 +23,7 @@ from app.services.birth_chart import compute_birth_chart
 from app.services.quiz import QUESTIONS, archetype_for, compute_type
 from app.services.ephemeris import sky_snapshot
 from app.storage.readings import fetch_recent_readings
-from app.web.auth import clear_profile_cookie, set_profile_cookie
+from app.web.auth import clear_profile_cookie, read_profile_cookie, set_profile_cookie
 from app.web.dependencies import get_db, get_profile
 from app.web.templating import templates
 
@@ -213,6 +213,41 @@ def save_profile(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     response = _redirect("/profile")
     set_profile_cookie(response, querent)
+    return response
+
+
+@router.post("/sync")
+def sync_profile(user_id: str = Form(""), profile_cookie: str | None = Cookie(default=None)) -> Response:
+    """Adopt the client's localStorage user_id into the cookie.
+
+    Without auth, localStorage is the source of truth for identity. When the
+    user lands on the profile page, the client sends its user_id here so the
+    server cookie mirrors it and the dashboard can filter to just this person.
+    Preserves any existing profile fields in the cookie.
+    """
+    if not user_id:
+        return Response(status_code=200)
+    existing = read_profile_cookie(profile_cookie)
+    if existing and existing.user_id == user_id:
+        return Response(status_code=200)
+    if existing:
+        base = Querent(
+            name=existing.name,
+            age=existing.age,
+            resonance=existing.resonance,
+            drawn_to=existing.drawn_to,
+            birth_date=existing.birth_date,
+            birth_time=existing.birth_time,
+            birth_place=existing.birth_place,
+            mbti=existing.mbti,
+            focus=existing.focus,
+            relationship_status=existing.relationship_status,
+            user_id=user_id,
+        )
+    else:
+        base = Querent(name="You", age=30, resonance="Unspecified", user_id=user_id)
+    response = Response(status_code=200)
+    set_profile_cookie(response, base)
     return response
 
 

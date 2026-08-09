@@ -54,6 +54,14 @@
           spread: 'hear-help-hold',
           question: '',
         }).as('syzygy_profile'),
+        init() {
+          // Give this browser a stable identity the first time it loads, so
+          // every reading it deals is attributable and the dashboard can
+          // isolate this person's history from everyone else's.
+          if (!this.profile.user_id) {
+            this.profile.user_id = (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36));
+          }
+        },
       }))
     })
   </script>
