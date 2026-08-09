@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Edit profile · syzygy{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Edit who you are</h1>
+  <p class="hero__lede">What you tell the cards shapes what they tell you.</p>
+</section>
+
+<form class="profile-form" method="post" action="/profile/save"
+      x-data="{ p: {{ profile_json | safe }} }"
+      @submit="profile = { ...profile, ...p, focus: p.focus || [] }">
+  <fieldset>
+    <legend>About you</legend>
+    <label><span>Name</span>
+      <input type="text" name="name" maxlength="64" x-model="p.name" /></label>
+    <label><span>Resonance</span>
+      <select name="resonance" x-model="p.resonance">
+        {% for option in resonances %}<option value="{{ option }}" {% if option == 'Unspecified' %}selected{% endif %}>{{ option }}</option>{% endfor %}
+      </select></label>
+    <label><span>Drawn to</span>
+      <select name="drawn_to" x-model="p.drawn_to">
+        {% for option in drawn_to_options %}<option value="{{ option }}">{{ option }}</option>{% endfor %}
+      </select></label>
+    <label><span>Relationship status</span>
+      <select name="relationship_status" x-model="p.relationship_status">
+        <option value="">Prefer not to say</option>
+        {% for option in relationship_statuses %}<option value="{{ option }}">{{ option }}</option>{% endfor %}
+      </select></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>What you're working on <span class="profile__hint">pick what calls to you</span></legend>
+    <div class="focus-grid">
+      {% for area in focus_areas %}
+      <label class="focus-tile">
+        <input type="checkbox" name="focus" value="{{ area }}" x-model="p.focus" />
+        <span class="focus-tile__glyph" aria-hidden="true">{{ area | focus_glyph }}</span>
+        <span class="focus-tile__label">{{ area }}</span>
+      </label>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <input type="hidden" name="mbti" x-model="p.mbti" />
+
+  <fieldset>
+    <legend>When you were born</legend>
+    <label><span>Date</span>
+      <input type="date" name="birth_date" x-model="p.birth_date" max="{{ today.isoformat() }}" /></label>
+    <label><span>Time</span>
+      <input type="time" name="birth_time" x-model="p.birth_time" /></label>
+    <label><span>Place</span>
+      <input type="text" name="birth_place" x-model="p.birth_place" placeholder="City, country" /></label>
+  </fieldset>
+
+  <div class="profile-form__actions">
+    <button class="draw-button" type="submit">Save profile</button>
+    <a class="draw-button draw-button--ghost" href="/profile">View your profile</a>
+    <button class="draw-button draw-button--danger" type="submit"
+            formaction="/profile/clear" formmethod="post">Clear</button>
+  </div>
+</form>
+{% endblock %}

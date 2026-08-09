@@ -64,7 +64,7 @@ def profile_page(
     querent: Querent | None = Depends(get_profile),
     conn: sqlite3.Connection = Depends(get_db),
 ) -> HTMLResponse:
-    """View + edit the profile. Shows the chart, archetype, and a reading dashboard."""
+    """The profile show page: who you are, your chart, and your reading pattern."""
     archetype = archetype_for(querent.mbti) if querent and querent.mbti else None
     history = fetch_recent_readings(50, conn)
     history_json = json.dumps([
@@ -83,10 +83,6 @@ def profile_page(
             "profile": querent,
             "chart": _chart(querent),
             "archetype": archetype,
-            "resonances": RESONANCES,
-            "drawn_to_options": DRAWN_TO,
-            "focus_areas": FOCUS_AREAS,
-            "relationship_statuses": RELATIONSHIP_STATUSES,
             "history": history,
             "history_json": history_json,
             "stats": stats,
@@ -95,6 +91,42 @@ def profile_page(
             "today": date.today(),
         },
     )
+
+
+@router.get("/edit", response_class=HTMLResponse)
+def profile_edit_page(request: Request, querent: Querent | None = Depends(get_profile)) -> HTMLResponse:
+    """The edit form, seeded from the server profile so x-model can't blank it."""
+    return templates.TemplateResponse(
+        request,
+        "profile_edit.html",
+        {
+            "profile": querent,
+            "profile_json": _profile_json(querent),
+            "resonances": RESONANCES,
+            "drawn_to_options": DRAWN_TO,
+            "focus_areas": FOCUS_AREAS,
+            "relationship_statuses": RELATIONSHIP_STATUSES,
+            "today": date.today(),
+        },
+    )
+
+
+def _profile_json(querent: Querent | None) -> str:
+    """The profile as a JSON object for seeding the edit form's x-data."""
+    q = querent or Querent(name="", age=30, resonance="Unspecified")
+    payload = {
+        "name": q.name,
+        "age": q.age,
+        "resonance": q.resonance,
+        "drawn_to": q.drawn_to,
+        "birth_date": q.birth_date.isoformat() if q.birth_date else "",
+        "birth_time": q.birth_time or "",
+        "birth_place": q.birth_place or "",
+        "mbti": q.mbti or "",
+        "focus": list(q.focus),
+        "relationship_status": q.relationship_status or "",
+    }
+    return json.dumps(payload)
 
 
 @router.get("/quiz", response_class=HTMLResponse)

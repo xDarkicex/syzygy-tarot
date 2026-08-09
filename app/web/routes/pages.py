@@ -43,8 +43,3 @@ def history(request: Request, conn: sqlite3.Connection = Depends(get_db)) -> HTM
 @router.get("/about", response_class=HTMLResponse)
 def about(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request, "about.html", {})
-
-
-@router.get("/profile/edit")
-def edit_profile_redirect(profile: Querent | None = Depends(get_profile)) -> RedirectResponse:
-    return RedirectResponse(url="/" if profile else "/", status_code=303)

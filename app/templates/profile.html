@@ -100,61 +100,11 @@
 </section>
 
 <section class="p-edit">
-  <h2 class="p-edit__title">Edit who you are</h2>
-  <form class="profile-form" method="post" action="/profile/save"
-        x-data="{ p: { ...profile, focus: Array.isArray(profile.focus) ? [...profile.focus] : [] } }">
-    <fieldset>
-      <legend>About you</legend>
-      <label><span>Name</span>
-        <input type="text" name="name" maxlength="64" x-model="p.name" value="{{ profile.name if profile else '' }}" /></label>
-      <label><span>Resonance</span>
-        <select name="resonance" x-model="p.resonance">
-          {% for option in resonances %}<option value="{{ option }}" {% if profile and profile.resonance == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
-        </select></label>
-      <label><span>Drawn to</span>
-        <select name="drawn_to" x-model="p.drawn_to">
-          {% for option in drawn_to_options %}<option value="{{ option }}" {% if profile and profile.drawn_to == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
-        </select></label>
-      <label><span>Relationship status</span>
-        <select name="relationship_status" x-model="p.relationship_status">
-          <option value="">Prefer not to say</option>
-          {% for option in relationship_statuses %}<option value="{{ option }}" {% if profile and profile.relationship_status == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
-        </select></label>
-    </fieldset>
-
-    <fieldset>
-      <legend>What you're working on <span class="profile__hint">pick what calls to you</span></legend>
-      <div class="focus-grid">
-        {% for area in focus_areas %}
-        <label class="focus-tile">
-          <input type="checkbox" name="focus" value="{{ area }}" x-model="p.focus"
-                 {% if profile and area in profile.focus %}checked{% endif %} />
-          <span class="focus-tile__glyph" aria-hidden="true">{{ area | focus_glyph }}</span>
-          <span class="focus-tile__label">{{ area }}</span>
-        </label>
-        {% endfor %}
-      </div>
-    </fieldset>
-
-    <input type="hidden" name="mbti" x-model="p.mbti" value="{{ profile.mbti if profile and profile.mbti else '' }}" />
-
-    <fieldset>
-      <legend>When you were born</legend>
-      <label><span>Date</span>
-        <input type="date" name="birth_date" x-model="p.birth_date" value="{{ profile.birth_date if profile and profile.birth_date else '' }}" max="{{ today.isoformat() }}" /></label>
-      <label><span>Time</span>
-        <input type="time" name="birth_time" x-model="p.birth_time" value="{{ profile.birth_time if profile else '' }}" /></label>
-      <label><span>Place</span>
-        <input type="text" name="birth_place" x-model="p.birth_place" value="{{ profile.birth_place if profile else '' }}" placeholder="City, country" /></label>
-    </fieldset>
-
-    <div class="profile-form__actions">
-      <button class="draw-button" type="submit">Save profile</button>
-      <a class="draw-button draw-button--ghost" href="/profile/quiz">Take the archetype quiz</a>
-      <button class="draw-button draw-button--danger" type="submit"
-              formaction="/profile/clear" formmethod="post">Clear</button>
-    </div>
-  </form>
+  <h2 class="p-edit__title">Make it yours</h2>
+  <div class="p-edit__actions">
+    <a class="draw-button" href="/profile/edit">Edit who you are</a>
+    <a class="draw-button draw-button--ghost" href="/profile/quiz">Take the archetype quiz</a>
+  </div>
 </section>
 
 <script>
