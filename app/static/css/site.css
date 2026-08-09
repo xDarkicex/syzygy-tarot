@@ -175,11 +175,12 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
 .p-stat__value { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; }
 .p-stat__value--sm { font-size: 1.1rem; line-height: 1.25; font-style: italic; }
 
-/* Charts — side by side, never full-width stacked. */
-.p-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin: 0 0 2rem; }
-.chart-box { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.25rem; }
-.chart-box__title { font-family: var(--serif); font-size: 1rem; font-style: italic; font-weight: 400; margin: 0 0 0.75rem; color: var(--ink-soft); }
-.chart-box canvas { max-height: 220px; }
+/* Charts — small, side by side, never full-width stacked. */
+.p-charts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 0 0 2rem; }
+.chart-box { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1rem; }
+.chart-box__title { font-family: var(--serif); font-size: 0.95rem; font-style: italic; font-weight: 400; margin: 0 0 0.6rem; color: var(--ink-soft); }
+.chart-box canvas { max-height: 200px; }
+@media (max-width: 720px) { .p-charts { grid-template-columns: 1fr; } }
 
 /* Recent readings — horizontal scroll of card thumbnails. */
 .p-recent__title { font-family: var(--serif); font-size: 1rem; font-style: italic; font-weight: 400; margin: 0 0 0.75rem; color: var(--ink-soft); }

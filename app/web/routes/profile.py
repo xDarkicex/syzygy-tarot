@@ -54,6 +54,7 @@ def _profile_stats(history) -> dict:
         "most_card_count": most_card[1],
         "element": element[0],
         "element_count": element[1],
+        "elements": element_counts,
     }
 
 
@@ -74,6 +75,7 @@ def profile_page(
         }
         for h in history
     ])
+    stats = _profile_stats(history)
     return templates.TemplateResponse(
         request,
         "profile.html",
@@ -87,7 +89,8 @@ def profile_page(
             "relationship_statuses": RELATIONSHIP_STATUSES,
             "history": history,
             "history_json": history_json,
-            "stats": _profile_stats(history),
+            "stats": stats,
+            "elements_json": json.dumps(stats.get("elements", {})),
             "today_sky": sky_snapshot(date.today()),
             "today": date.today(),
         },
