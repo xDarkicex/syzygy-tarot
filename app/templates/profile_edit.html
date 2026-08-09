@@ -7,7 +7,7 @@
 </section>
 
 <form class="profile-form" method="post" action="/profile/save"
-      x-data="{ p: {{ profile_json | safe }} }"
+      x-data='{ p: {{ profile_json | e }} }'
       @submit="profile = { ...profile, ...p, focus: p.focus || [] }">
   <fieldset>
     <legend>About you</legend>
