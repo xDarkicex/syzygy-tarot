@@ -27,11 +27,16 @@ from app.domain.seeding import (
 from app.domain.spreads import Spread, UnknownSpread, get_spread
 from app.storage.database import connect
 from app.storage.readings import fetch_reading, save_reading, update_interpretation
-from app.web.auth import set_profile_cookie
+from app.web.auth import read_profile_cookie, set_profile_cookie
 from app.web.dependencies import get_db, get_today
 
 router = APIRouter(prefix="/readings")
 templates = Jinja2Templates(directory=str(get_settings().templates_dir))
+
+
+def _cookie_profile(request: Request):
+    """Read the profile from the signed cookie, if present."""
+    return read_profile_cookie(request.cookies.get("syzygy_profile"))
 
 
 def _md(text: str) -> str:
@@ -165,9 +170,9 @@ def reveal_card(
 @router.post("/horoscope", response_class=HTMLResponse)
 def deal_horoscope(
     request: Request,
-    name: str = Form(...),
-    age: int = Form(...),
-    resonance: str = Form(...),
+    name: str = Form(""),
+    age: int = Form(0),
+    resonance: str = Form(""),
     drawn_to: str = Form("Prefer not to say"),
     birth_date: str = Form(""),
     birth_time: str = Form(""),
@@ -175,23 +180,19 @@ def deal_horoscope(
     today=Depends(get_today),
 ) -> HTMLResponse:
     """An astrology reading from the profile's birth data. No cards — a
-    horoscope for today, computed from the real natal chart + today's sky."""
-    parsed_birth = _parse_birth_date(birth_date)
-    try:
-        querent = Querent(
-            name=name,
-            age=age,
-            resonance=resonance,
-            drawn_to=drawn_to or "Prefer not to say",
-            birth_date=parsed_birth,
-            birth_time=birth_time or None,
-            birth_place=birth_place or None,
-        )
-    except InvalidQuerent as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    horoscope for today, computed from the real natal chart + today's sky.
+
+    Falls back to the signed profile cookie when the htmx form fields are
+    empty (e.g. the Alpine store hasn't synced the profile yet).
+    """
+    querent = _horoscope_querent(request, name, age, resonance, drawn_to, birth_date, birth_time, birth_place)
 
     if querent.birth_date is None:
-        raise HTTPException(status_code=400, detail="An astrology reading needs your date of birth.")
+        return templates.TemplateResponse(
+            request,
+            "partials/horoscope.html",
+            {"querent": querent, "chart": None, "horoscope": ""},
+        )
 
     text = ""
     try:
@@ -204,6 +205,43 @@ def deal_horoscope(
         "partials/horoscope.html",
         {"querent": querent, "chart": compute_birth_chart(querent.birth_date, querent.birth_time, querent.birth_place), "horoscope": text},
     )
+
+
+def _horoscope_querent(request, name, age, resonance, drawn_to, birth_date, birth_time, birth_place) -> Querent:
+    """Build the querent for a horoscope, preferring the cookie profile when the form is empty."""
+    if not name:
+        cookie = _cookie_profile(request)
+        if cookie:
+            return _from_cookie(cookie, drawn_to, birth_date, birth_time, birth_place)
+    parsed_birth = _parse_birth_date(birth_date)
+    try:
+        return Querent(
+            name=name,
+            age=age or 30,
+            resonance=resonance or "Unspecified",
+            drawn_to=drawn_to or "Prefer not to say",
+            birth_date=parsed_birth,
+            birth_time=birth_time or None,
+            birth_place=birth_place or None,
+        )
+    except InvalidQuerent as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+def _from_cookie(cookie, drawn_to, birth_date, birth_time, birth_place) -> Querent:
+    """Build a querent from the cookie profile, overriding with any form values."""
+    try:
+        return Querent(
+            name=cookie.name,
+            age=cookie.age,
+            resonance=cookie.resonance,
+            drawn_to=drawn_to or cookie.drawn_to,
+            birth_date=cookie.birth_date,
+            birth_time=cookie.birth_time or None,
+            birth_place=cookie.birth_place or None,
+        )
+    except InvalidQuerent as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 def _form_parts(

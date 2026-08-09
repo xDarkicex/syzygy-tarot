@@ -1,15 +1,19 @@
 <section class="interpretation">
   <header class="interpretation__head">
     <h3 class="interpretation__title">Today's sky for {{ querent.name or 'you' }}</h3>
+    {% if chart %}
     <p class="interpretation__sub">
       Sun in {{ chart.sun }}{% if chart.rising %}, rising in {{ chart.rising }}{% endif %}
       · Venus in {{ chart.venus }} · Moon in {{ chart.moon }}
     </p>
+    {% endif %}
   </header>
 
   <div class="interpretation__body">
     {% if horoscope %}
       {{ horoscope | md | safe }}
+    {% elif not chart %}
+      <p class="interpretation__sub">The stars need your date of birth to read the sky. Add it in your <a href="/profile/edit">profile</a>.</p>
     {% else %}
       <p class="interpretation__sub">The stars could not be read right now. The chart above is still yours.</p>
     {% endif %}
