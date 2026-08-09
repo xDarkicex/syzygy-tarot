@@ -215,14 +215,22 @@ fieldset.profile input:focus, fieldset.profile select:focus { outline: 2px solid
   padding: 0.65rem 0.75rem; border-radius: 3px; font-family: inherit; font-size: 0.95rem;
 }
 .profile-form input:focus, .profile-form select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
-.focus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; }
-.focus-option {
-  display: flex; align-items: center; gap: 0.6rem;
-  padding: 0.6rem 0.8rem; border: 1px solid var(--rule); border-radius: 4px; cursor: pointer;
+.focus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
+.focus-tile {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+  padding: 1.1rem 0.75rem; border: 1px solid var(--rule); border-radius: 8px; cursor: pointer;
+  transition: border-color 150ms, background 150ms, transform 150ms;
 }
-.focus-option:hover { border-color: var(--ink-faint); }
-.focus-option input { accent-color: var(--gold); }
-.focus-option span { color: var(--ink-soft); font-size: 0.9rem; }
+.focus-tile:hover { border-color: var(--ink-faint); transform: translateY(-1px); }
+.focus-tile input { position: absolute; opacity: 0; pointer-events: none; }
+.focus-tile__glyph { font-size: 1.6rem; color: var(--ink-faint); transition: color 150ms; }
+.focus-tile__label { font-family: var(--serif); font-size: 0.95rem; font-style: italic; color: var(--ink-soft); text-align: center; line-height: 1.2; }
+.focus-tile input:checked + .focus-tile__glyph { color: var(--gold); }
+.focus-tile input:checked ~ .focus-tile__label { color: var(--ink); }
+.focus-tile:has(input:checked) {
+  border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+  background: color-mix(in srgb, var(--gold) 8%, var(--paper-2));
+}
 .profile-form__actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
 .draw-button--danger { background: transparent; border: 1px solid color-mix(in srgb, var(--ember) 50%, transparent); color: var(--ember); }
 .draw-button--danger:hover { background: color-mix(in srgb, var(--ember) 15%, transparent); border-color: var(--ember); }

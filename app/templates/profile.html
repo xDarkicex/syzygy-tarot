@@ -94,7 +94,8 @@
 
 <section class="p-edit">
   <h2 class="p-edit__title">Edit who you are</h2>
-  <form class="profile-form" method="post" action="/profile/save" x-data="{ p: profile }">
+  <form class="profile-form" method="post" action="/profile/save"
+        x-data="{ p: { ...profile, focus: Array.isArray(profile.focus) ? [...profile.focus] : [] } }">
     <fieldset>
       <legend>About you</legend>
       <label><span>Name</span>
@@ -115,13 +116,14 @@
     </fieldset>
 
     <fieldset>
-      <legend>What you're working on</legend>
+      <legend>What you're working on <span class="profile__hint">pick what calls to you</span></legend>
       <div class="focus-grid">
         {% for area in focus_areas %}
-        <label class="focus-option">
+        <label class="focus-tile">
           <input type="checkbox" name="focus" value="{{ area }}" x-model="p.focus"
                  {% if profile and area in profile.focus %}checked{% endif %} />
-          <span>{{ area }}</span>
+          <span class="focus-tile__glyph" aria-hidden="true">{{ area | focus_glyph }}</span>
+          <span class="focus-tile__label">{{ area }}</span>
         </label>
         {% endfor %}
       </div>

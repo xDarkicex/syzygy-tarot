@@ -35,10 +35,26 @@ def _vector_focus(moon_sign: str | None) -> str:
     return _MOON_VECTOR.get(moon_sign or "", "Self & Growth")
 
 
+# Mystical glyphs for the focus-area tiles.
+_FOCUS_GLYPHS = {
+    "Love & Relationships": "♡",
+    "Career & Work": "✦",
+    "Self & Growth": "☽",
+    "Family": "⌂",
+    "Money & Security": "◈",
+    "Health & Vitality": "☀",
+}
+
+
+def _focus_glyph(area: str) -> str:
+    return _FOCUS_GLYPHS.get(area, "✦")
+
+
 def build_templates() -> Jinja2Templates:
     templates = Jinja2Templates(directory=str(get_settings().templates_dir))
     templates.env.filters["querent_name"] = _querent_name
     templates.env.filters["vector_focus"] = _vector_focus
+    templates.env.filters["focus_glyph"] = _focus_glyph
     return templates
 
 
